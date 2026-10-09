@@ -8,7 +8,7 @@ import type { MusicCue, Stinger, UiSound, Volumes } from './types';
 import { VoicePlayer, type VoiceManifest } from './voice';
 import { World } from './world';
 
-const STINGER_GAIN: Partial<Record<Stinger, number>> = { lights: 0.45, whoosh: 0.4, replay: 0.5, stamp: 0.55, logo: 0.7, go: 0.7, ko: 0.65, time: 0.6, decision: 0.6 };
+const STINGER_GAIN: Partial<Record<Stinger, number>> = { lights: 0.45, whoosh: 0.4, replay: 0.5, stamp: 0.55, logo: 0.7, go: 0.7, ko: 0.65, time: 0.6, decision: 0.6, heartbreak: 0.8, cash: 0.5, rankup: 0.55, unlock: 0.5 };
 const UI_GAIN: Partial<Record<UiSound, number>> = { move: 0.5, tick: 0.45, type: 0.35 };
 
 export class Core {
@@ -66,6 +66,8 @@ export class Core {
     }
     this.oneshot(`st.${id}`, this.mixer.uiIn, STINGER_GAIN[id] ?? 0.6);
     if (id === 'go') this.world.crowd.bump(0.6, 'cheer');
+    // The stinger carries its own gasp; the arena falls silent under it.
+    if (id === 'heartbreak') this.world.crowd.hush(7);
   }
 
   ui(id: UiSound): void {

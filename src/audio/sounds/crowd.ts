@@ -17,7 +17,7 @@ const V = {
   u: [320, 870],
   er: [490, 1350],
 } as const;
-type Vowel = keyof typeof V;
+export type Vowel = keyof typeof V;
 
 interface TalkerOpts {
   t0: number;
@@ -91,7 +91,7 @@ function talker(ctx: BaseAudioContext, out: AudioNode, o: TalkerOpts): void {
   env.gain.setTargetAtTime(0, o.t1 - 0.05, 0.02);
 }
 
-interface CrowdOpts {
+export interface CrowdOpts {
   seconds: number;
   talkers: number;
   seed: number;
@@ -112,7 +112,7 @@ interface CrowdOpts {
   loop?: boolean;
 }
 
-function crowdGraph(ctx: OfflineAudioContext, out: AudioNode, o: CrowdOpts): void {
+export function crowdGraph(ctx: OfflineAudioContext, out: AudioNode, o: CrowdOpts): void {
   const r = rng(o.seed);
   const sum = gain(ctx, 1);
   const lp = biquad(ctx, 'lowpass', o.lp, 0.6);

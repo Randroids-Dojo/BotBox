@@ -346,5 +346,259 @@ const nut: CueDef = {
   mix: { stab: 0.9, cym: 1.2 },
 };
 
-// prologue, montage and workshop reuse existing cues until they get their own.
-export const CUES: Record<Exclude<MusicCue, 'none'>, CueDef> = { title, menu, pits, intro, fight, victory, defeat, bumper, nut, prologue: title, montage: defeat, workshop: pits };
+// ---- prologue: the last 45 seconds of a championship final. The theme at full tilt, faster,
+// a ticking pulse under everything, scooped so hits and the commentators read over it.
+
+/** Two bars of the urgent 16th pulse on one root (low, high). */
+const pulse = (lo: string, hi: string) => Array.from({ length: 8 }, () => `${lo} ${hi}`).join(' ');
+const PULSE_D = pulse('D3', 'D4');
+const DRIVE_HAT = ['xoxoxoxoxoxoxoxo'];
+const DRIVE_SNARE = ['....x.......x...', '....x.......x...', '....x.......x...', '....x.......x.xx'];
+/** The riff's moving notes doubled two octaves up on the lead. */
+const RIFF_LEAD = [
+  L(['.', 8], ['F4', 3], ['G4', 3], ['.', 2]),
+  L(['.', 8], ['Bb4', 3], ['A4', 3], ['.', 2]),
+  L(['.', 8], ['F4', 3], ['G4', 3], ['.', 2]),
+  L(['.', 8], ['F4', 2], ['G4', 2], ['Ab4', 2], ['G4', 1], ['.', 1]),
+];
+/** Synth stabs that punch the chord on 1 and the and of 2. */
+const punch = (c: string) => L([c, 3], ['.', 3], [c, 3], ['.', 7]);
+
+const prologue: CueDef = {
+  bpm: 148,
+  loopFrom: 0,
+  level: 0.5,
+  scoop: true,
+  sections: [
+    // The riff, drums driving, the clock ticking.
+    {
+      bars: 4,
+      tracks: { gtr: RIFF, bass: 'follow', kick: RIFF_KICK, snare: DRIVE_SNARE, hat: DRIVE_HAT, cym: CRASH1, arp: [PULSE_D] },
+    },
+    // The riff doubled: stabs answer, the lead doubles the moving notes.
+    {
+      bars: 4,
+      tracks: {
+        gtr: RIFF,
+        bass: 'follow',
+        kick: RIFF_KICK,
+        snare: DRIVE_SNARE,
+        hat: DRIVE_HAT,
+        cym: ['x...............', '................', 'x...............', '................'],
+        stab: RIFF_STAB,
+        lead: RIFF_LEAD,
+        arp: [PULSE_D],
+        tom: ['................', '................', '................', '............1122'],
+      },
+    },
+    // The chorus: the theme hook over pushing eighths, a crash on every bar.
+    {
+      bars: 8,
+      tracks: {
+        gtr: ['D-d-d-d-D-d-d-dd', 'B-b-b-b-B-b-b-bb', 'C-c-c-c-C-c-c-cc', 'A-a-a-a-A-a-a.a.', 'D-d-d-d-D-d-d-dd', 'B-b-b-b-B-b-b-bb', 'C-c-c-c-F-f-f-ff', 'G-g-g-g-A---a.a.'],
+        bass: 'follow',
+        kick: ['x.x.x.x.x.x.x.x.'],
+        snare: ['....X.......X...', '....X.......X...', '....X.......X...', '....X.......X.oo'],
+        cym: ['x.r.r.r.r.r.r.r.'],
+        lead: [
+          L(['A4', 4], ['D5', 4], ['C5', 3], ['A4', 3], ['G4', 2]),
+          L(['F4', 8], ['D4', 3], ['F4', 3], ['G4', 2]),
+          L(['E4', 8], ['G4', 3], ['C5', 3], ['Bb4', 2]),
+          L(['A4', 12], ['.', 4]),
+          L(['A4', 4], ['D5', 4], ['C5', 3], ['A4', 3], ['G4', 2]),
+          L(['F4', 8], ['D5', 3], ['C5', 3], ['Bb4', 2]),
+          L(['C5', 8], ['A4', 4], ['C5', 4]),
+          L(['B4', 4], ['D5', 4], ['E5', 8]),
+        ],
+        stab: [punch('Dm'), punch('Bb'), punch('C'), punch('A'), punch('Dm'), punch('Bb'), L(['C', 3], ['.', 5], ['F', 3], ['.', 5]), L(['G', 3], ['.', 5], ['A', 3], ['.', 5])],
+        arp: [pulse('D3', 'D4'), pulse('Bb2', 'Bb3'), pulse('C3', 'C4'), pulse('A2', 'A3'), pulse('D3', 'D4'), pulse('Bb2', 'Bb3'), pulse('C3', 'C4'), pulse('A2', 'A3')],
+      },
+    },
+    // The riff again with the hook screaming an octave up over it.
+    {
+      bars: 4,
+      tracks: {
+        gtr: RIFF,
+        bass: 'follow',
+        kick: ['xx.x.xx.x.xx.xx.', 'xx.x.xx.x.xx.xx.', 'xx.x.xx.x.xx.xx.', 'xx.x.xx.x.x.x.x.'],
+        snare: DRIVE_SNARE,
+        hat: DRIVE_HAT,
+        cym: ['x...............', 'x...............', 'x...............', 'x...............'],
+        lead: [L(['A5', 4], ['D6', 4], ['C6', 3], ['A5', 3], ['G5', 2]), L(['F5', 8], ['D5', 3], ['F5', 3], ['G5', 2]), L(['A5', 4], ['D6', 4], ['C6', 3], ['A5', 3], ['G5', 2]), L(['F5', 4], ['G5', 4], ['A5', 8])],
+        stab: RIFF_STAB,
+        arp: [PULSE_D],
+      },
+    },
+    // Stop hits and a roll back into the riff.
+    {
+      bars: 2,
+      tracks: {
+        ...breakC.tracks,
+        tom: ['................', '........3.2.1.1.'],
+        snare: ['................', '..........o.o.xX'],
+        fx: [L(['riser:32', 16]), HOLD],
+      },
+    },
+  ],
+  mix: { stab: 0.85, arp: 0.42, lead: 0.7, hat: 0.4, gtrL: 0.8, gtrR: 0.8 },
+};
+
+// ---- montage: the fall. The theme's hook slowed down on a lightly overdriven guitar in a
+// room, a felt piano, a pad, brushes in the second phrase. Ends on A so the loop falls home.
+
+const montage: CueDef = {
+  bpm: 76,
+  loopFrom: 0,
+  level: 0.9,
+  kit: 'soft',
+  bassTone: 'soft',
+  cgtrTone: 'drive',
+  verb: { seconds: 2.8, wet: 0.42, sends: { cgtr: 1, piano: 0.8, pad: 0.6 } },
+  sections: [
+    // Piano alone.
+    {
+      bars: 2,
+      tracks: {
+        piano: [L(['D3+A3', 4], ['F4', 4], ['~A3', 4], ['~E4', 4]), L(['Bb2+F3', 4], ['D4', 4], ['~F3', 4], ['~C4', 4])],
+        pad: [chordBar('Dm'), chordBar('Bb')],
+        hat: [REST.replace(/ /g, ''), '............s...'],
+      },
+    },
+    // The hook, first phrase.
+    {
+      bars: 4,
+      tracks: {
+        cgtr: [
+          L(['A4', 4], ['D5', 4], ['C5', 3], ['A4', 3], ['G4', 2]),
+          L(['F4', 8], ['D4', 3], ['F4', 3], ['G4', 2]),
+          L(['E4', 8], ['G4', 3], ['C5', 3], ['Bb4', 2]),
+          L(['A4', 12], ['.', 4]),
+        ],
+        piano: [
+          L(['D3+A3', 4], ['F4', 4], ['~A3', 4], ['~D4', 4]),
+          L(['Bb2+F3', 4], ['D4', 4], ['~F3', 4], ['~Bb3', 4]),
+          L(['G2+D3', 4], ['Bb3', 4], ['~D3', 4], ['~G3', 4]),
+          L(['A2+E3', 4], ['C#4', 4], ['~E3', 4], ['~A3', 4]),
+        ],
+        pad: [chordBar('Dm'), chordBar('Bb'), chordBar('Gm'), chordBar('A')],
+        bass: ['D---------------', 'B---------------', 'G---------------', 'A-------K-------'],
+        hat: ['................', '................', '................', '........s.......'],
+        snare: ['................', '................', '................', '............o.o.'],
+      },
+    },
+    // Second phrase, brushes in.
+    {
+      bars: 4,
+      tracks: {
+        cgtr: [L(['A4', 4], ['D5', 4], ['C5', 3], ['A4', 3], ['G4', 2]), L(['F4', 8], ['D5', 3], ['C5', 3], ['Bb4', 2]), L(['A4', 8], ['G4', 4], ['E4', 4]), L(['D4', 12], ['.', 4])],
+        piano: [
+          L(['D3+A3', 4], ['F4', 4], ['~A3', 4], ['~D4', 4]),
+          L(['Bb2+F3', 4], ['D4', 4], ['~F3', 4], ['~Bb3', 4]),
+          L(['G2+D3', 4], ['Bb3', 4], ['A2+E3', 4], ['C#4', 4]),
+          L(['D3+A3', 4], ['F4', 4], ['~A3', 4], ['~D4', 4]),
+        ],
+        pad: [chordBar('Dm'), chordBar('Bb'), L(['Gm', 8], ['A', 8]), chordBar('Dm')],
+        bass: ['D-------d-A-----', 'B-------b-F-----', 'G-------A-------', 'D-------d-A-----'],
+        kick: ['x.......x.x.....'],
+        snare: ['....x.......x...', '....x.......x...', '....x.......x...', '....x.......x.o.'],
+        hat: ['s.o.o.o.s.o.o.o.'],
+      },
+    },
+    // The hook again, quieter, settling on A.
+    {
+      bars: 2,
+      tracks: {
+        cgtr: [L(['~A4', 4], ['~D5', 4], ['~C5', 8]), L(['~A4', 12], ['.', 4])],
+        piano: [L(['Bb2+F3', 4], ['D4', 4], ['~F3', 4], ['~Bb3', 4]), L(['A2+E3', 8], ['~C#4+E4', 8])],
+        pad: [chordBar('Bb'), chordBar('A')],
+        bass: ['B---------------', 'A---------------'],
+        kick: ['x.......x.......', 'x...............'],
+        snare: ['....x.......x...', '................'],
+        hat: ['s.o.o.o.s.o.o.o.', 's...............'],
+      },
+    },
+  ],
+  mix: { pad: 0.42, piano: 0.8, cgtr: 0.78, bass: 0.7, kick: 0.6, snare: 0.55, hat: 0.4 },
+};
+
+// ---- workshop: a small radio on the bench in a storage unit at night. A warm, unhurried
+// groove in D major with the theme's hook turned hopeful on the piano, 24 bars before it
+// comes around again.
+
+const strum = (c: string) => L([c, 6], [`~${c}`, 2], [c, 6], [`~${c}`, 2]);
+const CH = {
+  D: 'D3+A3+D4+F#4',
+  AC: 'C#3+A3+C#4+E4',
+  Bm: 'B2+F#3+B3+D4',
+  G: 'G2+B2+D3+G3+B3',
+  A: 'A2+E3+A3+C#4',
+  Em: 'E2+B2+E3+G3+B3',
+  DF: 'F#2+A2+D3+F#3',
+};
+/** One chord picked as eighths, low to high and back. */
+const pick = (n: string) => {
+  const p = n.split('+');
+  const order = [0, 2, 1, 3, 2, 3, 1, 2].map((i) => p[Math.min(i, p.length - 1)]);
+  return order.map((x) => `${x} .`).join(' ');
+};
+
+const workshop: CueDef = {
+  bpm: 88,
+  loopFrom: 0,
+  level: 0.42,
+  swing: 0.1,
+  kit: 'rock',
+  bassTone: 'soft',
+  cgtrTone: 'clean',
+  radio: { hp: 330, lp: 3000, honk: 4, drive: 2.6, hissDb: -46 },
+  sections: [
+    // The groove: rim clicks, strummed chords, a walking-down bass.
+    {
+      bars: 8,
+      tracks: {
+        cgtr: [strum(CH.D), strum(CH.AC), strum(CH.Bm), strum(CH.G), strum(CH.D), strum(CH.AC), strum(CH.Bm), L([CH.G, 6], [`~${CH.G}`, 2], [CH.A, 8])],
+        bass: ['D-------D-----d-', 'J-------J-----j-', 'M-------M-----m-', 'G-------G-----g-', 'D-------D-----d-', 'J-------J-----j-', 'M-------M-----m-', 'G-------A-----a-'],
+        kick: ['x.....x.x.......', 'x.....x.x.....x.'],
+        snare: ['....r.......r...', '....r.......r...', '....r.......r...', '....r.......r.o.'],
+        hat: ['x.o.x.o.x.o.x.o.'],
+      },
+    },
+    // The hook, turned hopeful, on the piano.
+    {
+      bars: 8,
+      tracks: {
+        cgtr: [strum(CH.D), strum(CH.Bm), strum(CH.G), strum(CH.A), strum(CH.D), strum(CH.Bm), L([CH.G, 6], [`~${CH.G}`, 2], [CH.A, 8]), strum(CH.D)],
+        piano: [
+          L(['A4', 4], ['D5', 4], ['C#5', 3], ['A4', 3], ['G4', 2]),
+          L(['F#4', 8], ['D4', 3], ['F#4', 3], ['G4', 2]),
+          L(['E4', 8], ['G4', 3], ['B4', 3], ['C#5', 2]),
+          L(['A4', 12], ['.', 4]),
+          L(['A4', 4], ['D5', 4], ['C#5', 3], ['A4', 3], ['G4', 2]),
+          L(['F#4', 8], ['D5', 3], ['C#5', 3], ['B4', 2]),
+          L(['B4', 4], ['A4', 4], ['G4', 4], ['E4', 4]),
+          L(['D5', 8], ['.', 8]),
+        ],
+        bass: ['D-------D-----d-', 'M-------M-----m-', 'G-------G-----g-', 'A-------A-----a-', 'D-------D-----d-', 'M-------M-----m-', 'G-------A-------', 'D-------D-----d-'],
+        kick: ['x.....x.x.......', 'x.....x.x.....x.'],
+        snare: ['....x.......x...', '....x.......x...', '....x.......x...', '....x.......x.o.'],
+        hat: ['x.o.x.o.x.o.x.o.'],
+        cym: ['x...............', '................', '................', '................', '................', '................', '................', '................'],
+      },
+    },
+    // A breather: picked chords, a pad, the ride.
+    {
+      bars: 8,
+      tracks: {
+        cgtr: [pick(CH.Em), pick(CH.G), pick(CH.DF), pick(CH.A), pick(CH.Em), pick(CH.G), pick(CH.DF), L([CH.A, 8], [`~${CH.A}`, 4], [CH.A, 4])],
+        pad: [chordBar('Em'), chordBar('G'), chordBar('D'), chordBar('A'), chordBar('Em'), chordBar('G'), chordBar('D'), chordBar('A')],
+        bass: ['K---------------', 'G---------------', 'N---------------', 'A---------------', 'K---------------', 'G---------------', 'N---------------', 'A-------A---a.a.'],
+        kick: ['x.......x.......', 'x.......x.x.....'],
+        snare: ['....r.......r...', '....r.......r...', '....r.......r...', '....x.......x.xx'],
+        cym: ['r...r...r...r...'],
+      },
+    },
+  ],
+  mix: { cgtr: 0.75, piano: 0.85, bass: 0.85, kick: 0.75, snare: 0.8, hat: 0.32, cym: 0.6, pad: 0.35 },
+};
+
+export const CUES: Record<Exclude<MusicCue, 'none'>, CueDef> = { title, menu, pits, intro, fight, victory, defeat, bumper, nut, prologue, montage, workshop };

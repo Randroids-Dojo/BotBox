@@ -41,10 +41,13 @@ export function defineAll(bank: Bank): void {
 export function warmBank(bank: Bank, firstCue: Exclude<MusicCue, 'none'> = 'title'): Promise<void> {
   const music = (cue: Exclude<MusicCue, 'none'>) => cueKeys(bank, cue);
   const first = [...bank.ids('ui.'), 'st.logo', 'st.whoosh', ...music(firstCue)];
+  // A first launch goes from the title straight into the prologue, so it comes next.
   return bank
     .ensure(first)
+    .then(() => bank.ensure(music('prologue')))
     .then(() => bank.ensure([...bank.ids('st.'), ...bank.ids('crowd.')]))
     .then(() => bank.ensure(bank.ids().filter((k) => !k.startsWith('m.'))))
+    .then(() => bank.ensure([...music('montage'), ...music('workshop')]))
     .then(() => bank.ensure([...music('menu'), ...music('intro'), ...music('fight')]));
 }
 

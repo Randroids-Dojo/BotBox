@@ -487,7 +487,9 @@ export class Crowd {
   private lastGroan = -10;
   private lastOoh = -10;
   private rate = 1;
-  private oneshots: AudioBufferSourceNode[] = [];
+  private oneshots: { src: AudioBufferSourceNode; g: GainNode }[] = [];
+  /** Until this time the arena is stunned: no reactions, the beds pulled almost to nothing. */
+  private hushUntil = -1;
 
   constructor(
     private ctx: BaseAudioContext,
@@ -585,12 +587,32 @@ export class Crowd {
     if (Math.random() < 0.6) this.bump(0, 'groan');
   }
 
+  /** A stunned silence for `seconds`: cut reactions in flight, hold the beds down, then let the
+   *  crowd come back up on its own. */
+  hush(seconds: number): void {
+    const t = this.ctx.currentTime;
+    this.hushUntil = t + seconds;
+    this.excitement = 0;
+    for (const o of this.oneshots) {
+      o.g.gain.cancelScheduledValues(t);
+      o.g.gain.setTargetAtTime(0, t, 0.12);
+      o.src.stop(t + 0.8);
+    }
+    this.update(0, null);
+  }
+
+  private hushed(): boolean {
+    return this.ctx.currentTime < this.hushUntil;
+  }
+
   bump(amount: number, reaction: Reaction): void {
+    if (this.hushed()) return;
     this.excitement = clamp(this.excitement + amount, 0, 1);
     if (reaction) this.react(reaction, amount);
   }
 
   private react(r: Exclude<Reaction, null>, amount: number): void {
+    if (this.hushed()) return;
     const now = this.ctx.currentTime;
     if (r === 'cheer' && now - this.lastCheer < 1.6) return;
     if (r === 'groan' && now - this.lastGroan < 4) return;
@@ -608,9 +630,9 @@ export class Crowd {
     g.gain.value = (r === 'applause' ? 0.9 : r === 'groan' ? 0.75 : 0.6) * (0.55 + 0.45 * clamp(amount * 1.5, 0, 1));
     src.connect(g).connect(this.mixer.crowdIn);
     src.start(now + 0.03);
-    this.oneshots.push(src);
+    this.oneshots.push({ src, g });
     src.onended = () => {
-      this.oneshots = this.oneshots.filter((s) => s !== src);
+      this.oneshots = this.oneshots.filter((s) => s.src !== src);
     };
     // Roars ride on top of a cheer.
     if (r === 'cheer' && amount > 0.6) {
@@ -622,6 +644,10 @@ export class Crowd {
         ag.gain.value = 0.35;
         a.connect(ag).connect(this.mixer.crowdIn);
         a.start(now + 0.4);
+        this.oneshots.push({ src: a, g: ag });
+        a.onended = () => {
+          this.oneshots = this.oneshots.filter((s) => s.src !== a);
+        };
       }
     }
   }
@@ -630,11 +656,20 @@ export class Crowd {
     if (!this.ensure()) return;
     const t = this.ctx.currentTime;
     const fighting = world?.match.phase === 'fight';
+    const [m1, m2, r1, r2] = this.loops;
+    if (this.hushed()) {
+      // Stunned: a faint murmur, no roar. Excitement stays at zero and climbs back afterwards.
+      this.excitement = 0;
+      m1.g.gain.setTargetAtTime(0.07, t, 0.35);
+      m2.g.gain.setTargetAtTime(0.05, t, 0.35);
+      r1.g.gain.setTargetAtTime(0, t, 0.2);
+      r2.g.gain.setTargetAtTime(0, t, 0.2);
+      return;
+    }
     const floor = Math.max(this.scripted, fighting ? 0.22 : 0.12);
     // Excitement falls back toward the floor over a few seconds.
     this.excitement = floor + (this.excitement - floor) * Math.exp(-dt / 2.2);
     const e = this.excitement;
-    const [m1, m2, r1, r2] = this.loops;
     m1.g.gain.setTargetAtTime(0.4 + 0.25 * e, t, 0.3);
     m2.g.gain.setTargetAtTime(0.32 + 0.2 * e, t, 0.3);
     const roar = Math.pow(clamp((e - 0.15) / 0.85, 0, 1), 1.3);
