@@ -11,6 +11,7 @@ import { ARENA_HALF, BIG_SCREEN } from '../../data/arena';
 import { GeoBatch } from '../util/geom';
 import { canvas, canvasTexture, hazardPattern } from '../util/tex';
 import { BEAM_FRAG, type Dressing } from './lights';
+import type { Quality } from '../types';
 import type { ArenaMaterials } from './materials';
 import { FRONT_H, SIDES, type Side } from './stands';
 
@@ -18,6 +19,8 @@ export interface ArenaDressing {
   root: THREE.Group;
   sweepUniforms: { uTime: { value: number }; uIntensity: { value: number } };
   set(d: Dressing): void;
+  /** Searchlights are big additive cones: medium and high only. */
+  setQuality(q: Quality): void;
 }
 
 const SWEEP_VERT = /* glsl */ `
@@ -138,7 +141,14 @@ export function buildDressing(mats: ArenaMaterials): ArenaDressing {
     qual.visible = d === 'qualifier';
   };
   set('normal');
-  return { root, sweepUniforms, set };
+  return {
+    root,
+    sweepUniforms,
+    set,
+    setQuality(q) {
+      sweep.visible = q !== 'low';
+    },
+  };
 }
 
 // ------------------------------------------------------------------ geometry helpers
