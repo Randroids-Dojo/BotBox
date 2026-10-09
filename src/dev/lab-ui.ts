@@ -626,8 +626,9 @@ syncDrawer();
 function open(id: string): unknown {
   const it = ITEMS[id];
   if (!it) return log(`no item ${id}`);
-  if (['menu', 'menunew', 'class', 'exhibition', 'garage', 'pits', 'bracket', 'bracketqf', 'bracketdone', 'credits', 'title'].includes(id)) {
-    stopFight();
+  const fresh = (it.group === 'Screens' && !['settings', 'pause', 'loading', 'loadinghold'].includes(id)) || ['fight', 'fightlive', 'rumble', 'ko'].includes(id);
+  if (fresh || ['decision', 'resultwon', 'resultlost', 'ceremony', 'eliminated'].includes(id)) {
+    if (fresh) stopFight();
     ui.debug.reset();
   }
   if (drawerOpen && innerWidth < 1000) {

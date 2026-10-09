@@ -1080,3 +1080,8 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.bx .bk-champ-col .bk-round {
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}

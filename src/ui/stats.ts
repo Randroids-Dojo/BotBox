@@ -142,7 +142,7 @@ export function scoutTip(opp: BotSpec, mine?: Loadout | null): string {
 
 /** One-line hardware rundown for cards. */
 export function hardwareLine(l: Loadout): string {
-  return `${CHASSIS[l.chassis].label}, ${DRIVES[l.drive].label}, ${POWER[l.power].label}, ${ARMOR_GRADE[l.armor.grade].label.toLowerCase()} ${ARMOR[l.armor.material].label}`;
+  return `${CHASSIS[l.chassis].label}, ${DRIVES[l.drive].label}, ${POWER[l.power].label}. ${ARMOR[l.armor.material].label} armor, ${ARMOR_GRADE[l.armor.grade].label.toLowerCase()} plate.`;
 }
 
 export function weaponShort(l: Loadout): string {

@@ -10,9 +10,15 @@ export class TouchControls {
   private opts: { weaponLabel: string; selfRight: boolean } | null = null;
   private forced = false;
   private offDevice: (() => void) | null = null;
+  /** Until a device reports in, trust the pointer type so a phone's first touch drives. */
+  private deviceKnown = false;
+  private readonly coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 
   constructor(private ctx: UiCtx) {
-    this.offDevice = ctx.input.onDevice(() => this.sync());
+    this.offDevice = ctx.input.onDevice(() => {
+      this.deviceKnown = true;
+      this.sync();
+    });
   }
 
   /** Lab hook: show the controls whatever the last device was. */
@@ -29,7 +35,8 @@ export class TouchControls {
   }
 
   private sync(): void {
-    const show = !!this.node && (this.forced || this.ctx.input.lastDevice === 'touch');
+    const touchy = this.deviceKnown ? this.ctx.input.lastDevice === 'touch' : this.coarse || this.ctx.input.lastDevice === 'touch';
+    const show = !!this.node && (this.forced || touchy);
     this.node?.classList.toggle('show', show);
     this.ctx.root.classList.toggle('touch-on', show);
   }
@@ -74,7 +81,7 @@ export class TouchControls {
       if (stickId !== null) return;
       e.preventDefault();
       stickId = e.pointerId;
-      zone.setPointerCapture(e.pointerId);
+      capture(zone, e.pointerId);
       cx = e.clientX;
       cy = e.clientY;
       place(cx, cy);
@@ -105,7 +112,7 @@ export class TouchControls {
         e.stopPropagation();
         if (id !== null) return;
         id = e.pointerId;
-        b.setPointerCapture(e.pointerId);
+        capture(b, e.pointerId);
         b.classList.add('down');
         down(true);
       });
@@ -147,5 +154,13 @@ export class TouchControls {
     this.teardown();
     this.offDevice?.();
     void this.opts;
+  }
+}
+
+function capture(e: HTMLElement, id: number): void {
+  try {
+    e.setPointerCapture(id);
+  } catch {
+    /* synthetic or already released pointers */
   }
 }

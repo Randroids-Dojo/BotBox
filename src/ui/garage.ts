@@ -258,7 +258,11 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       dragId = e.pointerId;
       lx = e.clientX;
       ly = e.clientY;
-      drag.setPointerCapture(e.pointerId);
+      try {
+        drag.setPointerCapture(e.pointerId);
+      } catch {
+        /* ignore */
+      }
     });
     drag.addEventListener('pointermove', (e) => {
       if (e.pointerId !== dragId) return;

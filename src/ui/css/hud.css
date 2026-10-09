@@ -640,7 +640,7 @@
   font-size: 11px;
 }
 .bx .tb-pause {
-  left: calc(50% + var(--hu, 10px) * 11.5);
+  left: calc(50% + var(--hu) * 22);
   top: var(--pad-t);
   width: 46px;
   height: 46px;
