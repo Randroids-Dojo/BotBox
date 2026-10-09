@@ -54,7 +54,7 @@ function horn(ctx: BaseAudioContext, out: AudioNode, t: number, freqs: number[],
     }
 }
 
-export const STINGER_SECONDS: Record<Exclude<Stinger, 'crowd_roar'>, number> = {
+export const STINGER_SECONDS: Record<Exclude<Stinger, 'crowd_roar' | 'heartbreak' | 'cash' | 'rankup' | 'unlock'>, number> = {
   logo: 3.6,
   whoosh: 0.9,
   lights: 1.4,

@@ -81,8 +81,18 @@ export interface Stage {
   controlYaw(): number;
   /** Camera pose for the audio listener. */
   listener(): { pos: Vec3; quat: Quat };
-  /** Garage scene: show this robot on the turntable, with optional damage fractions. */
-  garage(spec: BotSpec, damage?: { facets: Record<Facet, number>; parts: Record<Component, number> }): void;
+  /** Garage scene: show this robot on the turntable, with optional damage fractions.
+   *  `tier` styles the workshop: 0 a rented storage unit (bare bulb, junk, a box of scrap), 1 a
+   *  real garage, 2 a sponsored shop, 3 a pro facility with trophies. `missing` hides parts not
+   *  yet fitted during the first rebuild: 'drive' hides wheels and drive motors, 'power' the
+   *  battery, 'armor' every armor panel (the bare frame shows), 'weapon' the weapon. */
+  garage(
+    spec: BotSpec,
+    damage?: { facets: Record<Facet, number>; parts: Record<Component, number> },
+    opts?: { tier?: 0 | 1 | 2 | 3; missing?: ('drive' | 'power' | 'armor' | 'weapon')[] },
+  ): void;
+  /** Arena dressing: 'championship' adds finals banners, more light and a packed house. */
+  setDressing(d: 'normal' | 'championship' | 'qualifier'): void;
   /** Drag to orbit the garage or trophy view (pixels). */
   orbit(dx: number, dy: number): void;
   /** Trophy scene: the Giant Nut with the winning robot. */

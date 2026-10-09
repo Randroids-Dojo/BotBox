@@ -94,6 +94,8 @@ export function title(ctx: UiCtx): Promise<void> {
 // Main menu
 
 const MENU_SUBS: Record<MainMenuChoice, string> = {
+  career: 'Back to the workshop',
+  quick: 'One-off fights and rumbles',
   continue: '',
   season: 'Three fights for the Nut',
   exhibition: 'One-off fights and rumbles',

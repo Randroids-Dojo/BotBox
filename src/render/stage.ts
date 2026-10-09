@@ -350,9 +350,15 @@ class StageImpl implements Stage, StageExtras {
     return this.cams.listener(this.camera, this.listenerOut);
   }
 
-  garage(spec: BotSpec, damage?: { facets: Record<Facet, number>; parts: Record<Component, number> }): void {
+  garage(
+    spec: BotSpec,
+    damage?: { facets: Record<Facet, number>; parts: Record<Component, number> },
+    _opts?: { tier?: 0 | 1 | 2 | 3; missing?: ('drive' | 'power' | 'armor' | 'weapon')[] },
+  ): void {
     this.garageScene?.setRobot(spec, damage);
   }
+
+  setDressing(_d: 'normal' | 'championship' | 'qualifier'): void {}
 
   orbit(dx: number, dy: number): void {
     if (this.sceneId === 'garage') this.garageScene.orbit(dx, dy);

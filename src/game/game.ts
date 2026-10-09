@@ -186,6 +186,7 @@ export class Game {
       this.stage.setScene('title');
       this.audio.music('menu', 1);
       const choice = await this.ui.mainMenu({
+        career: null,
         season: this.save.season && !this.save.season.done ? describeSeason(this.save.season) : null,
         nuts: this.save.nuts,
         robot: this.save.robot,

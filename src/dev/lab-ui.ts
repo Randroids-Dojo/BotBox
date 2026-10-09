@@ -470,10 +470,10 @@ const ITEMS: Record<string, { group: string; label: string; run: () => unknown }
     label: 'Main menu',
     run: () => {
       stage.setMode('title');
-      return ui.mainMenu({ season: 'Heavyweight semifinal vs Tax Audit', nuts: { heavy: 1, light: 2 }, robot: mine }).then((c) => log(`menu: ${c}`));
+      return ui.mainMenu({ career: 'Juggernaut. Rank #43. $350', season: 'Heavyweight semifinal vs Tax Audit', nuts: { heavy: 1, light: 2 }, robot: mine }).then((c) => log(`menu: ${c}`));
     },
   },
-  menunew: { group: 'Screens', label: 'Main menu (new player)', run: () => (stage.setMode('title'), ui.mainMenu({ season: null, nuts: {}, robot: null }).then((c) => log(`menu: ${c}`))) },
+  menunew: { group: 'Screens', label: 'Main menu (new player)', run: () => (stage.setMode('title'), ui.mainMenu({ career: null, season: null, nuts: {}, robot: null }).then((c) => log(`menu: ${c}`))) },
   class: { group: 'Screens', label: 'Pick class', run: () => (stage.setMode('title'), ui.pickClass('New season').then((c) => log(`class: ${c}`))) },
   exhibition: {
     group: 'Screens',

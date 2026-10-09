@@ -346,4 +346,5 @@ const nut: CueDef = {
   mix: { stab: 0.9, cym: 1.2 },
 };
 
-export const CUES: Record<Exclude<MusicCue, 'none'>, CueDef> = { title, menu, pits, intro, fight, victory, defeat, bumper, nut };
+// prologue, montage and workshop reuse existing cues until they get their own.
+export const CUES: Record<Exclude<MusicCue, 'none'>, CueDef> = { title, menu, pits, intro, fight, victory, defeat, bumper, nut, prologue: title, montage: defeat, workshop: pits };

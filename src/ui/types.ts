@@ -14,6 +14,7 @@ import type {
   JudgeCard,
   Loadout,
   MatchResult,
+  PartKey,
   WeightClass,
   WorldFrame,
 } from '../contract';
@@ -42,9 +43,13 @@ export interface Damage {
   parts: Record<Component, number>;
 }
 
-export type MainMenuChoice = 'continue' | 'season' | 'exhibition' | 'garage' | 'settings' | 'credits';
+/** Main menu for returning players: Career (the workshop), Quick fight, Settings, Credits.
+ *  The older choices remain valid values but the menu no longer offers them. */
+export type MainMenuChoice = 'career' | 'quick' | 'continue' | 'season' | 'exhibition' | 'garage' | 'settings' | 'credits';
 
 export interface SaveSummary {
+  /** The career in progress, for the Career button ("Juggernaut. Rank #43. $350"). */
+  career: string | null;
   /** A season in progress, described for the menu ("Heavyweight semifinal vs Flapjack"). */
   season: string | null;
   /** Giant Nuts won, per class. */
@@ -72,9 +77,37 @@ export interface ExhibitionConfig {
   playerRival: string | null;
 }
 
+/** Garage categories, also used to mark empty slots during the guided first rebuild. */
+export type GarageCategory = 'chassis' | 'drive' | 'power' | 'weapon' | 'armor' | 'extras' | 'paint' | 'name';
+
+/** The career store inside the garage. Every part shows its price; owned parts are free to
+ *  swap; a part the player does not own is bought the moment it is fitted (confirm first);
+ *  parts above the current tier are visible but locked with a reason. */
+export interface CareerShop {
+  funds: number;
+  owned: PartKey[];
+  /** Price for every part key. */
+  prices: Record<PartKey, number>;
+  /** Locked parts and why ("Unlocks at the Regionals"). */
+  locked: Partial<Record<PartKey, string>>;
+  /** Buy a part. Returns the new funds, or null if refused (cannot afford, locked). */
+  buy(key: PartKey): number | null;
+  /** Repairs cost money in a career: dollars per 10 percent restored, from funds. */
+  repairPer10: number;
+  /** Health below this fraction is patched for free (already applied to the damage passed in). */
+  freePatch: number;
+}
+
 export interface GarageContext {
-  /** build: free editing, any class. pits: between season fights, repairs and limited refit. */
-  mode: 'build' | 'pits';
+  /** build: free editing, any class. pits: between season fights, repairs and limited refit.
+   *  career: the workshop garage, with prices, buying and paid repairs (see `career`). */
+  mode: 'build' | 'pits' | 'career';
+  /** Career store (mode 'career'). Pit-style refit costs and repair points do not apply. */
+  career?: CareerShop;
+  /** Guided first rebuild: these slots start empty and must be filled in this order. The UI
+   *  walks the player through them with a coach mark, shows EMPTY on the tabs, and keeps Done
+   *  disabled until all are filled. The preview receives the still-missing slots. */
+  guided?: GarageCategory[];
   loadout: Loadout;
   /** Locked in pits. */
   classLocked: boolean;
@@ -83,13 +116,81 @@ export interface GarageContext {
   /** The next opponent, for the scouting card. */
   opponent?: RivalSummary;
   /** Ask the stage to show this loadout (with damage) on the workshop turntable. */
-  preview(loadout: Loadout, damage?: Damage): void;
+  preview(loadout: Loadout, damage?: Damage, missing?: GarageCategory[]): void;
   orbit(dx: number, dy: number): void;
 }
 
 export interface GarageResult {
   loadout: Loadout;
   damage?: Damage;
+  /** Career: funds left after purchases and repairs, and what was bought. */
+  funds?: number;
+  bought?: PartKey[];
+}
+
+// ---- career screens
+
+export interface WorkshopView {
+  robot: { name: string; spec: BotSpec };
+  funds: number;
+  /** null is unranked. */
+  rank: number | null;
+  record: { w: number; l: number };
+  act: { title: string; subtitle: string; index: number; total: number };
+  /** The next campaign fight, or null when the career is complete. */
+  next: { title: string; opponent: RivalSummary; prize: number; blurb: string } | null;
+  /** Robot has damage worth repairing. */
+  damaged: boolean;
+  /** A repeatable exhibition for cash, once unlocked. */
+  sideGig: { title: string; opponent: RivalSummary; prize: number } | null;
+  /** One-line ticker: news, unlocks, a nudge ("New in the store: NiCad packs"). */
+  news: string | null;
+  /** Workshop level 0..3 (storage unit to pro shop), for styling. */
+  tier: 0 | 1 | 2 | 3;
+}
+
+export type WorkshopChoice = 'fight' | 'build' | 'sidegig' | 'career' | 'menu';
+
+export interface CareerView {
+  acts: {
+    title: string;
+    subtitle: string;
+    fights: { title: string; opponent: string; prize: number; state: 'won' | 'next' | 'locked'; result: string | null }[];
+  }[];
+  /** Top ten plus the player if outside it. */
+  rankings: { rank: number; name: string; you: boolean }[];
+  funds: number;
+  earnings: number;
+  record: { w: number; l: number };
+}
+
+export interface RewardsView {
+  won: boolean;
+  /** Purse paid (0 on a loss). */
+  prize: number;
+  fundsBefore: number;
+  fundsAfter: number;
+  rankBefore: number | null;
+  rankAfter: number | null;
+  /** New parts in the store, by label. */
+  unlocks: string[];
+  /** Set when this win finished an act. */
+  actComplete: { title: string; next: string } | null;
+  /** A short line under the numbers ("Rematch any time. Repairs are waiting in the garage."). */
+  note: string | null;
+}
+
+/** One beat of the prologue montage: TV graphics over the 3D shot the director sets up. */
+export interface MontageCard {
+  /** headline: a newspaper or TV news banner. result: a loss on the scoreboard ticker. rank: the
+   *  rankings slide (from rank to rank, null is unranked). */
+  kind: 'headline' | 'result' | 'rank';
+  title: string;
+  sub?: string;
+  result?: { opponent: string; method: string };
+  rank?: { from: number | null; to: number | null };
+  /** Seconds on screen. */
+  sec: number;
 }
 
 export interface BracketSlot {
@@ -186,4 +287,16 @@ export interface BroadcastUI {
   touchControls(opts: { weaponLabel: string; selfRight: boolean } | null): void;
   /** Little "skip" hint shown during cinematics; resolves when the player skips. */
   skippable(on: boolean): void;
+
+  // ---- career
+  workshop(view: WorkshopView): Promise<WorkshopChoice>;
+  career(view: CareerView): Promise<void>;
+  rewards(view: RewardsView): Promise<void>;
+  /** A montage beat (fire and forget the graphic; resolves after card.sec). */
+  montage(card: MontageCard): Promise<void>;
+  /** Story text on black ("Two seasons later."), resolves after sec. */
+  story(lines: string[], sec: number): Promise<void>;
+  /** A coach prompt for the prologue and first rebuild: short text plus a device-aware key or
+   *  button hint (action names: 'drive', 'weapon', 'selfRight', 'camera'), or null to clear. */
+  coach(text: string | null, action?: 'drive' | 'weapon' | 'selfRight' | 'camera'): void;
 }

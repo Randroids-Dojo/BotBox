@@ -102,6 +102,14 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
     touchControls: (o) => touch?.set(o),
     skippable: (on) => bc?.skippable(on),
 
+    // Career screens: placeholders until the real ones land.
+    workshop: async () => 'fight',
+    career: async () => undefined,
+    rewards: async () => undefined,
+    montage: (card) => new Promise<void>((r) => setTimeout(r, card.sec * 1000)),
+    story: (_lines, sec) => new Promise<void>((r) => setTimeout(r, sec * 1000)),
+    coach: () => undefined,
+
     debug: {
       get ctx() {
         return need();

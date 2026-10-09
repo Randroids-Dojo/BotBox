@@ -12,6 +12,9 @@ export type MusicCue =
   | 'defeat' // player lost
   | 'bumper' // short commercial-break sting then silence
   | 'nut' // Giant Nut ceremony: full theme, triumphant
+  | 'prologue' // the last seconds of a championship final: urgent, huge, the theme at full tilt
+  | 'montage' // the fall: slow, sad, the theme in a minor key, sparse
+  | 'workshop' // a lonely storage unit at night: a radio playing low, tools, hope
   | 'none';
 
 export type Stinger =
@@ -24,7 +27,11 @@ export type Stinger =
   | 'decision' // judges' card reveal
   | 'replay' // "Bot Replay" wipe
   | 'stamp' // result stamp
-  | 'crowd_roar'; // one-off big crowd reaction
+  | 'crowd_roar' // one-off big crowd reaction
+  | 'heartbreak' // the champion goes down: low boom, crowd gasp, then silence
+  | 'cash' // prize money counting up
+  | 'rankup' // climbing the rankings
+  | 'unlock'; // new parts in the store
 
 export type UiSound = 'move' | 'select' | 'back' | 'error' | 'buy' | 'repair' | 'tick' | 'type';
 

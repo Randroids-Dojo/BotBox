@@ -24,6 +24,15 @@ export type ArmorMaterialId = 'aluminum' | 'titanium' | 'uhmw' | 'polycarb' | 's
 export type ArmorGrade = 1 | 2 | 3;
 export type ExtraId = 'wedgeplate' | 'skirts' | 'srimech' | 'wheelguards' | 'spikes';
 
+/** A purchasable part in the career store, as category:id. */
+export type PartKey =
+  | `chassis:${ChassisId}`
+  | `drive:${DriveId}`
+  | `power:${PowerId}`
+  | `weapon:${WeaponId}`
+  | `armor:${ArmorMaterialId}`
+  | `extra:${ExtraId}`;
+
 export type Facet = 'front' | 'rear' | 'left' | 'right' | 'top' | 'belly';
 export const FACETS: readonly Facet[] = ['front', 'rear', 'left', 'right', 'top', 'belly'];
 export type Component = 'driveL' | 'driveR' | 'weapon' | 'battery' | 'electronics';
