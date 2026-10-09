@@ -8,12 +8,12 @@ import type { BroadcastUI, Settings, Speaker } from '../ui/types';
 type Category =
   | 'start' | 'hit' | 'huge' | 'flip' | 'airborne' | 'saw' | 'pulverizer' | 'ramrod' | 'spikes' | 'wall' | 'panel'
   | 'wheel' | 'fire' | 'smoke' | 'weapondown' | 'drivedown' | 'count' | 'ko' | 'righted' | 'pin' | 'spinup' | 'whiff'
-  | 'chase' | 'timelow' | 'decision' | 'upset' | 'idle' | 'intro' | 'rookie';
+  | 'chase' | 'timelow' | 'decision' | 'upset' | 'idle' | 'intro' | 'rookie' | 'comeback';
 
 const PRIORITY: Record<Category, number> = {
   huge: 9, ko: 9, flip: 8, fire: 8, saw: 7, pulverizer: 7, panel: 7, wheel: 7, start: 6, airborne: 6, count: 6,
   weapondown: 6, drivedown: 6, timelow: 6, decision: 6, righted: 5, pin: 5, upset: 5, hit: 4, wall: 4, spikes: 4,
-  ramrod: 4, smoke: 4, spinup: 3, whiff: 3, chase: 3, intro: 2, rookie: 2, idle: 1,
+  ramrod: 4, smoke: 4, spinup: 3, whiff: 3, chase: 3, intro: 2, rookie: 2, idle: 1, comeback: 10,
 };
 
 interface Pending {
@@ -33,7 +33,10 @@ export class Commentary {
   private pendingWhiff = new Map<string, number>();
   private busyUntil = 0;
   private counting = false;
+  private lastComeback = -99;
   enabled = true;
+  /** Career: the fallen champion's id. Its big hits get "the old champ still has it" lines. */
+  comeback: string | null = null;
 
   constructor(
     private audio: AudioEngine,
@@ -74,7 +77,10 @@ export class Commentary {
           else if (e.kind === 'pulverizer') this.queue('pulverizer');
           else if (e.kind === 'ramrod') this.queue('ramrod');
           else if (e.kind === 'spikestrip') this.queue('spikes');
-          else if (e.severity >= 0.72) this.queue('huge');
+          else if (this.comeback && e.attacker === this.comeback && e.severity >= 0.6 && this.now - this.lastComeback > 25) {
+            this.lastComeback = this.now;
+            this.queue('comeback');
+          } else if (e.severity >= 0.72) this.queue('huge');
           else if (e.kind === 'wall' && e.severity > 0.3) this.queue('wall');
           else if (e.severity >= 0.35 && e.kind !== 'floor') this.queue('hit');
           break;

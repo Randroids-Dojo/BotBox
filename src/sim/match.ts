@@ -15,8 +15,9 @@ import type {
   WorldFrame,
 } from '../contract';
 import { ARENA_HALF, LEXAN_TOP, SPIKESTRIPS, START_SQUARES, WALL_T } from '../data/arena';
-import { rivalById, type AiStyle } from '../data/roster';
-import { BotAi } from './ai';
+import { careerRivalById } from '../data/campaign';
+import type { AiStyle } from '../data/roster';
+import { BotAi, type AiScript } from './ai';
 import { BotSim, type SimHost } from './bot';
 import { Hazards } from './hazards';
 import { judge } from './judges';
@@ -47,6 +48,8 @@ export interface MatchOptions {
   seed: number;
   /** AI styles by entrant id (defaults from the roster or 'aggressive'). */
   styles?: Record<string, AiStyle>;
+  /** Start positions by entrant id (scripted scenes); otherwise each corner's square. */
+  positions?: Record<string, { x: number; z: number; yaw: number }>;
 }
 
 export class Match implements SimHost {
@@ -90,12 +93,14 @@ export class Match implements SimHost {
     this.buildArena();
     for (const e of opts.entrants) {
       const sq = START_SQUARES.find((s) => s.corner === e.corner) ?? START_SQUARES[0];
-      const bot = new BotSim(this, e.id, e.spec, e.corner, e.control, { pos: sq.center, yaw: sq.yaw }, e.carried);
+      const at = opts.positions?.[e.id];
+      const start = at ? { pos: { x: at.x, y: 0, z: at.z }, yaw: at.yaw } : { pos: sq.center, yaw: sq.yaw };
+      const bot = new BotSim(this, e.id, e.spec, e.corner, e.control, start, e.carried);
       this.bots.push(bot);
       this.bodyBot.set(bot.body.handle, bot);
       this.stats[e.id] = bot.stats;
       if (e.control === 'ai') {
-        const style = opts.styles?.[e.id] ?? rivalById(e.id)?.style ?? 'aggressive';
+        const style = opts.styles?.[e.id] ?? careerRivalById(e.id)?.style ?? 'aggressive';
         this.ai.set(e.id, new BotAi(bot, style, e.skill, new Rng(opts.seed * 31 + this.bots.length)));
       }
     }
@@ -196,6 +201,68 @@ export class Match implements SimHost {
   setCommand(id: string, cmd: DriveCommand): void {
     const b = this.bots.find((x) => x.id === id);
     if (b && b.control === 'player') b.cmd = cmd;
+  }
+
+  /** Script an AI driver for a cinematic (see AiScript), or null to hand it back to the AI. */
+  setAiScript(id: string, script: AiScript | null): void {
+    const ai = this.ai.get(id);
+    if (ai) ai.script = script;
+  }
+
+  /**
+   * A scripted, catastrophic hit for cinematics: the victim is thrown (launched high, flipped
+   * over, or slammed sideways), loses armor and parts, and catches fire. Uses the same damage
+   * and impulse paths as a real hit, so every effect, sound and camera beat follows.
+   */
+  finisher(attackerId: string, victimId: string, style: 'launch' | 'flip' | 'slam', opts: { fire?: boolean; kill?: boolean } = {}): void {
+    const a = this.bot(attackerId);
+    const v = this.bot(victimId);
+    if (!a || !v) return;
+    const m = v.spec.massKg;
+    const ap = a.pos;
+    const vp = v.pos;
+    let dir = norm(vec(vp.x - ap.x, 0, vp.z - ap.z));
+    if (len(dir) < 0.5) dir = vec(1, 0, 0);
+    const point = vec(vp.x - dir.x * v.half.z * 0.8, vp.y + v.half.y * 0.6, vp.z - dir.z * v.half.z * 0.8);
+    const side = vec(-dir.z, 0, dir.x);
+    if (style === 'launch') {
+      v.body.applyImpulseAtPoint(vec(dir.x * m * 3.2, m * 8.8, dir.z * m * 3.2), point, true);
+      v.body.applyTorqueImpulse(scale(side, m * 1.6), true);
+    } else if (style === 'flip') {
+      v.body.applyImpulseAtPoint(vec(dir.x * m * 1.6, m * 6.2, dir.z * m * 1.6), point, true);
+      v.body.applyTorqueImpulse(scale(side, m * 1.1), true);
+    } else {
+      v.body.applyImpulseAtPoint(vec(dir.x * m * 8.5, m * 1.6, dir.z * m * 8.5), point, true);
+      v.body.applyTorqueImpulse(vec(0, m * 0.8, 0), true);
+    }
+    const energy = 30000 * v.mScale;
+    const facing = v.facetAt(point);
+    v.damage({ amount: v.spec.facetHp[facing] * 3, facet: facing, kind: style === 'flip' ? 'flip' : 'spinner', attacker: a, point, dir, energy, threat: 'spinner', severity: 1 });
+    v.damage({ amount: v.spec.facetHp.top * 2, facet: 'top', kind: 'spinner', attacker: a, point: vec(vp.x, vp.y + v.half.y * 2, vp.z), dir, energy: energy * 0.4, threat: 'spinner', severity: 0.6 });
+    const flank: Facet = this.rng.chance(0.5) ? 'left' : 'right';
+    v.damage({ amount: v.spec.facetHp[flank] * 2, facet: flank, kind: 'spinner', attacker: a, point, dir, energy: energy * 0.3, threat: 'spinner', severity: 0.5 });
+    if (opts.kill) {
+      v.damagePart('weapon', 1e6, a);
+      v.damagePart('electronics', 1e6, a);
+    }
+    if (opts.fire && v.fire <= 0) {
+      v.fire = 1;
+      v.fireTimer = 30;
+      this.emit({ type: 'fire_start', t: this.t, bot: v.id });
+    }
+    v.lastTouchBy = a;
+    v.lastTouchT = this.t;
+  }
+
+  /** End the fight now: this robot is counted out. */
+  forceKo(id: string): void {
+    const b = this.bot(id);
+    if (!b || this.phase === 'over') return;
+    b.koCount = null;
+    b.disabled = false;
+    b.disable('ko');
+    this.emit({ type: 'ko', t: this.t, bot: b.id });
+    this.checkEnd();
   }
 
   tapOut(id: string): void {

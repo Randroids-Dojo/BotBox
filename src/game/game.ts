@@ -11,10 +11,13 @@ import type { Stage } from '../render/types';
 import type { Rapier } from '../sim/rapier';
 import { buildSpec } from '../sim/spec';
 import type { BroadcastUI, Damage, RivalSummary, Speaker } from '../ui/types';
+import { careerSummary, newCareer } from './career';
 import { runFight, nameLines, type RoundId } from './fight';
+import { prologue } from './prologue';
 import { load, store, type SaveData } from './save';
 import { PLAYER, ROUND_IDS, bracketView, describeSeason, newSeason, nextFight, record, resultText, simulateRound } from './season';
 import { starterLoadout, toClass } from './starter';
+import { careerHub, jumpTo } from './workshop';
 
 type Tick = (dt: number) => void;
 
@@ -182,17 +185,27 @@ export class Game {
     this.audio.music('title', 0.5);
     await this.ui.title();
     this.audio.stinger('logo');
+    const jump = params.get('career');
+    if (jump !== null) {
+      this.save.career ??= newCareer();
+      jumpTo(this.save.career, Number(jump) || 0);
+      this.persist();
+    }
+    // First launch: straight into the last seconds of a championship final.
+    if (!this.save.career?.prologueDone) await this.guarded(() => this.career());
     for (;;) {
       this.stage.setScene('title');
       this.audio.music('menu', 1);
       const choice = await this.ui.mainMenu({
-        career: null,
+        career: careerSummary(this.save.career),
         season: this.save.season && !this.save.season.done ? describeSeason(this.save.season) : null,
         nuts: this.save.nuts,
         robot: this.save.robot,
       });
-      try {
-        if (choice === 'continue') await this.season(true);
+      await this.guarded(async () => {
+        if (choice === 'career') await this.career();
+        else if (choice === 'quick') await this.exhibition();
+        else if (choice === 'continue') await this.season(true);
         else if (choice === 'season') await this.season(false);
         else if (choice === 'exhibition') await this.exhibition();
         else if (choice === 'garage') await this.garage();
@@ -201,16 +214,33 @@ export class Game {
           this.applySettings();
           this.persist();
         } else if (choice === 'credits') await this.ui.credits();
-      } catch (err) {
-        console.error(err);
-      }
-      this.setTick(null);
-      this.ui.hud(null);
-      this.ui.touchControls(null);
-      this.ui.caption(null);
-      this.ui.lowerThird(null);
-      this.ui.bug(false);
+      });
     }
+  }
+
+  /** Run a mode; whatever happens, come back to a clean menu. */
+  private async guarded(f: () => Promise<void>): Promise<void> {
+    try {
+      await f();
+    } catch (err) {
+      console.error(err);
+    }
+    this.setTick(null);
+    this.ui.hud(null);
+    this.ui.touchControls(null);
+    this.ui.caption(null);
+    this.ui.coach(null);
+    this.ui.lowerThird(null);
+    this.ui.bug(false);
+    this.audio.setWorldActive(false);
+    this.stage.setDressing('normal');
+    this.onCalm(true);
+  }
+
+  /** The comeback career: the prologue the first time, then the workshop. */
+  private async career(): Promise<void> {
+    if (!this.save.career?.prologueDone) await prologue(this);
+    await careerHub(this);
   }
 
   private rivalSummary(id: string): RivalSummary {

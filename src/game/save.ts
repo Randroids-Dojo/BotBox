@@ -1,7 +1,8 @@
-// Settings and the season in progress, kept in localStorage.
+// Settings, the career and the season in progress, kept in localStorage.
 
 import type { Component, Facet, Loadout, WeightClass } from '../contract';
 import type { Settings } from '../ui/types';
+import type { CareerSave } from './career';
 
 const KEY = 'botbox:v1';
 
@@ -28,6 +29,8 @@ export interface SaveData {
   settings: Settings;
   robot: Loadout | null;
   season: SeasonSave | null;
+  /** The comeback career. null until the first launch starts it. */
+  career: CareerSave | null;
   nuts: Partial<Record<WeightClass, number>>;
   fights: number;
 }
@@ -48,7 +51,7 @@ export function defaultSettings(): Settings {
 }
 
 export function load(): SaveData {
-  const fresh: SaveData = { settings: defaultSettings(), robot: null, season: null, nuts: {}, fights: 0 };
+  const fresh: SaveData = { settings: defaultSettings(), robot: null, season: null, career: null, nuts: {}, fights: 0 };
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return fresh;
@@ -57,6 +60,7 @@ export function load(): SaveData {
       settings: { ...fresh.settings, ...(d.settings ?? {}), volumes: { ...fresh.settings.volumes, ...(d.settings?.volumes ?? {}) } },
       robot: d.robot ?? null,
       season: d.season ?? null,
+      career: d.career ?? null,
       nuts: d.nuts ?? {},
       fights: d.fights ?? 0,
     };

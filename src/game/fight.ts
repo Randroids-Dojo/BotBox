@@ -2,8 +2,9 @@
 // beats, the result, Bot Replay, the judges, the interview.
 
 import type { BotCard, Corner, Entrant, MatchEvent, MatchResult, WorldFrame } from '../contract';
+import { careerRivalById, type Presentation } from '../data/campaign';
 import { CLASS_LABEL, WEAPONS } from '../data/parts';
-import { VOICED_NAMES, rivalById } from '../data/roster';
+import { VOICED_NAMES } from '../data/roster';
 import { Match } from '../sim/match';
 import { yawOf } from '../sim/math';
 import { Commentary } from './commentary';
@@ -29,6 +30,17 @@ export interface FightSetup {
   /** Season stakes for the interview copy. */
   final?: boolean;
   championIfWon?: boolean;
+  /** How much show there is. minimal: a garage league with no cameras (no booth, replay or
+   *  interview). regional: the regional broadcast. broadcast (default): the full show. */
+  presentation?: Presentation;
+  /** Slate override, for career event names. */
+  slate?: { title: string; sub: string };
+  /** Career: the player's robot is the fallen champion (comeback intros and booth lines). */
+  comeback?: boolean;
+  /** Vic lines before the intros (act openers, the rematch). */
+  openLines?: string[];
+  /** Crowd ceiling 0..1 (a folding-chair crowd is not a sold-out arena). */
+  crowd?: number;
 }
 
 export interface FightOutcome {
@@ -48,6 +60,10 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   const booth = new Commentary(audio, ui, () => g.save.settings);
   const player = setup.playerId ? match.bot(setup.playerId) ?? null : null;
   const cls = setup.entrants[0].spec.loadout.cls;
+  const show = setup.presentation ?? 'broadcast';
+  const minimal = show === 'minimal';
+  const crowdMax = setup.crowd ?? 1;
+  booth.comeback = setup.comeback && setup.playerId ? setup.playerId : null;
 
   g.onCalm(false);
   stage.setScene('arena');
@@ -104,7 +120,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     ui.hudFrame(world);
   });
 
-  const crowdFor = (sev: number) => g.crowd(Math.min(1, 0.45 + sev * 0.6));
+  const crowd = (level: number) => g.crowd(Math.min(crowdMax, level));
+  const crowdFor = (sev: number) => crowd(0.45 + sev * 0.6);
 
   function onEvent(e: MatchEvent): void {
     switch (e.type) {
@@ -190,21 +207,28 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   // ---------------------------------------------------------------- intro
   g.skipped = false;
   g.skipAll = false;
-  ui.bug(true);
+  ui.bug(!minimal);
   audio.music('intro', 1.5);
-  g.crowd(0.55);
+  crowd(0.55);
   g.setSkippable(true);
-  const roundLabel = ROUND_LABEL[setup.round];
-  stage.shot({ kind: 'flyover', duration: 6 });
-  void g.say([`vic.round.${setup.round}`, `vic.class.${cls}`]);
-  await g.wait(ui.slate(roundLabel.toUpperCase(), `${CLASS_LABEL[cls]} division`, 2.6));
-  if (!g.skipped) {
-    booth.speak('intro');
-    await g.wait(2.8);
+  const slate = setup.slate ?? { title: ROUND_LABEL[setup.round].toUpperCase(), sub: `${CLASS_LABEL[cls]} division` };
+  stage.shot({ kind: 'flyover', duration: minimal ? 4 : 6 });
+  if (minimal) {
+    await g.wait(ui.slate(slate.title, slate.sub, 2.2));
+  } else {
+    if (setup.openLines?.length) await g.say(setup.openLines, 12);
+    if (!g.skipAll) {
+      void g.say(setup.slate ? [`vic.class.${cls}`] : [`vic.round.${setup.round}`, `vic.class.${cls}`]);
+      await g.wait(ui.slate(slate.title, slate.sub, 2.6));
+    }
+    if (!g.skipped && !g.skipAll) {
+      booth.speak('intro');
+      await g.wait(2.8);
+    }
   }
   for (const e of setup.entrants) {
     if (g.skipAll) break;
-    stage.shot({ kind: 'bot_intro', bot: e.id, duration: 7 });
+    stage.shot({ kind: 'bot_intro', bot: e.id, duration: minimal ? 3.2 : 7 });
     ui.lowerThird({
       corner: e.corner,
       card: e.card,
@@ -212,14 +236,15 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
       weaponShort: WEAPONS[e.spec.loadout.weapon].short,
       classLabel: CLASS_LABEL[cls],
     });
-    await g.say([CORNER_LINE[e.corner], ...introLines(e)], 14);
+    if (minimal) await g.wait(2.6);
+    else await g.say([CORNER_LINE[e.corner], ...introLines(e)], 14);
     ui.lowerThird(null);
     await g.wait(0.35);
   }
   g.setSkippable(false);
   g.skipAll = false;
   stage.shot({ kind: 'faceoff', duration: 3 });
-  void g.say(['vic.ready']);
+  if (!minimal) void g.say(['vic.ready']);
   await g.wait(1.6, false);
   stage.shot({ kind: 'lights', duration: 4 });
   ui.hud(setup.entrants.map((e) => ({ id: e.id, name: e.card.name, corner: e.corner, spec: e.spec, player: e.id === setup.playerId })));
@@ -230,17 +255,19 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     const secs = input.lastDevice === 'touch' ? 5 : g.save.fights < 4 ? 7 : 4.5;
     showControls(document.getElementById('ui')!, player.spec, input.lastDevice, secs);
   }
-  g.crowd(0.75);
+  crowd(0.75);
   // Wait for green.
   while (match.phase === 'countdown') await g.frame();
-  void g.say([g.pickId('vic.go.')]);
+  if (!minimal) void g.say([g.pickId('vic.go.')]);
   ui.banner('fight');
   stage.shot({ kind: 'live' });
   audio.music('fight', 1);
   // Hand the crowd back to the action.
-  g.crowd(0.6);
+  crowd(0.6);
   audio.crowd(0);
   booth.reset();
+  // No cameras, no booth at the garage league.
+  booth.enabled = !minimal;
   if (player) ui.touchControls(touchOpts());
 
   // ---------------------------------------------------------------- fight
@@ -263,29 +290,32 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   booth.enabled = false;
   audio.stopVoice();
   ui.caption(null);
+  const call = (ids: string[]) => {
+    if (!minimal) void g.say(ids);
+  };
   if (result.method === 'decision') {
     audio.stinger('time');
     ui.banner('time');
-    void g.say(['vic.time']);
+    call(['vic.time']);
   } else if (result.method === 'tapout') {
     audio.stinger('ko');
     ui.banner('tapout');
-    void g.say(['vic.tapout']);
+    call(['vic.tapout']);
   } else {
     audio.stinger('ko');
     ui.banner('ko');
-    void g.say([g.pickId('vic.ko.')]);
+    call([g.pickId('vic.ko.')]);
     const loser = setup.entrants.find((e) => e.id !== result.winner);
     if (loser) stage.shot({ kind: 'loser', bot: loser.id, duration: 3 });
   }
-  g.crowd(1);
+  crowd(1);
   await g.wait(3.2, false);
   simRunning = false;
   ui.hud(null);
   audio.music('none', 1);
 
   // ---------------------------------------------------------------- bot replay
-  const moments = rec.best(3);
+  const moments = rec.best(show === 'broadcast' ? 3 : show === 'regional' ? 1 : 0);
   if (moments.length) {
     g.setSkippable(true);
     audio.stinger('replay');
@@ -331,7 +361,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   if (result.method === 'decision' && result.judges && result.totals && setup.entrants.length === 2) {
     stage.shot({ kind: 'booth', duration: 8 });
     audio.music('intro', 1);
-    await g.say(['vic.decision']);
+    if (!minimal) await g.say(['vic.decision']);
     const decision = ui.decision({
       judges: result.judges,
       totals: result.totals,
@@ -341,9 +371,9 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     audio.stinger('decision');
     const w = result.totals[result.winner!];
     const l = Object.entries(result.totals).find(([id]) => id !== result.winner)?.[1] ?? 0;
-    await g.say(['vic.byscore', `vic.num.${w}`, 'vic.to', `vic.num.${l}`, g.pickId('vic.winner.'), ...nameLines(winnerEntrant)]);
+    if (!minimal) await g.say(['vic.byscore', `vic.num.${w}`, 'vic.to', `vic.num.${l}`, g.pickId('vic.winner.'), ...nameLines(winnerEntrant)]);
     await decision;
-  } else if (winnerEntrant) {
+  } else if (winnerEntrant && !minimal) {
     await g.say([g.pickId('vic.winner.'), ...nameLines(winnerEntrant)]);
   }
 
@@ -353,14 +383,15 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     ui.banner('winner', winnerEntrant.card.name);
   }
   audio.music(setup.playerId ? (playerWon ? 'victory' : 'defeat') : 'victory', 0.5);
-  g.crowd(playerWon || !setup.playerId ? 1 : 0.6);
+  crowd(playerWon || !setup.playerId ? 1 : 0.6);
   await g.wait(3.5);
 
   // ---------------------------------------------------------------- interview
-  if (setup.playerId) {
+  if (setup.playerId && !minimal) {
     const me = setup.entrants.find((e) => e.id === setup.playerId)!;
     const them = setup.entrants.find((e) => e.id !== setup.playerId)!;
-    void g.say([g.pickId(playerWon ? (setup.championIfWon ? 'jenna.champ.' : 'jenna.win.') : 'jenna.lose.')]);
+    const opener = playerWon ? (setup.championIfWon ? 'jenna.champ.' : setup.comeback && Math.random() < 0.6 ? 'jenna.comeback.' : 'jenna.win.') : 'jenna.lose.';
+    void g.say([g.pickId(opener)]);
     await ui.interview(
       interview({
         won: playerWon,
@@ -386,15 +417,16 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   return { result, playerWon, carried, quit: false };
 
   function introLines(e: Entrant): string[] {
-    if (e.control === 'ai' || rivalById(e.id)) return [`vic.bot.${e.card.voiceId ?? e.id}`];
-    return [g.pickId('vic.player.intro.'), ...nameLines(e)];
+    if (e.control === 'ai' || careerRivalById(e.id)) return [`vic.bot.${e.card.voiceId ?? e.id}`];
+    const comeback = setup.comeback && g.audio.voiceIds().some((id) => id.startsWith('vic.player.comeback.'));
+    return [g.pickId(comeback ? 'vic.player.comeback.' : 'vic.player.intro.'), ...nameLines(e)];
   }
 }
 
 /** Announcer lines for a robot's name. */
 export function nameLines(e: { card: BotCard; id: string } | null): string[] {
   if (!e) return [];
-  if (rivalById(e.id)) return [`vic.name.${e.card.voiceId ?? e.id}`];
+  if (careerRivalById(e.id)) return [`vic.name.${e.card.voiceId ?? e.id}`];
   const voiced = VOICED_NAMES.find((n) => n.name.toLowerCase() === e.card.name.trim().toLowerCase());
   return [voiced ? `vic.player.${voiced.slug}` : 'vic.player.rookie'];
 }

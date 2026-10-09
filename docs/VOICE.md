@@ -105,7 +105,7 @@ The player's robot is JUGGERNAUT (the name call `vic.player.juggernaut` already 
 | --- | --- | --- | --- |
 | `vic.bot.<id>`, `vic.name.<id>` | 1 each | Vic | Intros and name calls for the new robots in `src/data/campaign.ts`: doorstop, trash-panda, lawn-dart, buzz-off, chop-suey, terminal-velocity. Terminal Velocity's intro should feel like the arrival of the villain. |
 | `vic.pro.open` | 1 | Vic | Prologue open, over a packed house: forty-five seconds left in the championship final, the champion is rolling. |
-| `vic.pro.ko.N` | 2 | Vic | The champion goes down: "It's over!" and "A new champion... TERMINAL VELOCITY!" |
+| `vic.pro.ko.1`, `vic.pro.ko.2` | 1 each | Vic | Played in order, not picked at random. `.1` the champion goes down: "It's over!" `.2` "A new champion... TERMINAL VELOCITY!" |
 | `vic.player.comeback.N` | 3 | Vic | Intro bodies for the rebuilt Juggernaut, leading into its name: a fallen champion clawing back from the scrap heap. |
 | `vic.act.regionals`, `vic.act.show`, `vic.act.championship` | 1 each | Vic | Act openers: the regional broadcast, prime time on BotBox, the championship. |
 | `vic.final.open` | 1 | Vic | The rematch: the robot that fell against the robot that broke it. |
@@ -113,7 +113,7 @@ The player's robot is JUGGERNAUT (the name call `vic.player.juggernaut` already 
 | `dale.pro.taste.N`, `chuck.pro.taste.N` | 3 each | Dale, Chuck | Prologue, while the champion dominates: seconds from a third straight Giant Nut. |
 | `dale.pro.turn.N`, `chuck.pro.turn.N` | 2 each | Dale, Chuck | Prologue: something is wrong, Terminal Velocity's bar is screaming up to speed. |
 | `dale.pro.down.N`, `chuck.pro.down.N` | 2 each | Dale, Chuck | Prologue: the champion is launched and goes down. Shock. |
-| `jenna.fall.N` | 4 | Jenna | Montage, TV news style: crashes out in the first round; sponsors pull out; falls out of the rankings; the team sells the disk. |
+| `jenna.fall.N` | 4 | Jenna | Montage, TV news style, played in order: 1 crashes out in the first round; 2 sponsors pull out; 3 falls out of the rankings; 4 the team sells the disk. |
 | `dale.fall.N`, `chuck.fall.N` | 3 each | Dale, Chuck | Montage: wry and sad reactions to Juggernaut losing again and again. |
 | `dale.comeback.N`, `chuck.comeback.N` | 4 each | Dale, Chuck | During Regionals and later fights when Juggernaut lands something big: the old champ still has it. |
 | `jenna.comeback.N` | 3 | Jenna | Post-win interview openers during the climb. |

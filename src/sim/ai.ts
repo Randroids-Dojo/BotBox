@@ -17,6 +17,8 @@ const HAZARD_SPOTS: { pos: Vec3; r: number; kind: 'pulv' | 'saw' | 'ram' }[] = [
   ...RAMRODS.map((r) => ({ pos: r.center, r: Math.max(r.hx, r.hz) + 0.2, kind: 'ram' as const })),
 ];
 
+export type AiScript = 'passive' | 'windup' | 'charge';
+
 export class BotAi {
   mode: Mode = 'spinup';
   private think = 0;
@@ -41,10 +43,15 @@ export class BotAi {
     this.circleDir = rng.chance(0.5) ? 1 : -1;
   }
 
+  /** Cinematic override: 'passive' keeps its distance with the weapon off, 'windup' keeps its
+   *  distance while the weapon comes up to speed, 'charge' goes straight for the target. */
+  script: AiScript | null = null;
+
   update(dt: number, bots: BotSim[]): DriveCommand {
     const me = this.me;
     const cmd: DriveCommand = { throttle: 0, turn: 0, weapon: false, weaponPressed: false, selfRight: false };
     if (me.disabled) return cmd;
+    if (this.script) return this.scripted(dt, bots, cmd);
 
     // Upside down and not invertible: right yourself.
     if (me.helpless) {
@@ -216,6 +223,34 @@ export class BotAi {
       }
     }
     return this.finish(cmd, me);
+  }
+
+  private scripted(dt: number, bots: BotSim[], cmd: DriveCommand): DriveCommand {
+    const me = this.me;
+    const foe = bots.find((b) => b !== me && !b.disabled);
+    const pos = me.pos;
+    const yaw = yawOf(me.quat);
+    const wantArmed = this.script !== 'passive' && me.parts.weapon > 0;
+    if (me.spinnerSpec && me.armed !== wantArmed) cmd.weaponPressed = true;
+    if (!foe) return cmd;
+    const fp = foe.pos;
+    if (this.script === 'charge') {
+      this.steer(cmd, pos, yaw, vec(fp.x, 0, fp.z), 1, false);
+      return cmd;
+    }
+    // Passive: a slow, wide orbit around the middle, never closing in. Easy to catch.
+    this.modeTime += dt;
+    const a = this.modeTime * 0.32;
+    const goal = vec(Math.cos(a) * 2.6, 0, Math.sin(a) * 2.6);
+    const away = Math.hypot(pos.x - fp.x, pos.z - fp.z);
+    if (away < 1.6) {
+      const dx = pos.x - fp.x;
+      const dz = pos.z - fp.z;
+      goal.x = pos.x + dx;
+      goal.z = pos.z + dz;
+    }
+    this.steer(cmd, pos, yaw, goal, 0.42, true);
+    return cmd;
   }
 
   private finish(cmd: DriveCommand, me: BotSim): DriveCommand {
