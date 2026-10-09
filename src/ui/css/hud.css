@@ -1,0 +1,665 @@
+/* Fight HUD and touch controls. Corners and the top edge only; the middle stays clear. */
+
+.bx .hud {
+  --hu: clamp(8.5px, min(1vw, 2.3vh), 17px);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-size: var(--hu);
+}
+.bx .hud-col {
+  position: absolute;
+  top: var(--pad-t);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--hu) * 0.6);
+}
+.bx .hud-col.left {
+  left: var(--pad-l);
+}
+.bx .hud-col.right {
+  right: var(--pad-r);
+  align-items: flex-end;
+}
+
+/* ---- scoreboard */
+.bx .scoreboard {
+  position: absolute;
+  left: 50%;
+  top: var(--pad-t);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: bx-slam-down 0.4s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+.bx .sb-face {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--hu) * 0.8);
+  padding: calc(var(--hu) * 0.15) calc(var(--hu) * 1.6);
+  background: var(--metal);
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--hu) * 1.1) 100%, calc(var(--hu) * 1.1) 100%);
+  box-shadow: inset 0 -3px 0 var(--orange);
+}
+.bx .sb-face::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--chrome-h);
+}
+.bx .sb-logo {
+  font-size: calc(var(--hu) * 0.8);
+  color: var(--dim);
+}
+.bx .sb-clock {
+  font-size: calc(var(--hu) * 3.3);
+  line-height: 1.05;
+  min-width: 2.6em;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 0.3em rgba(255, 255, 255, 0.35);
+}
+.bx .scoreboard.late .sb-clock {
+  color: #ff4a3d;
+  animation: bx-blink 1s steps(1) infinite;
+}
+.bx .sb-phase {
+  font-size: calc(var(--hu) * 0.75);
+  min-width: 3.4em;
+  color: var(--orange);
+}
+.bx .scoreboard[data-phase='fight'] .sb-phase::before {
+  content: '';
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 0.35em;
+  border-radius: 50%;
+  background: var(--red);
+  animation: bx-blink 1s steps(1) infinite;
+}
+.bx .sb-slow {
+  margin-top: 0.3em;
+  font-size: calc(var(--hu) * 0.8);
+  padding: 0.1em 0.8em;
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.bx .sb-slow.on {
+  opacity: 1;
+}
+
+/* light tree */
+.bx .lighttree {
+  display: flex;
+  gap: calc(var(--hu) * 0.5);
+  margin-top: calc(var(--hu) * 0.5);
+  padding: calc(var(--hu) * 0.45) calc(var(--hu) * 0.7);
+  background: #0b0d10;
+  box-shadow: 0 0 0 2px #2b3038, 0 0 0 3px #000;
+  border-radius: calc(var(--hu) * 0.4);
+  opacity: 0;
+  transform: translateY(-0.6em) scale(0.9);
+  transition:
+    opacity 0.2s,
+    transform 0.25s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.bx .lighttree.show {
+  opacity: 1;
+  transform: none;
+}
+.bx .lt {
+  width: calc(var(--hu) * 2.5);
+  height: calc(var(--hu) * 2.5);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #3a2020, #1a0a0a 70%);
+  box-shadow: inset 0 0 0 2px #000;
+}
+.bx .lt.green {
+  background: radial-gradient(circle at 40% 35%, #1d3a24, #08140b 70%);
+}
+.bx .lt.red.on {
+  background: radial-gradient(circle at 40% 35%, #fff 0 8%, #ff6b5e 25%, #ff1a1a 60%, #8a0000);
+  box-shadow:
+    0 0 1.2em #ff1a1a,
+    0 0 2.6em rgba(255, 26, 26, 0.6);
+}
+.bx .lt.green.on {
+  background: radial-gradient(circle at 40% 35%, #fff 0 8%, #8cff9e 25%, #22e05a 60%, #087a2a);
+  box-shadow:
+    0 0 1.2em #22e05a,
+    0 0 3em rgba(34, 224, 90, 0.7);
+}
+
+/* ---- robot panels */
+.bx .hp {
+  position: relative;
+  width: calc(var(--hu) * 19);
+  background: linear-gradient(180deg, rgba(14, 16, 20, 0.86), rgba(8, 9, 12, 0.78));
+  box-shadow:
+    0 0 0 1px #000,
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  animation: bx-slam-left 0.4s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+.bx .hp.right {
+  animation-name: bx-slam-right;
+}
+.bx .hp.disabled {
+  filter: grayscale(0.8) brightness(0.7);
+}
+.bx .hp-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  height: calc(var(--hu) * 2);
+  padding-right: 0.6em;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cc) 55%, #000), rgba(0, 0, 0, 0) 85%);
+  border-top: 2px solid var(--cc);
+}
+.bx .hp.right .hp-name {
+  flex-direction: row-reverse;
+  padding: 0 0 0 0.6em;
+  background: linear-gradient(270deg, color-mix(in srgb, var(--cc) 55%, #000), rgba(0, 0, 0, 0) 85%);
+}
+.bx .hp-stripe {
+  align-self: stretch;
+  width: 0.5em;
+  background: var(--cc);
+}
+.bx .hp-nm {
+  font-size: calc(var(--hu) * 1.2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  text-shadow: 0 1px 0 #000;
+}
+.bx .hp-you {
+  flex: none;
+  font-size: calc(var(--hu) * 0.65);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.1em 0.45em;
+  background: var(--orange);
+  color: #000;
+}
+.bx .hp.right .hp-nm {
+  text-align: right;
+}
+.bx .hp-body {
+  display: flex;
+  align-items: stretch;
+  gap: calc(var(--hu) * 0.7);
+  padding: calc(var(--hu) * 0.5) calc(var(--hu) * 0.6) calc(var(--hu) * 0.5);
+}
+.bx .hp.right .hp-body {
+  flex-direction: row-reverse;
+}
+.bx .hp-sch {
+  flex: none;
+  width: calc(var(--hu) * 4.6);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--hu) * 0.25);
+}
+.bx .hp-svg {
+  width: 100%;
+  height: calc(var(--hu) * 5.6);
+}
+.bx .sch-facet {
+  stroke: #000;
+  transition: fill 0.25s;
+}
+.bx .sch-facet.gone {
+  fill: transparent !important;
+  stroke: #ff2a1f;
+  stroke-dasharray: 0.02 0.015;
+}
+.bx .sch-wheel {
+  fill: #59626e;
+}
+.bx .sch-wheel.lost {
+  fill: none;
+  stroke: #ff2a1f;
+  stroke-width: 0.012;
+}
+.bx .sch-weapon {
+  fill: #e9eef4;
+  stroke: #000;
+  stroke-width: 0.012;
+}
+.bx .sch-weapon circle {
+  fill: none;
+  stroke: #e9eef4;
+}
+.bx .sch-front {
+  fill: var(--cc);
+}
+.bx .hp-belly {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: calc(var(--hu) * 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  font-weight: 700;
+}
+.bx .hp-belly-bar {
+  flex: 1;
+  height: 0.6em;
+  background: #15181d;
+}
+.bx .hp-belly-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+.bx .hp-comps {
+  flex: none;
+  display: flex;
+  gap: calc(var(--hu) * 0.28);
+}
+.bx .hc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+}
+.bx .hc-bar {
+  position: relative;
+  flex: 1;
+  width: calc(var(--hu) * 0.85);
+  background: #15181d;
+  box-shadow: inset 0 0 0 1px #000;
+  display: flex;
+  align-items: flex-end;
+}
+.bx .hc-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: height 0.2s;
+}
+.bx .hc-k {
+  font-size: calc(var(--hu) * 0.85);
+  color: var(--dim);
+  line-height: 1;
+}
+.bx .hc.dead .hc-k {
+  color: #ff2a1f;
+}
+.bx .hp-side {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: calc(var(--hu) * 0.3);
+}
+.bx .hp-weapon {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.bx .hp.right .hp-weapon {
+  flex-direction: row-reverse;
+}
+.bx .rpm {
+  position: relative;
+  width: calc(var(--hu) * 3.8);
+  height: calc(var(--hu) * 3.8);
+  flex: none;
+}
+.bx .rpm-svg {
+  width: 100%;
+  height: 100%;
+}
+.bx .rpm-track,
+.bx .rpm-arc {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: butt;
+}
+.bx .rpm-track {
+  stroke: #22262d;
+}
+.bx .rpm-arc {
+  stroke: var(--orange);
+  filter: drop-shadow(0 0 2px var(--orange));
+}
+.bx .hp-weapon.full .rpm-arc {
+  stroke: #ffd27a;
+}
+.bx .rpm-n {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--hu) * 1.05);
+}
+.bx .wk {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+}
+.bx .wk-t {
+  font-size: calc(var(--hu) * 0.75);
+  color: var(--dim);
+}
+.bx .lamp {
+  width: calc(var(--hu) * 0.8);
+  height: calc(var(--hu) * 0.8);
+  border-radius: 50%;
+  background: #2a2f37;
+  box-shadow: inset 0 0 0 1px #000;
+}
+.bx .lamp.on {
+  background: var(--green);
+  box-shadow: 0 0 0.6em var(--green);
+}
+.bx .lamp.red {
+  background: #7a1010;
+}
+.bx .gas {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2em;
+}
+.bx .gas-n {
+  font-size: calc(var(--hu) * 2.6);
+  line-height: 0.95;
+}
+.bx .gas-k {
+  font-size: calc(var(--hu) * 0.7);
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+.bx .hp-weapon.empty .gas-n {
+  color: #ff2a1f;
+}
+.bx .lift-bar {
+  display: flex;
+  align-items: flex-end;
+  width: calc(var(--hu) * 1);
+  height: calc(var(--hu) * 3.2);
+  background: #15181d;
+  box-shadow: inset 0 0 0 1px #000;
+}
+.bx .lift-fill {
+  display: block;
+  width: 100%;
+  background: var(--orange);
+}
+.bx .hp-weapon.none .wk-t {
+  font-size: calc(var(--hu) * 0.95);
+  padding: 0.6em 0;
+}
+.bx .hp-bat {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: calc(var(--hu) * 0.7);
+}
+.bx .hp.right .hp-bat {
+  flex-direction: row-reverse;
+}
+.bx .bat-k {
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+.bx .bat-bar {
+  position: relative;
+  flex: 1;
+  height: 0.85em;
+  background: #15181d;
+  box-shadow: inset 0 0 0 1px #000;
+}
+.bx .bat-bar::after {
+  content: '';
+  position: absolute;
+  right: -3px;
+  top: 25%;
+  bottom: 25%;
+  width: 3px;
+  background: #3a414b;
+}
+.bx .bat-fill {
+  display: block;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #ffd21f 0 0.5em, #b89600 0.5em 0.6em);
+}
+.bx .bat-fill.low {
+  background: repeating-linear-gradient(90deg, #ff2a1f 0 0.5em, #8a0000 0.5em 0.6em);
+}
+.bx .bat-pct {
+  font-size: 1.35em;
+  min-width: 2.2em;
+  text-align: right;
+}
+.bx .hp-hold {
+  display: none;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.25em 0.6em 0.35em;
+  font-size: calc(var(--hu) * 0.8);
+  background: rgba(255, 210, 31, 0.15);
+}
+.bx .hp-hold.on {
+  display: flex;
+}
+.bx .hold-k {
+  color: var(--yellow);
+}
+.bx .hold-bar {
+  flex: 1;
+  height: 0.6em;
+  background: #15181d;
+}
+.bx .hold-fill {
+  display: block;
+  height: 100%;
+  background: var(--yellow);
+}
+.bx .hp-hold.warn {
+  background: rgba(255, 42, 42, 0.3);
+  animation: bx-blink 0.5s steps(1) infinite;
+}
+.bx .hp-hold.warn .hold-fill {
+  background: var(--red);
+}
+.bx .hold-n {
+  font-size: 1.3em;
+}
+.bx .hp-status {
+  display: none;
+  padding: 0.15em 0.6em;
+  font-size: calc(var(--hu) * 0.75);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: var(--red);
+  color: #fff;
+}
+.bx .hp-status.on {
+  display: block;
+}
+
+/* KO count: big ref count beside the robot's panel. */
+.bx .ko {
+  position: absolute;
+  top: 0;
+  left: calc(100% + var(--hu) * 0.6);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.2em 0.6em 0.1em;
+  background: rgba(0, 0, 0, 0.82);
+  border: 3px solid var(--cc);
+  box-shadow: 0 0 1.6em rgba(255, 42, 42, 0.5);
+}
+.bx .hp.right .ko {
+  left: auto;
+  right: calc(100% + var(--hu) * 0.6);
+}
+.bx .ko.on {
+  display: flex;
+}
+.bx .ko-k {
+  font-size: calc(var(--hu) * 0.8);
+  color: #ff5b4f;
+}
+.bx .ko-n {
+  font-size: calc(var(--hu) * 6.6);
+  line-height: 0.95;
+  color: #fff;
+  text-shadow: 0 0 0.2em #ff1a1a;
+}
+.bx .ko.tick .ko-n {
+  animation: bx-punch 0.3s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+/* ---- touch controls */
+.bx .touch {
+  --hu: clamp(8.5px, min(1vw, 2.3vh), 17px);
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+.bx .touch.show {
+  display: block;
+}
+.bx .ts-zone {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 42%;
+  height: 62%;
+  touch-action: none;
+}
+.bx .ts-base {
+  position: absolute;
+  left: calc(var(--pad-l) + 70px);
+  bottom: calc(var(--pad-b) + 10px);
+  top: auto;
+  width: 132px;
+  height: 132px;
+  margin: -66px 0 0 -66px;
+  border-radius: 50%;
+  opacity: 0.55;
+  transition: opacity 0.15s;
+}
+.bx .ts-base:not(.active) {
+  margin: 0 0 0 -66px;
+}
+.bx .ts-base.active {
+  opacity: 1;
+  bottom: auto;
+}
+.bx .ts-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.15) 40%, rgba(0, 0, 0, 0.45) 70%);
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.5),
+    0 0 0 2px rgba(0, 0, 0, 0.6);
+}
+.bx .ts-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 58px;
+  height: 58px;
+  margin: -29px 0 0 -29px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff, #c9d0d8 40%, #5d6672 100%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+}
+.bx .tb {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  background: radial-gradient(circle at 45% 35%, rgba(60, 66, 76, 0.8), rgba(10, 12, 15, 0.8));
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.4),
+    0 0 0 2px rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 13px;
+}
+.bx .tb.down {
+  transform: scale(0.92);
+  background: radial-gradient(circle at 45% 35%, #ffb066, var(--orange));
+  color: #000;
+}
+.bx .tb-weapon {
+  right: calc(var(--pad-r) + 8px);
+  bottom: calc(var(--pad-b) + 8px);
+  width: 112px;
+  height: 112px;
+  background: radial-gradient(circle at 45% 35%, rgba(255, 140, 50, 0.85), rgba(170, 60, 0, 0.85));
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 220, 180, 0.7),
+    0 0 0 3px rgba(0, 0, 0, 0.6),
+    0 0 1.4em rgba(255, 106, 0, 0.45);
+  font-size: 14px;
+}
+.bx .tb-weapon .tb-t {
+  max-width: 90px;
+  text-align: center;
+  line-height: 1.1;
+}
+.bx .tb-right {
+  right: calc(var(--pad-r) + 132px);
+  bottom: calc(var(--pad-b) + 74px);
+  width: 64px;
+  height: 64px;
+  font-size: 11px;
+  background: radial-gradient(circle at 45% 35%, rgba(80, 150, 255, 0.85), rgba(10, 50, 140, 0.85));
+}
+.bx .tb-cam {
+  right: calc(var(--pad-r) + 132px);
+  bottom: calc(var(--pad-b) + 4px);
+  width: 56px;
+  height: 56px;
+  font-size: 11px;
+}
+.bx .tb-pause {
+  left: calc(50% + var(--hu, 10px) * 11.5);
+  top: var(--pad-t);
+  width: 46px;
+  height: 46px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+.bx .pz {
+  width: 6px;
+  height: 18px;
+  background: #fff;
+}
+
+@media (orientation: portrait) {
+  .bx .hud {
+    --hu: clamp(8px, 2.1vw, 14px);
+  }
+  .bx .hp {
+    width: calc(var(--hu) * 17);
+  }
+}
