@@ -397,7 +397,7 @@ export const EXTRAS: Record<ExtraId, ExtraPart> = {
     blurb: 'Self-righting mechanism. A pneumatic arm on the roof that pushes you back over.',
     lb: 12,
     notWithWeapon: [],
-    notOn: ['invertible'],
+    notOn: [],
   },
   wheelguards: {
     label: 'Wheel guards',

@@ -155,7 +155,7 @@ export function buildSpec(l: Loadout): BotSpec {
     H = Math.min(H, 2 * r - 0.03 * s);
     g = r - H / 2;
   }
-  if (l.chassis === 'shell') g = 0.03 * s;
+  if (l.chassis === 'shell') g = 0.035 * s;
   const lipY = -g + 0.008 * s; // a wedge lip scrapes 8 mm above the floor (scaled)
   const t = Math.max(0.004, (grade.mm / 1000) * 1.6 * s); // visual and debris thickness
 
@@ -165,10 +165,10 @@ export function buildSpec(l: Loadout): BotSpec {
   const wheels: WheelSpec[] = [];
   let wheelX: number;
   if (l.chassis === 'invertible') wheelX = W / 2 - ww / 2 - 0.03 * s;
-  else if (l.chassis === 'shell') wheelX = 0.2 * s;
+  else if (l.chassis === 'shell') wheelX = 0.26 * s;
   else wheelX = W / 2 + ww / 2 + 0.012 * s;
   const wheelY = r - g;
-  const zs = l.chassis === 'shell' ? wheelZ.map((z) => z * 0.45) : wheelZ;
+  const zs = l.chassis === 'shell' ? wheelZ.map((z) => z * 0.62) : wheelZ;
   for (const side of [-1, 1] as const) for (const z of zs) wheels.push({ pos: v(side * wheelX, wheelY, z), radius: r, width: ww, side });
 
   // ---- weapon
@@ -180,7 +180,7 @@ export function buildSpec(l: Loadout): BotSpec {
     const mass = 14 * m;
     const sp: SpinnerSpec = {
       kind: 'vdisk',
-      center: v(0, R - g + 0.015 * s, -L / 2 - 0.05 * s),
+      center: v(0, R + 0.04 * s - g + 0.012 * s, -L / 2 - 0.05 * s),
       axis: 'x',
       radius: R,
       width: 0.035 * s,
@@ -199,7 +199,7 @@ export function buildSpec(l: Loadout): BotSpec {
     const mass = 18 * m;
     weapon = {
       kind: 'drum',
-      center: v(0, R - g + 0.012 * s, -L / 2 - 0.08 * s),
+      center: v(0, R + 0.03 * s - g + 0.012 * s, -L / 2 - 0.08 * s),
       axis: 'x',
       radius: R,
       width: Math.min(0.4 * s, W * 0.68),
@@ -235,7 +235,7 @@ export function buildSpec(l: Loadout): BotSpec {
     const mass = 30 * m;
     weapon = {
       kind: 'shell',
-      center: v(0, 0.13 * s, 0),
+      center: v(0, 0.14 * s, 0),
       axis: 'y',
       radius: R,
       width: 0.22 * s,
@@ -453,7 +453,12 @@ export function buildSpec(l: Loadout): BotSpec {
   // ---- totals and stats
   const check = checkLoadout(l);
   const massKg = check.weightLb * LB_TO_KG;
-  const invertible = ch.invertible;
+  // Invertible only if the weapon stays inside the wheels' reach on both sides.
+  let weaponTop = 0;
+  if (weapon.kind === 'vdisk' || weapon.kind === 'drum') weaponTop = weapon.center.y + weapon.radius + weapon.toothHeight;
+  else if (weapon.kind === 'hbar' || weapon.kind === 'shell') weaponTop = weapon.center.y + weapon.width / 2;
+  else if (weapon.kind === 'axe' || weapon.kind === 'flipper' || weapon.kind === 'lifter') weaponTop = weapon.hinge.y;
+  const invertible = ch.invertible && weaponTop <= wheelY + r + 0.004 * s;
   const selfRight = has('srimech') || wp.selfRight > 0;
   const trackWidth = 2 * Math.max(wheelX, 0.15 * s);
   const topSpeed = dr.topSpeed * (0.85 + 0.15 * s);
