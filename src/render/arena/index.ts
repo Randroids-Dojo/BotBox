@@ -75,6 +75,7 @@ export async function buildArena(renderer: THREE.WebGLRenderer, quality: Quality
   crowd.root.traverse((o) => o.layers.set(CROWD_LAYER));
   const env = buildArenaEnv(renderer, structure.fixtures);
   const dressing = buildDressing(mats);
+  dressing.setQuality(quality);
   root.add(dressing.root);
   progress(0.8);
 
@@ -108,6 +109,7 @@ export async function buildArena(renderer: THREE.WebGLRenderer, quality: Quality
     setQuality(q) {
       q0 = q;
       lights.setQuality(q);
+      dressing.setQuality(q);
       crowd.setDensity(crowdBuilt(q));
       crowd.root.traverse((o) => o.layers.set(CROWD_LAYER));
       applyFill();

@@ -132,9 +132,10 @@ class StageImpl implements Stage, StageExtras {
     // Compile everything up front so the first fight frame does not hitch.
     this.titleScene.root.visible = true;
     this.trophyScene.root.visible = true;
-    for (const g of this.arena.dressing.root.children) g.visible = true;
+    this.arena.dressing.root.traverse((o) => (o.visible = true));
     await r.compileAsync(s, this.camera);
     this.arena.dressing.set(this.dressing);
+    this.arena.dressing.setQuality(this.quality);
     this.garageScene.showAll(true);
     await r.compileAsync(this.garageScene.scene, this.camera);
     this.garageScene.showAll(false);
