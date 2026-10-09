@@ -71,6 +71,10 @@
   letter-spacing: 0.04em;
 }
 .bx .chrome-text {
+  /* background-clip: text only paints inside the box, so text must never spill out of it:
+     wrap long names instead of overflowing (a spilled glyph turns invisible). */
+  max-width: 100%;
+  overflow-wrap: break-word;
   background: var(--chrome);
   -webkit-background-clip: text;
   background-clip: text;

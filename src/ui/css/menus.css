@@ -21,7 +21,8 @@
   text-align: center;
 }
 .bx .load-logo {
-  font-size: calc(var(--u) * 5.4);
+  /* Capped by width: the wide logo face must fit a portrait phone with room to spare. */
+  font-size: min(calc(var(--u) * 5.4), 11.5vw);
   line-height: 1;
   animation: bx-punch 0.6s cubic-bezier(0.2, 1.2, 0.4, 1) both;
 }
@@ -1084,4 +1085,12 @@
 .bx .bk-champ-col .bk-round {
   letter-spacing: 0.04em;
   white-space: nowrap;
+}
+
+/* Portrait phones: the round labels share a narrow row with four columns. */
+@media (orientation: portrait) {
+  .bx .bk-round {
+    font-size: min(calc(var(--u) * 0.85), 2.4vw);
+    letter-spacing: 0.08em;
+  }
 }

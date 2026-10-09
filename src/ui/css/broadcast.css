@@ -444,13 +444,15 @@
   padding: 0 var(--pad-l);
 }
 .bx .sl-title {
-  font-size: calc(var(--u) * 6.4);
+  font-size: min(calc(var(--u) * 6.4), 7.5vw);
   line-height: 1;
   animation: bx-punch 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
 }
 .bx .sl-sub {
   margin-top: 0.4em;
-  font-size: calc(var(--u) * 1.8);
+  max-width: 92vw;
+  overflow-wrap: break-word;
+  font-size: min(calc(var(--u) * 1.8), 5vw);
   color: var(--orange);
   animation: bx-slam-up 0.4s 0.2s cubic-bezier(0.2, 1, 0.3, 1) both;
 }
@@ -466,7 +468,7 @@
   letter-spacing: 0.3em;
 }
 .bx .bp-logo {
-  font-size: calc(var(--u) * 6.6);
+  font-size: min(calc(var(--u) * 6.6), 11.5vw);
   line-height: 1;
   animation: bx-punch 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
 }
@@ -926,13 +928,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
   .bx .cm-title {
-    font-size: calc(var(--u) * 4.4);
+    font-size: min(calc(var(--u) * 4.4), 10vw);
   }
   .bx .sl-title {
-    font-size: calc(var(--u) * 3.8);
+    font-size: min(calc(var(--u) * 3.8), 7.5vw);
   }
   .bx .bp-logo {
-    font-size: calc(var(--u) * 4);
+    font-size: min(calc(var(--u) * 4), 11.5vw);
   }
   .bx .l3-chips {
     flex-wrap: wrap;
