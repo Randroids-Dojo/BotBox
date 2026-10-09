@@ -410,6 +410,7 @@ export async function prologue(g: Game): Promise<void> {
   await theFall(g, teardown);
   g.save.career.prologueDone = true;
   g.persist();
+  g.audio.music('none', 4);
   await g.ui.story(['Two seasons later.', 'A rented storage unit in Oakland.'], 5);
   await firstRebuild(g);
 }

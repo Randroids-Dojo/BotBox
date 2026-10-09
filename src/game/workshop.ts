@@ -70,23 +70,6 @@ async function garage(g: Game, c: CareerSave, opponent: CampaignFight | null): P
   g.persist();
 }
 
-/** Prize money counting up, then the rank, then anything new in the store. */
-async function rewardsBeat(g: Game, view: Parameters<Game['ui']['rewards']>[0]): Promise<void> {
-  const screen = g.ui.rewards(view);
-  void (async () => {
-    if (view.prize > 0) {
-      g.audio.stinger('cash');
-      await g.wait(1.3, false);
-    }
-    if (view.rankAfter !== null && view.rankAfter !== view.rankBefore) {
-      g.audio.stinger('rankup');
-      await g.wait(1.2, false);
-    }
-    if (view.unlocks.length) g.audio.stinger('unlock');
-  })();
-  await screen;
-}
-
 async function fight(g: Game, c: CareerSave, f: CampaignFight | null, gig: SideGig | null): Promise<void> {
   const act = currentAct(c);
   const oppId = f ? f.opponent : gig!.opponent;
@@ -134,12 +117,9 @@ async function fight(g: Game, c: CareerSave, f: CampaignFight | null, gig: SideG
   }
   showWorkshop(g, c);
   g.audio.music('workshop', 1);
-  await rewardsBeat(g, view);
-  if (view.actComplete && c.next < FIGHTS.length) {
-    const next = currentAct(c);
-    g.audio.stinger('whoosh');
-    await g.ui.slate(next.title.toUpperCase(), next.subtitle, 3.2);
-  }
+  // The purse counts up, the rank climbs, new parts and the next act land (the screen plays its
+  // own stingers).
+  await g.ui.rewards(view);
 }
 
 async function ceremony(g: Game, c: CareerSave): Promise<void> {
@@ -166,9 +146,8 @@ export async function careerHub(g: Game): Promise<void> {
     g.audio.music('workshop', 1);
     const gig = sideGig(c, gigSeed);
     const view = workshopView(c, gig);
-    // Tell them about new parts once.
+    // The news ticker mentions new parts once.
     if (storeTier(c) > c.toldTier) {
-      g.audio.stinger('unlock');
       c.toldTier = storeTier(c);
       g.persist();
     }
