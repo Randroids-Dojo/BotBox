@@ -640,10 +640,10 @@ function open(id: string): unknown {
 
 declare global {
   interface Window {
-    lab: { open: (id: string) => unknown; heard: string[]; ui: typeof ui; items: string[] };
+    lab: { open: (id: string) => unknown; heard: string[]; ui: typeof ui; items: string[]; input: Input };
   }
 }
-window.lab = { open, heard, ui, items: Object.keys(ITEMS) };
+window.lab = { open, heard, ui, items: Object.keys(ITEMS), input };
 
 stage.setMode('title');
 if (params.get('touch') === '1') ui.debug.forceTouch(true);

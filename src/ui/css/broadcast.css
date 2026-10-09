@@ -55,7 +55,7 @@
   font-size: 0.9em;
 }
 .bx .l3-name {
-  font-size: calc(var(--u) * 3.6);
+  font-size: calc(var(--u) * 3.2);
   line-height: 1;
   margin: 0.08em 0 0.05em;
   white-space: nowrap;
@@ -117,10 +117,11 @@
 /* ---- captions */
 .bx .caption {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   bottom: var(--pad-b);
-  transform: translateX(-50%);
-  width: min(calc(100% - var(--pad-l) - var(--pad-r)), calc(var(--u) * 50));
+  width: min(calc(100% - var(--pad-l) - var(--pad-r) - var(--u) * 16), calc(var(--u) * 42));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -230,7 +231,6 @@
 .bx .bn-band {
   height: calc(var(--u) * 0.9);
   background: var(--hazard);
-  background-size: 2.2em 100%;
   animation: bx-band 0.4s cubic-bezier(0.2, 1, 0.3, 1) both;
 }
 .bx .bn-band.bot {
@@ -426,7 +426,6 @@
   right: -20%;
   height: calc(var(--u) * 1.6);
   background: var(--hazard);
-  background-size: 2.4em 100%;
   transform: rotate(-6deg);
   opacity: 0.9;
 }
@@ -440,7 +439,7 @@
 }
 @keyframes bx-stripe {
   to {
-    background-position: 12em 0;
+    background-position: 15.56em 0;
   }
 }
 .bx .sl-center {
@@ -738,8 +737,8 @@
 .bx .rs-stamp,
 .bx .el-stamp {
   position: absolute;
-  right: calc(var(--u) * 1.6);
-  top: calc(var(--u) * -1.2);
+  right: calc(var(--u) * 2.2);
+  top: calc(var(--u) * 1.6);
   padding: 0.05em 0.4em;
   font-size: calc(var(--u) * 4);
   line-height: 1;
@@ -764,7 +763,7 @@
 .bx .rs-head {
   font-size: calc(var(--u) * 2.4);
   line-height: 1.05;
-  max-width: 80%;
+  max-width: 68%;
 }
 .bx .rs-stats {
   display: grid;
@@ -821,6 +820,9 @@
   top: var(--pad-t);
   text-align: center;
 }
+.bx .cm-kicker {
+  margin-top: 0.4em;
+}
 .bx .cm-title {
   font-size: calc(var(--u) * 7.6);
   line-height: 1;
@@ -832,9 +834,10 @@
 }
 .bx .cm-bottom {
   position: absolute;
-  left: 50%;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   bottom: var(--pad-b);
-  transform: translateX(-50%);
   width: min(calc(100% - var(--pad-l) - var(--pad-r)), calc(var(--u) * 46));
   display: flex;
   flex-direction: column;

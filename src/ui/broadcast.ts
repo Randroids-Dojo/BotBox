@@ -417,7 +417,7 @@ export class Broadcast {
       const cont = button('Continue', { activate: () => finish(), cls: 'small primary' });
       const node = el('div.screen.ceremony-screen', [
         confetti,
-        el('div.cm-top', [el('div.cm-kicker.kicker', `${CLASS_LABEL[cls]} Giant Nut`), el('div.cm-title.wide.orange-text', 'Champion')]),
+        el('div.cm-top', [el('div.cm-title.wide.orange-text', 'Champion'), el('div.cm-kicker.kicker', `${CLASS_LABEL[cls]} Giant Nut`)]),
         el('div.cm-bottom.scan', [el('div.cm-name.wide.chrome-text', card.name), el('div.cm-team', `${card.team}. ${card.hometown}`), el('div.cm-builders', `Built by ${card.builders}`), cont]),
       ]);
       this.ctx.layers.over.append(node);

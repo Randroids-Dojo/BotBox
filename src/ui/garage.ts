@@ -48,7 +48,7 @@ import { button, statBars } from './widgets';
 type Tab = 'repair' | 'scout' | 'chassis' | 'drive' | 'power' | 'weapon' | 'armor' | 'extras' | 'paint' | 'name';
 const TAB_LABEL: Record<Tab, string> = {
   repair: 'Repair',
-  scout: 'Next fight',
+  scout: 'Scout',
   chassis: 'Chassis',
   drive: 'Drive',
   power: 'Power',
@@ -247,17 +247,8 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
     const node = el('div.screen.garage' + (pits ? '.pits' : ''), [left, panel]);
     ctx.layers.screen.append(node);
 
-    // Stats live in the panel on tall screens and under the preview on short or narrow ones.
-    const mq = window.matchMedia('(max-height: 620px), (orientation: portrait)');
-    const placeStats = () => {
-      const target = mq.matches ? leftStats : panel;
-      if (statsBox.parentElement !== target) {
-        if (target === panel) panel.insertBefore(statsBox, warn);
-        else target.append(statsBox);
-      }
-    };
-    mq.addEventListener('change', placeStats);
-    placeStats();
+    // The tale of the tape sits under the preview like a broadcast stat card.
+    leftStats.append(statsBox);
 
     // Orbit by dragging the preview.
     let dragId: number | null = null;
@@ -438,6 +429,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       tab = t;
       ctx.sfx.ui('move');
       renderAll(null);
+      body.scrollTop = 0;
       const first = body.querySelector<HTMLElement>('.nav');
       const tabEl = byKey(`tab:${t}`);
       scope.refresh(focusBody ? first ?? tabEl : tabEl);
@@ -792,7 +784,6 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       }
       done = true;
       clearTimeout(previewTimer);
-      mq.removeEventListener('change', placeStats);
       ctx.nav.pop(scope);
       if (ok) ctx.mine = cur;
       else ctx.mine = orig;

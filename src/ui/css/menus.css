@@ -37,7 +37,6 @@
   height: 100%;
   width: 0;
   background: var(--hazard);
-  background-size: 200% 100%;
   box-shadow: 0 0 1em rgba(255, 106, 0, 0.6);
   transition: width 0.25s ease-out;
 }
@@ -420,6 +419,8 @@
 /* ---- modals (settings, pause) */
 .bx .modal {
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   pointer-events: auto;
 }
@@ -475,6 +476,9 @@
 }
 .bx .pause-panel .menu-list {
   width: 100%;
+}
+.bx .btn.armed .sub {
+  display: none;
 }
 .bx .btn.armed:not(.is-focus) {
   border-left-color: var(--red);
@@ -607,6 +611,10 @@
     0 0 0 3px var(--orange),
     0 0 1.6em rgba(255, 106, 0, 0.35);
 }
+.bx .ex-card.is-focus {
+  outline: 3px solid #fff !important;
+  outline-offset: 3px;
+}
 .bx .ex-card.drive {
   box-shadow: 0 0 0 3px var(--blue);
 }
@@ -634,8 +642,8 @@
 }
 .bx .exc-stamp {
   position: absolute;
-  right: 0.5em;
-  top: 1.2em;
+  right: 0.6em;
+  top: 2.6em;
   padding: 0.1em 0.5em;
   font-size: calc(var(--u) * 1.4);
   color: var(--orange);

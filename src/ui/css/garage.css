@@ -64,9 +64,10 @@
 .bx .gl-stats-slot {
   position: absolute;
   left: var(--pad-l);
-  right: calc(var(--u) * 1);
   bottom: var(--pad-b);
+  width: min(calc(100% - var(--pad-l) - var(--u) * 1.4), calc(var(--u) * 34));
   pointer-events: none;
+  animation: bx-slam-up 0.4s 0.1s cubic-bezier(0.2, 1, 0.3, 1) both;
 }
 .bx .gl-stats-slot .gp-stats {
   background: linear-gradient(90deg, rgba(8, 10, 13, 0.92), rgba(8, 10, 13, 0.72));
@@ -98,8 +99,11 @@
 /* ---- weight meter */
 .bx .gp-head {
   display: flex;
-  gap: 1em;
-  align-items: stretch;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.bx .pits .gp-tabs {
+  grid-template-columns: repeat(5, 1fr);
 }
 .bx .wmeter {
   flex: 1;
@@ -232,14 +236,14 @@
 }
 .bx .pts {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 0 0.2em 0 0.9em;
-  border-left: 2px solid #3a414b;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25em 0.8em;
+  background: rgba(42, 127, 255, 0.14);
+  border-left: 4px solid var(--blue);
 }
 .bx .pts-num {
-  font-size: calc(var(--u) * 2.6);
+  font-size: calc(var(--u) * 2);
   line-height: 0.9;
   color: var(--blue-hi);
   white-space: nowrap;
@@ -781,6 +785,9 @@
   .bx .opt.is-focus .opt-blurb {
     display: block;
   }
+  .bx .gl-stats-slot {
+    width: calc(100% - var(--pad-l) - var(--u) * 1.4);
+  }
   .bx .gl-stats-slot .statbars {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -816,6 +823,9 @@
   .bx .garage.out .gar-panel {
     animation-name: bx-out-down;
   }
+  .bx .gl-stats-slot {
+    width: calc(100% - var(--pad-l) - var(--pad-r));
+  }
   .bx .gl-stats-slot .statbars {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -838,4 +848,8 @@
   .bx .gp-foot .btn {
     flex: 1;
   }
+}
+.bx .rep-row.full .rep-btn.plus {
+  background: #2a2f37;
+  opacity: 0.4;
 }
