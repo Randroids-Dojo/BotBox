@@ -255,16 +255,22 @@ export function defineShow(bank: Bank): void {
     rate: 24000,
     render: (ctx, out) => {
       const verb = hall(ctx, out, 0.7, 4.5);
+      // Keep the boom out of the subsonics: phone speakers stop near 150 Hz, and the peak should
+      // be spent on what people hear.
       const dry = gain(ctx, 1);
-      dry.connect(out);
-      dry.connect(verb);
-      const sh = drive(ctx, 1.8, 0.1);
+      const hp = biquad(ctx, 'highpass', 38, 0.7);
+      dry.connect(hp);
+      hp.connect(out);
+      // The long tail lives in the room, so the room gets no sub.
+      hp.connect(biquad(ctx, 'highpass', 110, 0.7)).connect(verb);
+      const sh = drive(ctx, 2.2, 0.1);
       sh.connect(dry);
-      thump(ctx, sh, 0, { f0: 68, f1: 26, drop: 0.7, amp: 0.95, decay: 1.1 });
-      burst(ctx, sh, 0, { type: 'lowpass', f: 140, q: 0.7, amp: 0.7, decay: 0.9, color: 'brown', seed: 110 });
-      burst(ctx, dry, 0, { type: 'highpass', f: 1600, q: 0.6, amp: 0.25, decay: 0.05, seed: 111 });
+      thump(ctx, sh, 0, { f0: 95, f1: 42, drop: 0.35, amp: 0.65, decay: 0.4 });
+      thump(ctx, sh, 0, { f0: 170, f1: 80, drop: 0.25, amp: 0.55, decay: 0.3 });
+      burst(ctx, sh, 0, { type: 'lowpass', f: 260, q: 0.7, amp: 0.3, decay: 0.45, color: 'brown', seed: 110 });
+      burst(ctx, dry, 0, { type: 'highpass', f: 1600, q: 0.6, amp: 0.3, decay: 0.05, seed: 111 });
       // A dark low gong under the boom.
-      modal(ctx, dry, 0, { f0: 73, ratios: [1, 1.59, 2.14, 2.65, 3.5], decay: 1.6, amp: 0.07, tilt: 0.7, damp: 0.5, seed: 112 });
+      modal(ctx, dry, 0, { f0: 110, ratios: [1, 1.59, 2.14, 2.65, 3.5], decay: 1.6, amp: 0.08, tilt: 0.6, damp: 0.5, seed: 112 });
       // Powering down: a filtered saw sagging from 220 Hz to 40 Hz.
       const pd = osc(ctx, 'sawtooth', 220, 0.35, 4.5);
       pd.frequency.setValueAtTime(220, 0.35);
@@ -272,7 +278,7 @@ export function defineShow(bank: Bank): void {
       const pdg = gain(ctx, 0);
       pd.connect(biquad(ctx, 'lowpass', 600, 1.2)).connect(pdg).connect(dry);
       pdg.gain.setValueAtTime(0, 0.35);
-      pdg.gain.linearRampToValueAtTime(0.05, 0.6);
+      pdg.gain.linearRampToValueAtTime(0.07, 0.6);
       pdg.gain.setTargetAtTime(0, 2.2, 0.7);
       // The gasp: everyone at once, a sharp intake that falls in pitch and level.
       const crowd = gain(ctx, 1);
@@ -292,7 +298,7 @@ export function defineShow(bank: Bank): void {
         seconds: 4.2,
         talkers: 48,
         seed: 113,
-        level: 0.22,
+        level: 0.45,
         low: [150, 230],
         high: [280, 420],
         rate: [0.9, 1.3],
@@ -305,14 +311,14 @@ export function defineShow(bank: Bank): void {
       const inhale = gain(ctx, 0);
       noise(ctx, 0.08, 2, 'pink', 114).connect(biquad(ctx, 'bandpass', 1400, 0.7)).connect(inhale).connect(crowd);
       inhale.gain.setValueAtTime(0, 0.08);
-      inhale.gain.linearRampToValueAtTime(0.32, 0.16);
+      inhale.gain.linearRampToValueAtTime(0.45, 0.16);
       inhale.gain.setTargetAtTime(0, 0.22, 0.25);
       // The hush: a few stunned voices, very low, scattered across the arena.
       crowdGraph(ctx, crowd, {
         seconds: S.heartbreak,
         talkers: 12,
         seed: 115,
-        level: 0.05,
+        level: 0.11,
         low: [100, 150],
         high: [180, 240],
         rate: [2, 3.5],

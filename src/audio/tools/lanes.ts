@@ -3,7 +3,7 @@
 import { chromium } from 'playwright-core';
 
 const [cue = 'title', ...pick] = process.argv.slice(2);
-const lanes = pick.length ? pick : ['gtrL', 'gtrR', 'bass', 'kick', 'snare', 'hat', 'cym', 'tom', 'lead', 'arp', 'clean', 'stab', 'pad', 'fx'];
+const lanes = pick.length ? pick : ['gtrL', 'gtrR', 'bass', 'kick', 'snare', 'hat', 'cym', 'tom', 'lead', 'arp', 'clean', 'piano', 'cgtr', 'stab', 'pad', 'fx'];
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 const page = await browser.newPage();
 await page.goto(process.env.URL ?? 'http://localhost:5243/?lab=audio');

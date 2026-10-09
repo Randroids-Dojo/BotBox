@@ -349,10 +349,9 @@ const nut: CueDef = {
 // ---- prologue: the last 45 seconds of a championship final. The theme at full tilt, faster,
 // a ticking pulse under everything, scooped so hits and the commentators read over it.
 
-/** Two bars of the urgent 16th pulse on one root (low, high). */
-const pulse = (lo: string, hi: string) => Array.from({ length: 8 }, () => `${lo} ${hi}`).join(' ');
+/** A bar of the urgent eighth-note pulse on one root, jumping the octave. */
+const pulse = (lo: string, hi: string) => Array.from({ length: 4 }, () => `${lo} . ${hi} .`).join(' ');
 const PULSE_D = pulse('D3', 'D4');
-const DRIVE_HAT = ['xoxoxoxoxoxoxoxo'];
 const DRIVE_SNARE = ['....x.......x...', '....x.......x...', '....x.......x...', '....x.......x.xx'];
 /** The riff's moving notes doubled two octaves up on the lead. */
 const RIFF_LEAD = [
@@ -373,7 +372,7 @@ const prologue: CueDef = {
     // The riff, drums driving, the clock ticking.
     {
       bars: 4,
-      tracks: { gtr: RIFF, bass: 'follow', kick: RIFF_KICK, snare: DRIVE_SNARE, hat: DRIVE_HAT, cym: CRASH1, arp: [PULSE_D] },
+      tracks: { gtr: RIFF, bass: 'follow', kick: RIFF_KICK, snare: DRIVE_SNARE, cym: CRASH1, arp: [PULSE_D] },
     },
     // The riff doubled: stabs answer, the lead doubles the moving notes.
     {
@@ -383,7 +382,6 @@ const prologue: CueDef = {
         bass: 'follow',
         kick: RIFF_KICK,
         snare: DRIVE_SNARE,
-        hat: DRIVE_HAT,
         cym: ['x...............', '................', 'x...............', '................'],
         stab: RIFF_STAB,
         lead: RIFF_LEAD,
@@ -399,7 +397,7 @@ const prologue: CueDef = {
         bass: 'follow',
         kick: ['x.x.x.x.x.x.x.x.'],
         snare: ['....X.......X...', '....X.......X...', '....X.......X...', '....X.......X.oo'],
-        cym: ['x.r.r.r.r.r.r.r.'],
+        cym: ['x...r...r...r...'],
         lead: [
           L(['A4', 4], ['D5', 4], ['C5', 3], ['A4', 3], ['G4', 2]),
           L(['F4', 8], ['D4', 3], ['F4', 3], ['G4', 2]),
@@ -422,7 +420,6 @@ const prologue: CueDef = {
         bass: 'follow',
         kick: ['xx.x.xx.x.xx.xx.', 'xx.x.xx.x.xx.xx.', 'xx.x.xx.x.xx.xx.', 'xx.x.xx.x.x.x.x.'],
         snare: DRIVE_SNARE,
-        hat: DRIVE_HAT,
         cym: ['x...............', 'x...............', 'x...............', 'x...............'],
         lead: [L(['A5', 4], ['D6', 4], ['C6', 3], ['A5', 3], ['G5', 2]), L(['F5', 8], ['D5', 3], ['F5', 3], ['G5', 2]), L(['A5', 4], ['D6', 4], ['C6', 3], ['A5', 3], ['G5', 2]), L(['F5', 4], ['G5', 4], ['A5', 8])],
         stab: RIFF_STAB,
@@ -440,7 +437,7 @@ const prologue: CueDef = {
       },
     },
   ],
-  mix: { stab: 0.85, arp: 0.42, lead: 0.7, hat: 0.4, gtrL: 0.8, gtrR: 0.8 },
+  mix: { stab: 0.85, arp: 0.5, lead: 0.7, gtrL: 0.9, gtrR: 0.9, kick: 0.75 },
 };
 
 // ---- montage: the fall. The theme's hook slowed down on a lightly overdriven guitar in a
@@ -518,7 +515,7 @@ const montage: CueDef = {
       },
     },
   ],
-  mix: { pad: 0.42, piano: 0.8, cgtr: 0.78, bass: 0.7, kick: 0.6, snare: 0.55, hat: 0.4 },
+  mix: { pad: 0.42, piano: 0.7, cgtr: 1.0, bass: 0.36, kick: 0.6, snare: 0.8, hat: 0.5 },
 };
 
 // ---- workshop: a small radio on the bench in a storage unit at night. A warm, unhurried
@@ -545,12 +542,12 @@ const pick = (n: string) => {
 const workshop: CueDef = {
   bpm: 88,
   loopFrom: 0,
-  level: 0.42,
+  level: 0.34,
   swing: 0.1,
   kit: 'rock',
   bassTone: 'soft',
   cgtrTone: 'clean',
-  radio: { hp: 330, lp: 3000, honk: 4, drive: 2.6, hissDb: -46 },
+  radio: { hp: 200, lp: 3000, honk: 4, drive: 2.6, hissDb: -46 },
   sections: [
     // The groove: rim clicks, strummed chords, a walking-down bass.
     {
@@ -560,7 +557,6 @@ const workshop: CueDef = {
         bass: ['D-------D-----d-', 'J-------J-----j-', 'M-------M-----m-', 'G-------G-----g-', 'D-------D-----d-', 'J-------J-----j-', 'M-------M-----m-', 'G-------A-----a-'],
         kick: ['x.....x.x.......', 'x.....x.x.....x.'],
         snare: ['....r.......r...', '....r.......r...', '....r.......r...', '....r.......r.o.'],
-        hat: ['x.o.x.o.x.o.x.o.'],
       },
     },
     // The hook, turned hopeful, on the piano.
@@ -581,8 +577,6 @@ const workshop: CueDef = {
         bass: ['D-------D-----d-', 'M-------M-----m-', 'G-------G-----g-', 'A-------A-----a-', 'D-------D-----d-', 'M-------M-----m-', 'G-------A-------', 'D-------D-----d-'],
         kick: ['x.....x.x.......', 'x.....x.x.....x.'],
         snare: ['....x.......x...', '....x.......x...', '....x.......x...', '....x.......x.o.'],
-        hat: ['x.o.x.o.x.o.x.o.'],
-        cym: ['x...............', '................', '................', '................', '................', '................', '................', '................'],
       },
     },
     // A breather: picked chords, a pad, the ride.
@@ -594,11 +588,10 @@ const workshop: CueDef = {
         bass: ['K---------------', 'G---------------', 'N---------------', 'A---------------', 'K---------------', 'G---------------', 'N---------------', 'A-------A---a.a.'],
         kick: ['x.......x.......', 'x.......x.x.....'],
         snare: ['....r.......r...', '....r.......r...', '....r.......r...', '....x.......x.xx'],
-        cym: ['r...r...r...r...'],
       },
     },
   ],
-  mix: { cgtr: 0.75, piano: 0.85, bass: 0.85, kick: 0.75, snare: 0.8, hat: 0.32, cym: 0.6, pad: 0.35 },
+  mix: { cgtr: 0.55, piano: 0.9, bass: 1.1, kick: 0.9, snare: 0.8, pad: 0.35 },
 };
 
 export const CUES: Record<Exclude<MusicCue, 'none'>, CueDef> = { title, menu, pits, intro, fight, victory, defeat, bumper, nut, prologue, montage, workshop };

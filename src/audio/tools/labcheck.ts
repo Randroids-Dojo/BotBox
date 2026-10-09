@@ -47,6 +47,24 @@ for (let i = 0; i < 30; i += 4) {
   await page.waitForTimeout(60);
 }
 
+// The career stingers, then each cue alone in real time: renderer CPU over 8 s.
+for (const s of ['heartbreak', 'cash', 'rankup', 'unlock']) {
+  await click(s);
+  await page.waitForTimeout(300);
+}
+const cueCpu: string[] = [];
+for (const cue of ['title', 'menu', 'pits', 'prologue', 'montage', 'workshop']) {
+  await click(cue);
+  await page.waitForTimeout(2500);
+  const a = await rendererCpu();
+  const t = Date.now();
+  await page.waitForTimeout(8000);
+  cueCpu.push(`${cue} ${((((await rendererCpu()) - a) / ((Date.now() - t) / 1000)) * 100).toFixed(1)}%`);
+}
+await click('knockout cut');
+await page.waitForTimeout(1500);
+console.log('after the knockout cut:\n' + (await status()));
+
 await click('none');
 await page.waitForTimeout(1500);
 let c0 = await rendererCpu();
@@ -70,6 +88,7 @@ await click('slow motion');
 await click('stop mock fight');
 
 console.log(`\nrenderer CPU: idle page ${((idle / idleWall) * 100).toFixed(1)}% of a core, mock fight with music ${((fight / fightWall) * 100).toFixed(1)}% of a core`);
+console.log(`renderer CPU per cue (a core): ${cueCpu.join(', ')}`);
 console.log(`screenshot ${OUT}/lab.png`);
 if (errors.length) console.log(`\n${errors.length} console messages:\n  ` + [...new Set(errors)].slice(0, 20).join('\n  '));
 await browser.close();

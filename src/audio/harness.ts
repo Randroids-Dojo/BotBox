@@ -228,7 +228,7 @@ export function grindEvents(world: WorldFrame, t: number): MatchEvent[] {
 /** The full world mix: a mock fight with two roster robots, fight music, crowd, moving camera. */
 export async function renderFight(
   seconds: number,
-  o: { wav?: boolean; bots?: string[]; music?: boolean; cue?: Exclude<MusicCue, 'none'>; seed?: number; slowmo?: [number, number]; crowd?: boolean; robots?: boolean; events?: boolean; only?: readonly string[]; hazards?: boolean; worldMute?: boolean; musicMute?: boolean; stinger?: { at: number; id: Stinger; cut?: boolean } } = {},
+  o: { wav?: boolean; bots?: string[]; music?: boolean; cue?: Exclude<MusicCue, 'none'>; seed?: number; slowmo?: [number, number]; crowd?: boolean; robots?: boolean; events?: boolean; only?: readonly string[]; hazards?: boolean; worldMute?: boolean; musicMute?: boolean; uiMute?: boolean; stinger?: { at: number; id: Stinger; cut?: boolean } } = {},
 ): Promise<RenderResult> {
   const t0 = performance.now();
   const bank = await harnessBank();
@@ -245,6 +245,7 @@ export async function renderFight(
     await core.music.idle();
   }
   if (o.musicMute) core.setVolumes({ master: 1, music: 0, sfx: 1, voice: 1 });
+  if (o.uiMute) core.mixer.uiIn.gain.value = 0;
   let stung = false;
   const counts: Record<string, number> = {};
   let peakShots = 0;
