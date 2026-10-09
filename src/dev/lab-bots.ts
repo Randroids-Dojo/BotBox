@@ -339,16 +339,13 @@ const mockViews = new Map<string, BotView>();
 
 function startMock(a = 'megahurtz', b = 'tax-audit'): void {
   stopMock();
-  const ea = ENTRIES.find((e) => e.id === a) ?? ENTRIES[0];
-  const eb = ENTRIES.find((e) => e.id === b) ?? ENTRIES[3];
+  const ids = [a, b, ...(params.get('more') ?? '').split(',').filter(Boolean)];
+  const list = ids.map((id, i) => ENTRIES.find((e) => e.id === id) ?? ENTRIES[i]);
   mock = new MockWorld(
-    [
-      { id: ea.id, spec: ea.spec },
-      { id: eb.id, spec: eb.spec },
-    ],
-    { countdown: 0, clashEvery: 1.6, seed: 11 },
+    list.map((e) => ({ id: e.id, spec: e.spec })),
+    { countdown: 0, clashEvery: Number(params.get('clash') ?? 1.6), seed: 11 },
   );
-  for (const e of [ea, eb]) {
+  for (const e of list) {
     const v = createBotView(e.spec, { envMap: env, quality });
     scene.add(v.root);
     mockViews.set(e.id, v);
@@ -719,6 +716,7 @@ function benchEvent(kind: 'shrapnel' | 'grind' | 'killsaw' | 'pulverizer' | 'co2
 const clock = new THREE.Timer();
 let fpsText = '';
 let timeScale = 1;
+const stress = params.get('stress') === '1';
 let frames = 0;
 let fpsAcc = 0;
 const frameTimes: number[] = [];
@@ -728,13 +726,18 @@ const tmpQ = new THREE.Quaternion();
 function tick(): void {
   clock.update();
   const dt = Math.min(0.05, clock.getDelta()) * timeScale;
+  const t0 = performance.now();
   advance(dt);
+  const t1 = performance.now();
   key.target.position.copy(controls.target);
   key.position.copy(controls.target).add(new THREE.Vector3(4, 9, 5));
   renderer.info.reset();
   composer.render(dt);
+  cpuTimes.push([t1 - t0, performance.now() - t1]);
+  if (cpuTimes.length > 600) cpuTimes.shift();
   requestAnimationFrame(tick);
 }
+const cpuTimes: [number, number][] = [];
 
 function advance(dt: number): void {
   simT += dt;
@@ -835,11 +838,22 @@ function advance(dt: number): void {
       if (v) b.pos.y += v.spec.groundClearance;
     }
     mockFrame = out.frame;
+    if (stress) for (const b of out.frame.bots) Object.assign(b, { smoke: 1, fire: 1, facets: { ...b.facets, top: 0, left: 0 } });
     for (const e of out.events) {
       if (e.type === 'hit') mockViews.get(e.victim)?.hit(e);
       pendingEvents.push(e);
     }
     for (const b of out.frame.bots) mockViews.get(b.id)?.update(b, dt);
+  }
+
+  // Stress: a constant barrage of big titanium hits and grinding on mock robots.
+  if (stress && mode === 'mock' && mockFrame && Math.floor(simT * 5) !== Math.floor((simT - dt) * 5)) {
+    for (const b of mockFrame.bots) {
+      const p = { x: b.pos.x, y: 0.25, z: b.pos.z };
+      pendingEvents.push({ type: 'hit', t: simT, kind: 'spinner', attacker: null, victim: b.id, point: p, dir: { x: rng() - 0.5, y: 0.4, z: rng() - 0.5 }, energy: 15000, facet: 'front', damage: 0, severity: 1, material: 'titanium' });
+      pendingEvents.push({ type: 'shrapnel', t: simT, bot: b.id, point: p, dir: { x: 0, y: 1, z: 0 }, count: 10, material: 'steel' });
+      pendingEvents.push({ type: 'grind', t: simT, point: p, dir: { x: 1, y: 0, z: 0 }, intensity: 1, material: 'steel' });
+    }
   }
 
   // Bench grinding.
@@ -896,6 +910,14 @@ window.__lab = {
   },
   turn: (on: boolean) => (turning = on),
   arm: (k: number | null) => (armHold = k),
+  /** Frame the camera on a mock-fight robot from a broadcast-ish distance. */
+  follow: (id: string, dist = 3, height = 1.6) => {
+    const b = mockFrame?.bots.find((x) => x.id === id);
+    if (!b) return;
+    controls.target.set(b.pos.x, 0.25, b.pos.z);
+    camera.position.set(b.pos.x + dist * 0.6, height, b.pos.z + dist * 0.8);
+    flying = false;
+  },
   part: (c: Component, v: number) => {
     const s = sel();
     if (s) s.frame.parts[c] = v;
@@ -909,9 +931,14 @@ window.__lab = {
   stats: () => {
     const sorted = [...frameTimes].sort((a, b) => a - b);
     const avg = frameTimes.reduce((a, b) => a + b, 0) / Math.max(1, frameTimes.length);
-    return { fps: 1 / avg, p95ms: (sorted[Math.floor(sorted.length * 0.95)] ?? 0) * 1000, calls: renderer.info.render.calls, tris: renderer.info.render.triangles, geos: renderer.info.memory.geometries, tex: renderer.info.memory.textures };
+    const upd = cpuTimes.reduce((a, b) => a + b[0], 0) / Math.max(1, cpuTimes.length);
+    const sub = cpuTimes.reduce((a, b) => a + b[1], 0) / Math.max(1, cpuTimes.length);
+    return { fps: 1 / avg, updateMs: +upd.toFixed(2), submitMs: +sub.toFixed(2), p95ms: (sorted[Math.floor(sorted.length * 0.95)] ?? 0) * 1000, calls: renderer.info.render.calls, tris: renderer.info.render.triangles, geos: renderer.info.memory.geometries, tex: renderer.info.memory.textures };
   },
-  resetStats: () => (frameTimes.length = 0),
+  resetStats: () => {
+    frameTimes.length = 0;
+    cpuTimes.length = 0;
+  },
   timeScale: (k: number) => (timeScale = k),
   /** Debug: show only parts whose name starts with a prefix (panel, wheel, frame...). */
   only: (prefix: string | null) => {

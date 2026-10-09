@@ -315,7 +315,7 @@ export class Fx implements FxLayer {
     // Flash: light pulse and a glow sprite.
     if (e.energy > 150) {
       const col = mat === 'titanium' ? '#e9f0ff' : '#ffcf8a';
-      this.lights.flash({ x: p.x, y: p.y + 0.35, z: p.z }, (15 + 110 * e01 * e01) * (factor > 0 ? 1 : 0.4), col, 0.05 + 0.05 * big);
+      this.lights.flash({ x: p.x, y: p.y + 0.35, z: p.z }, (10 + 70 * e01 * e01) * (factor > 0 ? 1 : 0.4), col, 0.05 + 0.05 * big);
       const g = factor > 0 ? 1 : 0.35;
       this.glow.emit({ x: p.x, y: p.y, z: p.z, vx: 0, vy: 0, vz: 0, life: 0.09 + 0.06 * big, size0: 0.06 + 0.16 * e01, size1: 0.12 + 0.32 * e01, c0: [5 * g, 4.2 * g, 3.2 * g], c1: [2 * g, 0.8 * g, 0.2 * g], alpha: 1, cell: 3, rot: 0, spin: 0, fadeIn: 0.01 });
     }
@@ -641,7 +641,7 @@ export class Fx implements FxLayer {
       if (r() < dt * 10 * b.fire)
         this.smoke.emit({ x: _v.x, y: _v.y + 0.25, z: _v.z, vx: (r() - 0.5) * 0.3, vy: 0.7, vz: (r() - 0.5) * 0.3, life: 4, size0: 0.2, size1: 1.5, c0: [0.03, 0.028, 0.026], c1: [0.07, 0.07, 0.07], alpha: 0.65, buoy: 0.6, drag: 0.4, shade: 0.5 });
       const flick = 0.75 + 0.25 * Math.sin(this.t * 31 + b.id.length) * Math.sin(this.t * 17.3) + (r() - 0.5) * 0.2;
-      this.lights.sustain(`fire:${b.id}`, 'fire', { x: _v.x, y: _v.y + 0.35, z: _v.z }, 16 * b.fire * flick, '#ff7a28');
+      this.lights.sustain(`fire:${b.id}`, 'fire', { x: _v.x, y: _v.y + 0.45, z: _v.z }, 7 * b.fire * flick, '#ff7a28');
       // Scorch under a burning robot.
       const sacc = (this.scorchAcc.get(b.id) ?? 0) + dt;
       if (sacc > 1.5) {
