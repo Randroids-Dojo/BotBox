@@ -1,8 +1,12 @@
 // Arena workbench: the Stage driven by MockWorld, with controls for scenes, cameras, shots,
-// quality, the broadcast filter and the mock, plus an fps and draw call readout.
+// quality, the broadcast filter and the mock, plus an fps and draw call readout. Also the
+// workshop tiers, rebuild parts and arena dressings.
 //   ?lab=arena&scene=arena&cam=broadcast&q=high&filter=1&bots=3&hideui=1&warp=8
+//   ?lab=arena&scene=garage&tier=0&missing=drive,power,armor,weapon&gbot=scrap
+//   ?lab=arena&scene=arena&dressing=championship
 
 import type { HitEvent, MatchEvent, Vec3 } from '../contract';
+import { JUGGERNAUT_PRIME, SCRAP_LOADOUT } from '../data/campaign';
 import { ROSTER } from '../data/roster';
 import { createStage } from '../render/stage';
 import type { CameraMode, Quality, SceneId, ShotRequest, StageEntrant } from '../render/types';
@@ -38,7 +42,18 @@ ui.appendChild(loading);
 await stage.init((p) => (loading.textContent = `Loading ${Math.round(p * 100)}%`));
 loading.remove();
 stage.setEntrants(entrants);
-stage.garage(entrants[0].spec);
+type Missing = 'drive' | 'power' | 'armor' | 'weapon';
+type Dressing = 'normal' | 'championship' | 'qualifier';
+const gbot = params.get('gbot') ?? 'scrap';
+const garageSpec =
+  gbot === 'scrap' ? buildSpec(SCRAP_LOADOUT) : gbot === 'prime' ? buildSpec(JUGGERNAUT_PRIME) : buildSpec((ROSTER.find((r) => r.id === gbot) ?? ROSTER[0]).loadout);
+const garageOpts: { tier: 0 | 1 | 2 | 3; missing: Missing[] } = {
+  tier: Number(params.get('tier') ?? 2) as 0 | 1 | 2 | 3,
+  missing: (params.get('missing') ?? '').split(',').filter(Boolean) as Missing[],
+};
+const applyGarage = () => stage.garage(garageSpec, undefined, { tier: garageOpts.tier, missing: [...garageOpts.missing] });
+applyGarage();
+stage.setDressing((params.get('dressing') as Dressing | null) ?? 'normal');
 stage.trophy(entrants[0].spec);
 const q0 = params.get('q') as Quality | null;
 if (q0) stage.setQuality(q0);
@@ -104,6 +119,26 @@ row('Look', [
   ['crowd .5', () => stage.crowd(0.5)],
   ['crowd 1', () => stage.crowd(1)],
 ]);
+row('Workshop', [
+  ...([0, 1, 2, 3] as const).map((t) => [`tier ${t}`, () => ((garageOpts.tier = t), applyGarage())] as [string, () => void]),
+]);
+row('Missing (toggle)', [
+  ...(['drive', 'power', 'armor', 'weapon'] as const).map(
+    (m) =>
+      [
+        m,
+        () => {
+          const i = garageOpts.missing.indexOf(m);
+          if (i >= 0) garageOpts.missing.splice(i, 1);
+          else garageOpts.missing.push(m);
+          applyGarage();
+        },
+      ] as [string, () => void],
+  ),
+  ['all', () => ((garageOpts.missing = ['drive', 'power', 'armor', 'weapon']), applyGarage())],
+  ['none', () => ((garageOpts.missing = []), applyGarage())],
+]);
+row('Dressing', (['normal', 'qualifier', 'championship'] as Dressing[]).map((d) => [d, () => stage.setDressing(d)]));
 row('Mock', [
   ['pause', () => (paused = !paused)],
   ['restart', () => {
@@ -173,6 +208,12 @@ addEventListener('pointermove', (e) => {
     return mock;
   },
   stats: () => ({ fps, ...stage.stats() }),
+  /** Workshop: set tier and missing parts (as in the garage contract). */
+  garage(tier: 0 | 1 | 2 | 3, missing: Missing[] = []) {
+    garageOpts.tier = tier;
+    garageOpts.missing = missing;
+    applyGarage();
+  },
   pause: (p: boolean) => (paused = p),
   /** Render n frames back to back, waiting for the GPU each time. Milliseconds per frame. */
   bench(n = 90): { ms: number; calls: number } {

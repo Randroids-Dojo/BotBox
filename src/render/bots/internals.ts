@@ -29,12 +29,15 @@ function hullBox(spec: BotSpec): THREE.Box3 {
   return b;
 }
 
-export function buildFrame(c: Ctx): THREE.Group {
+/** `splitLiner` builds the dark inner liner as its own mesh (named 'liner') so the garage can
+ *  hide it and show an open frame. */
+export function buildFrame(c: Ctx, splitLiner = false): THREE.Group {
   const { spec } = c;
   const s = spec.scale;
   const group = new THREE.Group();
   group.name = 'frame';
   const b = new GeoBucket();
+  const linerBucket = splitLiner ? new GeoBucket() : b;
   const t = spec.panels[0]?.t ?? 0.006;
   const chassis = spec.loadout.chassis;
   const pts = spec.hull[0].map(v3);
@@ -51,7 +54,7 @@ export function buildFrame(c: Ctx): THREE.Group {
     const liner = new ConvexGeometry(pts.map((p) => p.clone().sub(center).multiplyScalar(0.985).add(center)));
     // Flip it inside out so its faces look inward.
     flipWinding(liner);
-    b.add(liner, hw(c, 'interior'));
+    linerBucket.add(liner, hw(c, 'interior'));
     // Box-tube frame along the hull edges, inset under the armor.
     const tube = Math.max(0.018, 0.025 * s);
     const d = t + tube / 2 + 0.003;
@@ -162,6 +165,12 @@ export function buildFrame(c: Ctx): THREE.Group {
   });
 
   b.build(group);
+  if (linerBucket !== b && !linerBucket.empty) {
+    const g = new THREE.Group();
+    g.name = 'liner';
+    linerBucket.build(g);
+    group.add(g);
+  }
   return group;
 }
 
@@ -242,12 +251,22 @@ function find(spec: BotSpec, comp: InternalSpec['component']): InternalSpec {
   return spec.internals.find((i) => i.component === comp)!;
 }
 
-export function buildInternals(c: Ctx): THREE.Group {
+/** Internals as one merged mesh, or with `split` as child groups 'internals:core' (electronics
+ *  and wiring), 'internals:battery', 'internals:drive' and 'internals:weapon' so the garage can
+ *  leave parts out during a rebuild. */
+export function buildInternals(c: Ctx, split = false): THREE.Group {
   const { spec } = c;
   const s = spec.scale;
   const group = new THREE.Group();
   group.name = 'internals';
-  const b = new GeoBucket();
+  const core = new GeoBucket();
+  const buckets = {
+    core,
+    battery: split ? new GeoBucket() : core,
+    drive: split ? new GeoBucket() : core,
+    weapon: split ? new GeoBucket() : core,
+  };
+  let b = buckets.battery;
   const lowQ = c.q === 'low';
 
   // ---- battery
@@ -308,6 +327,7 @@ export function buildInternals(c: Ctx): THREE.Group {
   }
 
   // ---- electronics: two speed controllers with heat sinks, a receiver, a relay
+  b = core;
   const el = find(spec, 'electronics');
   const ec = v3(el.center);
   const ex = el.size.x;
@@ -338,6 +358,7 @@ export function buildInternals(c: Ctx): THREE.Group {
   }
 
   // ---- drive motors and gearboxes
+  b = buckets.drive;
   for (const comp of ['driveL', 'driveR'] as const) {
     const dv = find(spec, comp);
     const side = comp === 'driveL' ? -1 : 1;
@@ -389,6 +410,7 @@ export function buildInternals(c: Ctx): THREE.Group {
   }
 
   // ---- weapon drive
+  b = buckets.weapon;
   const wp = find(spec, 'weapon');
   const wc = v3(wp.center);
   const kind = spec.weapon.kind;
@@ -414,6 +436,7 @@ export function buildInternals(c: Ctx): THREE.Group {
   }
 
   // ---- wiring: red and black runs from the battery to the controllers and motors
+  b = core;
   const run = (from: THREE.Vector3, to: THREE.Vector3, sag: number) => {
     for (const [k, mat] of [
       [-1, 'wireRed'],
@@ -443,7 +466,16 @@ export function buildInternals(c: Ctx): THREE.Group {
   ]);
   b.add(new THREE.TubeGeometry(sig, 8, 0.002 * s, 4), hw(c, 'wireYellow'));
 
-  b.build(group);
+  core.build(group);
+  if (split) {
+    for (const k of ['battery', 'drive', 'weapon'] as const) {
+      if (buckets[k].empty) continue;
+      const g = new THREE.Group();
+      g.name = `internals:${k}`;
+      buckets[k].build(g);
+      group.add(g);
+    }
+  }
   return group;
 }
 

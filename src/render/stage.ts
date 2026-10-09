@@ -131,7 +131,9 @@ class StageImpl implements Stage, StageExtras {
     this.titleScene.root.visible = true;
     this.trophyScene.root.visible = true;
     await r.compileAsync(s, this.camera);
+    this.garageScene.showAll(true);
     await r.compileAsync(this.garageScene.scene, this.camera);
+    this.garageScene.showAll(false);
     this.setScene(this.sceneId);
     this.ready = true;
     p(1);
@@ -353,9 +355,9 @@ class StageImpl implements Stage, StageExtras {
   garage(
     spec: BotSpec,
     damage?: { facets: Record<Facet, number>; parts: Record<Component, number> },
-    _opts?: { tier?: 0 | 1 | 2 | 3; missing?: ('drive' | 'power' | 'armor' | 'weapon')[] },
+    opts?: { tier?: 0 | 1 | 2 | 3; missing?: ('drive' | 'power' | 'armor' | 'weapon')[] },
   ): void {
-    this.garageScene?.setRobot(spec, damage);
+    this.garageScene?.setRobot(spec, damage, opts);
   }
 
   setDressing(_d: 'normal' | 'championship' | 'qualifier'): void {}

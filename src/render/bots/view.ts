@@ -41,6 +41,20 @@ interface PanelView {
 
 const ROT_FRONT = new THREE.Quaternion(0, 1, 0, 0);
 
+/** Parts the garage can leave off during a rebuild. */
+export type MissingPart = 'drive' | 'power' | 'armor' | 'weapon';
+
+interface Pop {
+  obj: THREE.Object3D;
+  /** Seconds until it starts (negative once running). */
+  delay: number;
+  t: number;
+  y: number;
+  scale: THREE.Vector3;
+}
+
+const POP_TIME = 0.42;
+
 // ------------------------------------------------------------------------------- 2D helpers
 
 type P2 = THREE.Vector2;
@@ -213,6 +227,11 @@ class ProceduralBotView implements BotView {
   private alwaysInternals: boolean;
   private lastInverted = false;
   private q: QualitySettings;
+  private missing = new Set<MissingPart>();
+  /** Garage only: the split internals, open frame and bare floor pan, built on first use. */
+  private garageParts: { liner: THREE.Object3D | null; pan: THREE.Mesh | null; groups: Record<'battery' | 'drive' | 'weapon', THREE.Object3D | null> } | null = null;
+  private weaponMeshes: THREE.Object3D[] = [];
+  private pops: Pop[] = [];
 
   constructor(
     readonly spec: BotSpec,
@@ -511,18 +530,21 @@ class ProceduralBotView implements BotView {
   update(frame: BotFrame, dt: number): void {
     this.root.position.set(frame.pos.x, frame.pos.y, frame.pos.z);
     this.root.quaternion.set(frame.quat.x, frame.quat.y, frame.quat.z, frame.quat.w);
-    let missing = false;
+    const noArmor = this.missing.has('armor');
+    let missing = noArmor;
     for (const pv of this.panels) {
-      const vis = frame.facets[pv.spec.facet] > 0;
+      const vis = frame.facets[pv.spec.facet] > 0 && !noArmor;
       pv.group.visible = vis;
       if (!vis) missing = true;
     }
     this.internals.visible = missing || this.alwaysInternals;
+    const noDrive = this.missing.has('drive');
     for (let i = 0; i < this.wheels.length; i++) {
       const w = this.wheels[i];
       w.rotation.x = -(frame.wheelSpin[i] ?? 0);
-      w.visible = !frame.wheelLost[i];
+      w.visible = !frame.wheelLost[i] && !noDrive;
     }
+    if (this.pops.length) this.animatePops(dt);
     this.rig?.update(frame.weapon, frame.parts.weapon, dt, frame.inverted);
     this.srimech?.update(frame.inverted, dt);
     this.lastInverted = frame.inverted;
@@ -536,6 +558,138 @@ class ProceduralBotView implements BotView {
     }
     this.atlas.flush();
     this.root.updateMatrixWorld();
+  }
+
+  /** Garage rebuild: hide parts not fitted yet. Parts that come back pop into place when
+   *  `animate` is set. The first call switches this view to split internals and an open frame. */
+  setMissing(parts: readonly MissingPart[], animate: boolean): void {
+    const next = new Set(parts);
+    const gp = this.ensureGarageParts();
+    if (animate) {
+      let k = 0;
+      for (const part of this.missing) {
+        if (next.has(part)) continue;
+        for (const obj of this.partObjects(part)) this.startPop(obj, k++ * 0.045);
+      }
+    }
+    this.missing = next;
+    const noArmor = next.has('armor');
+    if (gp.liner) gp.liner.visible = !noArmor;
+    if (gp.pan) gp.pan.visible = noArmor;
+    if (gp.groups.battery) gp.groups.battery.visible = !next.has('power');
+    if (gp.groups.drive) gp.groups.drive.visible = !next.has('drive');
+    if (gp.groups.weapon) gp.groups.weapon.visible = !next.has('weapon');
+    for (const m of this.weaponMeshes) m.visible = !next.has('weapon');
+  }
+
+  private ensureGarageParts(): NonNullable<ProceduralBotView['garageParts']> {
+    if (this.garageParts) return this.garageParts;
+    const ctx = { spec: this.spec, env: this.opts.envMap, q: this.opts.quality };
+    // Swap in a frame with its liner apart and internals split by part.
+    const frame = buildFrame(ctx, true);
+    const internals = buildInternals(ctx, true);
+    internals.visible = this.internals.visible;
+    for (const old of [this.frame, this.internals]) {
+      old.removeFromParent();
+      old.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (!m.isMesh) return;
+        m.geometry.dispose();
+        const i = this.ownGeos.indexOf(m.geometry);
+        if (i >= 0) this.ownGeos.splice(i, 1);
+      });
+    }
+    this.frame = frame;
+    this.internals = internals;
+    this.root.add(frame, internals);
+    // A bare floor pan where the belly armor goes, so the open frame has a floor.
+    let pan: THREE.Mesh | null = null;
+    const belly = this.spec.panels.find((p) => p.facet === 'belly');
+    if (belly) {
+      const sw = hardware('frame', this.opts.envMap, this.opts.quality);
+      const b = new GeoBucket();
+      const m = new THREE.Matrix4().compose(v3(belly.center), quat(belly.rot), new THREE.Vector3(1, 1, 1));
+      b.add(new THREE.BoxGeometry(belly.w * 0.96, belly.h * 0.96, Math.max(0.003, belly.t * 0.5)), sw, m);
+      pan = b.build(this.root)[0] ?? null;
+      if (pan) {
+        pan.name = 'floorpan';
+        pan.visible = false;
+      }
+    }
+    const group = (name: string) => internals.getObjectByName(name) ?? null;
+    // Weapon meshes, leaving any armor the weapon carries (a flipper's front skin).
+    this.weaponMeshes = [];
+    if (this.rig) {
+      const walk = (o: THREE.Object3D) => {
+        if (o.name.startsWith('panel:')) return;
+        if ((o as THREE.Mesh).isMesh || (o as THREE.Points).isPoints) {
+          this.weaponMeshes.push(o);
+          return;
+        }
+        for (const ch of o.children) walk(ch);
+      };
+      walk(this.rig.group);
+    }
+    this.root.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.isMesh && m.geometry && !this.ownGeos.includes(m.geometry)) this.ownGeos.push(m.geometry);
+    });
+    this.garageParts = {
+      liner: frame.getObjectByName('liner') ?? null,
+      pan,
+      groups: { battery: group('internals:battery'), drive: group('internals:drive'), weapon: group('internals:weapon') },
+    };
+    return this.garageParts;
+  }
+
+  private partObjects(part: MissingPart): THREE.Object3D[] {
+    const gp = this.garageParts;
+    switch (part) {
+      case 'drive':
+        return [...this.wheels, ...(gp?.groups.drive ? [gp.groups.drive] : [])];
+      case 'power':
+        return gp?.groups.battery ? [gp.groups.battery] : [];
+      case 'armor':
+        return this.panels.filter((p) => !p.onArm).map((p) => p.group);
+      case 'weapon':
+        return this.rig ? [this.rig.group] : [];
+    }
+  }
+
+  private startPop(obj: THREE.Object3D, delay: number): void {
+    const prev = this.pops.find((p) => p.obj === obj);
+    if (prev) {
+      prev.delay = delay;
+      prev.t = 0;
+      return;
+    }
+    this.pops.push({ obj, delay, t: 0, y: obj.position.y, scale: obj.scale.clone() });
+    obj.scale.multiplyScalar(0.001);
+  }
+
+  /** Drop in from a little above with a squash and settle. */
+  private animatePops(dt: number): void {
+    const s = this.spec.scale;
+    for (let i = this.pops.length - 1; i >= 0; i--) {
+      const p = this.pops[i];
+      if (p.delay > 0) {
+        p.delay -= dt;
+        continue;
+      }
+      p.t += dt;
+      const u = Math.min(1, p.t / POP_TIME);
+      // Fall with gravity, then a damped bounce.
+      const fall = u < 0.45 ? 1 - (u / 0.45) ** 2 : 0;
+      const bounce = u < 0.45 ? 0 : Math.sin(((u - 0.45) / 0.55) * Math.PI * 2) * Math.exp(-(u - 0.45) * 7) * 0.12;
+      p.obj.position.y = p.y + (fall * 0.09 + Math.max(0, bounce) * 0.1) * s;
+      const k = u < 0.2 ? 0.6 + (u / 0.2) * 0.5 : 1 + Math.sin(((u - 0.2) / 0.8) * Math.PI * 2.5) * Math.exp(-(u - 0.2) * 6) * 0.08;
+      p.obj.scale.copy(p.scale).multiplyScalar(k);
+      if (u >= 1) {
+        p.obj.position.y = p.y;
+        p.obj.scale.copy(p.scale);
+        this.pops.splice(i, 1);
+      }
+    }
   }
 
   private applySoot(): void {
