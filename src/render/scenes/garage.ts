@@ -166,7 +166,7 @@ export class GarageScene {
     this.lamp.add(shade, bulb, cord);
     this.lamp.position.set(0.25, 2.85, 0.3);
     s.add(this.lamp);
-    this.lampLight = new THREE.SpotLight(0xffc890, 60, 12, 0.9, 0.6, 1.4);
+    this.lampLight = new THREE.SpotLight(0xffc890, 34, 12, 0.9, 0.6, 1.4);
     this.lampLight.position.set(0.25, 2.7, 0.3);
     this.lampLight.target.position.set(0, 0, 0);
     this.lampLight.castShadow = true;
@@ -297,11 +297,12 @@ export class GarageScene {
     const r = this.size * 0.62 + 0.15;
     // Fit by width (robot in the left 60 percent) and by height, whichever needs more room.
     const vHalf = Math.tan(THREE.MathUtils.degToRad(fov) / 2);
-    const dist = Math.max(2.0, r / (0.5 * Math.tan(hfov / 2)), r / (0.62 * vHalf));
+    const dist = Math.max(1.7, r / (0.6 * Math.tan(hfov / 2)), r / (0.82 * vHalf));
     const p = this.pose;
     p.pos.set(Math.sin(this.yaw) * Math.cos(this.pitch) * dist, this.center.y + Math.sin(this.pitch) * dist, Math.cos(this.yaw) * Math.cos(this.pitch) * dist);
     p.pos.add(this.center);
-    p.target.copy(this.center).setY(this.center.y + dist * 0.07);
+    // Aim a little low so the robot sits above the stats card in the lower left.
+    p.target.copy(this.center).setY(this.center.y - dist * 0.075);
     // Shift the robot into the left 60 percent: aim right of it.
     _d.subVectors(p.target, p.pos).normalize();
     _r.crossVectors(_d, new THREE.Vector3(0, 1, 0)).normalize();
