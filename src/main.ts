@@ -29,13 +29,15 @@ if (lab) {
     e.preventDefault();
     retry();
   });
-  import('./game/boot')
-    .then((m) => {
-      sessionStorage.removeItem(KEY);
-      return m.boot();
-    })
-    .catch((err) => {
+  import('./game/boot').then(
+    (m) => {
+      // Loaded fine: allow a future retry after the game has been up for a while.
+      setTimeout(() => sessionStorage.removeItem(KEY), 15000);
+      m.boot().catch((err) => console.error(err));
+    },
+    (err) => {
       console.error(err);
       retry();
-    });
+    },
+  );
 }
