@@ -150,13 +150,14 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       break;
     }
     case 'impact': {
-      const dist = THREE.MathUtils.lerp(2.1, 1.7, e);
-      out.pos.copy(s.base).addScaledVector(s.dir, dist).setY(0.3);
+      // Low and close enough to feel it, far enough that a robot never fills the lens.
+      const dist = THREE.MathUtils.lerp(3.1, 2.6, e);
+      out.pos.copy(s.base).addScaledVector(s.dir, dist).setY(0.75);
       _a.crossVectors(s.dir, UP);
-      out.pos.addScaledVector(_a, 0.5);
+      out.pos.addScaledVector(_a, 0.6);
       settle(out.pos, ctx);
-      out.target.copy(s.base).setY(0.22);
-      out.fov = THREE.MathUtils.lerp(54, 48, e);
+      out.target.copy(s.base).setY(0.3);
+      out.fov = THREE.MathUtils.lerp(58, 50, e);
       out.roll = 0.06;
       break;
     }

@@ -187,6 +187,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   };
 
   // ---------------------------------------------------------------- intro
+  g.skipped = false;
+  g.skipAll = false;
   ui.bug(true);
   audio.music('intro', 1.5);
   g.crowd(0.55);
@@ -209,7 +211,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
       weaponShort: WEAPONS[e.spec.loadout.weapon].short,
       classLabel: CLASS_LABEL[cls],
     });
-    await g.say([CORNER_LINE[e.corner], ...introLines(e)], 7.5);
+    await g.say([CORNER_LINE[e.corner], ...introLines(e)], 14);
     ui.lowerThird(null);
     await g.wait(0.35);
   }
@@ -229,6 +231,9 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   ui.banner('fight');
   stage.shot({ kind: 'live' });
   audio.music('fight', 1);
+  // Hand the crowd back to the action.
+  g.crowd(0.6);
+  audio.crowd(0);
   booth.reset();
   if (player) ui.touchControls(touchOpts());
 
@@ -240,6 +245,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     simRunning = false;
     ui.hud(null);
     ui.bug(false);
+    audio.crowd(0);
+    audio.setWorldActive(false);
     match.dispose();
     g.onCalm(true);
     return { result: match.result ?? fallbackResult(match), playerWon: false, carried: player?.carried(), quit: true };
@@ -363,6 +370,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
 
   unsubAction();
   ui.bug(false);
+  audio.crowd(0);
+  audio.setWorldActive(false);
   const carried = player?.carried();
   match.dispose();
   g.save.fights++;

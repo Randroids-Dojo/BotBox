@@ -164,6 +164,7 @@ export class Game {
 
   async run(): Promise<void> {
     this.stage.setScene('title');
+    this.audio.setWorldActive(false);
     this.audio.music('title', 0.5);
     await this.ui.title();
     this.audio.stinger('logo');
@@ -339,6 +340,7 @@ export class Game {
 
   /** Cold open, title and the host desk. */
   private async episodeOpen(full: boolean): Promise<void> {
+    this.skipped = false;
     this.skipAll = false;
     this.ui.skippable(true);
     this.stage.setEntrants([]);
@@ -365,6 +367,7 @@ export class Game {
     }
     this.ui.skippable(false);
     this.skipAll = false;
+    this.audio.crowd(0);
   }
 
   private async ceremony(l: Loadout): Promise<void> {

@@ -241,7 +241,11 @@ export class Match implements SimHost {
         if (ai) b.cmd = ai.update(dt, this.bots);
       }
     }
-    for (const b of this.bots) b.prestep(dt, fighting);
+    for (const b of this.bots) {
+      b.prestep(dt, fighting);
+      // Button presses are edges: one step consumes them, even when a frame runs several steps.
+      if (b.control === 'player' && b.cmd.weaponPressed) b.cmd = { ...b.cmd, weaponPressed: false };
+    }
     this.hazards.step(dt, fighting);
 
     this.world.step(this.queue);

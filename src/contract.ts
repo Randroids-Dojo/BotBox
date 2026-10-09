@@ -380,7 +380,7 @@ export interface BotCard {
   /** One-liner for the lower third and scouting card. */
   blurb: string;
   record?: string;
-  /** Voice line id prefix for this robot, if it has recorded lines (ann.bot.<voiceId>.*). */
+  /** Voice id for this robot, if it has recorded lines (vic.bot.<voiceId> and vic.name.<voiceId>). */
   voiceId?: string;
 }
 
