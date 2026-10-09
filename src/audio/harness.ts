@@ -164,7 +164,11 @@ export interface RenderResult {
 }
 
 /** A music cue on its own, optionally switching to another cue partway (crossfade test). */
-export async function renderCue(cue: Exclude<MusicCue, 'none'>, seconds: number, o: { wav?: boolean; then?: { at: number; cue: MusicCue; fade: number }; solo?: string[] } = {}): Promise<RenderResult> {
+export async function renderCue(
+  cue: Exclude<MusicCue, 'none'>,
+  seconds: number,
+  o: { wav?: boolean; then?: { at: number; cue: MusicCue; fade: number }; solo?: string[]; ui?: [number, UiSound][]; stinger?: [number, Stinger] } = {},
+): Promise<RenderResult> {
   const t0 = performance.now();
   const bank = await harnessBank();
   await bank.ensure(cueKeys(bank, cue));
@@ -181,12 +185,14 @@ export async function renderCue(cue: Exclude<MusicCue, 'none'>, seconds: number,
     ctx,
     core,
     seconds,
-    hook: async (t) => {
+    hook: async (t, step) => {
       if (o.then && !switched && t >= o.then.at) {
         switched = true;
         core.musicCue(o.then.cue, o.then.fade);
         await core.music.idle();
       }
+      for (const [at, id] of o.ui ?? []) if (t >= at && t - step < at) core.ui(id);
+      if (o.stinger && t >= o.stinger[0] && t - step < o.stinger[0]) core.stinger(o.stinger[1]);
     },
   });
   return { stats: stats(out), wav: o.wav ? wavBase64(out) : undefined, ms: performance.now() - t0, info: { cue } };
@@ -222,11 +228,12 @@ export function grindEvents(world: WorldFrame, t: number): MatchEvent[] {
 /** The full world mix: a mock fight with two roster robots, fight music, crowd, moving camera. */
 export async function renderFight(
   seconds: number,
-  o: { wav?: boolean; bots?: string[]; music?: boolean; seed?: number; slowmo?: [number, number]; crowd?: boolean; robots?: boolean; events?: boolean; only?: readonly string[]; hazards?: boolean; worldMute?: boolean } = {},
+  o: { wav?: boolean; bots?: string[]; music?: boolean; cue?: Exclude<MusicCue, 'none'>; seed?: number; slowmo?: [number, number]; crowd?: boolean; robots?: boolean; events?: boolean; only?: readonly string[]; hazards?: boolean; worldMute?: boolean; musicMute?: boolean; uiMute?: boolean; stinger?: { at: number; id: Stinger; cut?: boolean } } = {},
 ): Promise<RenderResult> {
   const t0 = performance.now();
   const bank = await harnessBank();
-  await bank.ensure(cueKeys(bank, 'fight'));
+  const cue = o.cue ?? 'fight';
+  await bank.ensure(cueKeys(bank, cue));
   const ctx = offline(seconds);
   const core = new Core(ctx, bank, manifest);
   const specs = rosterSpecs(o.bots ?? ['megahurtz', 'tax-audit']);
@@ -234,9 +241,12 @@ export async function renderFight(
   if (o.crowd === false) core.mixer.crowdGate.gain.value = 0;
   const mock = new MockWorld(specs, { seed: o.seed ?? 7, countdown: 4, clashEvery: 2.2 });
   if (o.music !== false) {
-    core.musicCue('fight', 0);
+    core.musicCue(cue, 0);
     await core.music.idle();
   }
+  if (o.musicMute) core.setVolumes({ master: 1, music: 0, sfx: 1, voice: 1 });
+  if (o.uiMute) core.mixer.uiIn.gain.value = 0;
+  let stung = false;
   const counts: Record<string, number> = {};
   let peakShots = 0;
   const excite: number[] = [];
@@ -256,6 +266,11 @@ export async function renderFight(
       if (o.worldMute) core.mixer.worldGate.gain.value = 0;
       for (const e of ev) counts[e.type === 'hit' ? `hit.${e.kind}` : e.type] = (counts[e.type === 'hit' ? `hit.${e.kind}` : e.type] ?? 0) + 1;
       if (o.slowmo) core.world.setTimeScale(t >= o.slowmo[0] && t < o.slowmo[1] ? 0.25 : 1);
+      if (o.stinger && !stung && t >= o.stinger.at) {
+        stung = true;
+        if (o.stinger.cut) core.musicCue('none', 0);
+        core.stinger(o.stinger.id);
+      }
       const f0 = performance.now();
       core.frame(frame, ev, orbitListener(t), step);
       frameMs += performance.now() - f0;
@@ -283,11 +298,12 @@ export async function renderTour(o: { wav?: boolean; group?: 'all' | 'show' | 'i
   const bank = await harnessBank();
   const group = o.group ?? 'all';
   const plan: { what: string; len: number; fire: (core: Core) => void }[] = [];
-  const stingers: Stinger[] = ['logo', 'whoosh', 'lights', 'go', 'ko', 'time', 'decision', 'replay', 'stamp', 'crowd_roar'];
+  const stingers: Stinger[] = ['logo', 'whoosh', 'lights', 'go', 'ko', 'time', 'decision', 'replay', 'stamp', 'crowd_roar', 'heartbreak', 'cash', 'rankup', 'unlock'];
+  const long: Partial<Record<Stinger, number>> = { logo: 4, decision: 4, crowd_roar: 4, heartbreak: 8.5, unlock: 3, rankup: 3 };
   const uis: UiSound[] = ['move', 'select', 'back', 'error', 'buy', 'repair', 'tick', 'type'];
   const center = { x: 0, y: 0.2, z: 0 };
   if (group === 'all' || group === 'show') {
-    for (const s of stingers) plan.push({ what: `stinger.${s}`, len: s === 'logo' || s === 'decision' || s === 'crowd_roar' ? 4 : 2.6, fire: (c) => c.stinger(s) });
+    for (const s of stingers) plan.push({ what: `stinger.${s}`, len: long[s] ?? 2.6, fire: (c) => c.stinger(s) });
     for (const u of uis) plan.push({ what: `ui.${u}`, len: 0.8, fire: (c) => c.ui(u) });
   }
   if (group === 'all' || group === 'impacts') {
@@ -455,6 +471,24 @@ function emptyWorld(): WorldFrame {
   return { t: 0, bots: [], debris: [], hazards: [], match: { phase: 'fight', clock: 100, lights: 4, timeScale: 1 } };
 }
 
+/** One stinger through the engine and the master chain, nothing else playing. */
+export async function renderStinger(id: Stinger, seconds: number): Promise<RenderResult> {
+  const t0 = performance.now();
+  const bank = await harnessBank();
+  const ctx = offline(seconds);
+  const core = new Core(ctx, bank, manifest);
+  core.world.setActive(false);
+  core.mixer.crowdGate.gain.value = 0;
+  // Half a second in, like the effects tour, so the master dynamics have settled.
+  void ctx.suspend(0.5).then(() => {
+    core.stinger(id);
+    void ctx.resume();
+  });
+  const b = await ctx.startRendering();
+  const out = [b.getChannelData(0), b.getChannelData(1)];
+  return { stats: stats(out), wav: wavBase64(out), ms: performance.now() - t0, info: { id } };
+}
+
 /** Render one bank sample on its own (for spectra). */
 export async function renderKey(key: string): Promise<{ wav: string; seconds: number }> {
   const bank = await harnessBank();
@@ -510,5 +544,47 @@ export async function cpuProfile(): Promise<Record<string, number>> {
   return out;
 }
 
-export const harness = { renderCue, renderFight, renderTour, renderKey, renderVoiceTest, cpuProfile, bankInfo, stats };
+/** Steady-state cost of one music cue on its own (render time over audio time), after the
+ *  bare mixer is subtracted, so cues can be compared. Also how long its samples take to render
+ *  from cold and how much memory they hold. */
+export async function cueCost(cue: Exclude<MusicCue, 'none'>, secs = 20): Promise<{ graph: number; keys: number; bytes: number }> {
+  const bank = await harnessBank();
+  const keys = cueKeys(bank, cue);
+  await bank.ensure(keys);
+  let bytes = 0;
+  for (const k of keys) {
+    const b = bank.get(k);
+    if (b) bytes += b.length * b.numberOfChannels * 4;
+  }
+  const once = async (music: boolean) => {
+    const ctx = offline(secs);
+    const core = new Core(ctx, bank, manifest);
+    core.world.setActive(false);
+    core.mixer.crowdGate.gain.value = 0;
+    core.mixer.hallIn.disconnect();
+    if (music) {
+      core.musicCue(cue, 0);
+      await core.music.idle();
+      core.music.pump(secs);
+    }
+    const t0 = performance.now();
+    await ctx.startRendering();
+    return (performance.now() - t0) / 1000 / secs;
+  };
+  const bare = Math.min(await once(false), await once(false));
+  const full = Math.min(await once(true), await once(true));
+  return { graph: full - bare, keys: keys.length, bytes };
+}
+
+/** Cold render time of a set of bank keys on a fresh bank (what a cue costs to warm up). */
+export async function coldRender(cue: Exclude<MusicCue, 'none'>): Promise<{ seconds: number; wall: number }> {
+  const { Bank } = await import('./bank');
+  const b = new Bank(RATE, 3);
+  const keys = cueKeys(b, cue);
+  const t0 = performance.now();
+  await b.ensure(keys);
+  return { seconds: b.renderSeconds, wall: (performance.now() - t0) / 1000 };
+}
+
+export const harness = { renderCue, renderFight, renderTour, renderStinger, renderKey, renderVoiceTest, cpuProfile, cueCost, coldRender, bankInfo, stats };
 export type Harness = typeof harness;

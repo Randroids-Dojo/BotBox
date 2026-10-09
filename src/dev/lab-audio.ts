@@ -75,7 +75,7 @@ audio.setVolumes(vol);
 section('Volumes', volRow);
 
 // ---- music
-const cues: MusicCue[] = ['title', 'menu', 'pits', 'intro', 'fight', 'victory', 'defeat', 'bumper', 'nut', 'none'];
+const cues: MusicCue[] = ['title', 'menu', 'pits', 'intro', 'fight', 'victory', 'defeat', 'bumper', 'nut', 'prologue', 'montage', 'workshop', 'none'];
 const fadeSel = h('select');
 for (const f of ['0', '0.5', '1', '2', '4']) fadeSel.append(h('option', { value: f, selected: f === '1' }, `fade ${f}s`));
 const cueRow = h('div', { className: 'row' });
@@ -90,10 +90,19 @@ for (const c of cues) {
   cueRow.append(b);
 }
 cueRow.append(fadeSel);
+// The prologue's knockout: the music cut dead and the heartbreak over it.
+cueRow.append(
+  button('knockout cut', () => {
+    audio.unlock();
+    audio.music('none', 0);
+    audio.stinger('heartbreak');
+    for (const x of cueButtons.values()) x.classList.remove('on');
+  }),
+);
 section('Music', cueRow);
 
 // ---- stingers and UI
-const stingers: Stinger[] = ['logo', 'whoosh', 'lights', 'go', 'ko', 'time', 'decision', 'replay', 'stamp', 'crowd_roar'];
+const stingers: Stinger[] = ['logo', 'whoosh', 'lights', 'go', 'ko', 'time', 'decision', 'replay', 'stamp', 'crowd_roar', 'heartbreak', 'cash', 'rankup', 'unlock'];
 section('Stingers', h('div', { className: 'row' }, ...stingers.map((s) => button(s, () => audio.stinger(s)))));
 const uis: UiSound[] = ['move', 'select', 'back', 'error', 'buy', 'repair', 'tick', 'type'];
 section('UI', h('div', { className: 'row' }, ...uis.map((u) => button(u, () => audio.ui(u)))));

@@ -3,16 +3,19 @@
 // Every bar is 16 sixteenth-note steps.
 //   gtr, bass: one char per step. Lowercase = palm-muted chug, uppercase = open chord that rings
 //     until the next event or a '.'. '-' holds, '.' rests (and chokes a ringing chord).
-//     Letters: d D2, e Eb2, k E2, f F2, n F#2, g G2, h Ab2, a A2, b Bb2, m B2, c C3, p C#3, q D3.
-//   kick, snare, tom, hat, cym: one char per step. x hit, X accent, o ghost. Hats: x closed,
-//     O open. Toms: 1 high, 2 mid, 3 low. Cymbals: x crash, r ride.
-//   lead, arp, clean: space separated tokens, one per step: a note (A4, C#5, Bb3), '-' hold, '.' rest.
+//     Letters: j C#2 (bass lines), d D2, e Eb2, k E2, f F2, n F#2, g G2, h Ab2, a A2, b Bb2, m B2,
+//     c C3, p C#3, q D3. The rock bass plays an octave under these, the soft bass at pitch.
+//   kick, snare, tom, hat, cym: one char per step. x hit, X accent, o ghost. Snare: r rim click.
+//     Hats: x closed, O open, s brush swish. Toms: 1 high, 2 mid, 3 low. Cymbals: x crash, r ride.
+//   lead, arp, clean, piano, cgtr: space separated tokens, one per step: a note (A4, C#5, Bb3),
+//     '-' hold, '.' rest. Join notes with '+' for a chord (D3+A3+F4, rolled on piano and strummed on
+//     cgtr). A leading '~' plays the token soft.
 //   stab, pad: tokens are chord names (Dm, Bb, F#m, D5), '-' hold, '.' rest.
 //   fx: tokens 'boom', 'riser:<steps>' (a sweep that peaks <steps> later), '.'.
 
 import { NOTE_SECONDS } from './instruments';
 
-export type TrackId = 'gtr' | 'bass' | 'kick' | 'snare' | 'hat' | 'cym' | 'tom' | 'lead' | 'arp' | 'clean' | 'stab' | 'pad' | 'fx';
+export type TrackId = 'gtr' | 'bass' | 'kick' | 'snare' | 'hat' | 'cym' | 'tom' | 'lead' | 'arp' | 'clean' | 'piano' | 'cgtr' | 'stab' | 'pad' | 'fx';
 
 export interface Section {
   bars: number;
@@ -33,12 +36,32 @@ export interface CueDef {
   mix?: Partial<Record<Lane, number>>;
   /** Cue output level. */
   level?: number;
-  /** Lo-fi radio filter (the pits). */
-  radio?: boolean;
+  /** Lo-fi radio filter: true for the boombox in the pits, or a cheaper set (see RadioOpts). */
+  radio?: boolean | RadioOpts;
+  /** Brushes and a felt kick instead of the rock kit. */
+  kit?: 'rock' | 'soft';
+  /** Fingered round bass an octave up instead of the drop-D rock bass. */
+  bassTone?: 'rock' | 'soft';
+  /** Electric guitar on the cgtr lane: clean, or a light overdrive with vibrato for melodies. */
+  cgtrTone?: 'clean' | 'drive';
+  /** A room on the cue: one convolver, lanes send to it (default send 1, drums less). */
+  verb?: { seconds: number; wet: number; sends?: Partial<Record<Lane, number>> };
   /** Mid scoop to leave room for voice and sfx (the fight bed). */
   scoop?: boolean;
   /** Swing amount for the off 16ths, 0..0.5 of a step. */
   swing?: number;
+}
+
+/** A small cheap radio: steep band-pass, a little crunch, mono, a bed of hiss. */
+export interface RadioOpts {
+  hp: number;
+  lp: number;
+  /** Speaker cone resonance boost in dB around 1.3 kHz. */
+  honk: number;
+  /** Waveshaper drive, 1 is clean. */
+  drive: number;
+  /** Hiss into the radio, in dB (it goes through the radio filters with the music). */
+  hissDb: number;
 }
 
 export interface NoteEvent {
@@ -52,7 +75,7 @@ export interface NoteEvent {
   lane: Lane;
 }
 
-export type Lane = 'gtrL' | 'gtrR' | 'bass' | 'kick' | 'snare' | 'hat' | 'cym' | 'tom' | 'lead' | 'arp' | 'clean' | 'stab' | 'pad' | 'fx';
+export type Lane = 'gtrL' | 'gtrR' | 'bass' | 'kick' | 'snare' | 'hat' | 'cym' | 'tom' | 'lead' | 'arp' | 'clean' | 'piano' | 'cgtr' | 'stab' | 'pad' | 'fx';
 
 export const LANE_PAN: Record<Lane, number> = {
   gtrL: -0.8,
@@ -66,6 +89,8 @@ export const LANE_PAN: Record<Lane, number> = {
   lead: 0.1,
   arp: 0.25,
   clean: -0.2,
+  piano: 0.15,
+  cgtr: -0.25,
   stab: 0,
   pad: 0,
   fx: 0,
@@ -86,6 +111,8 @@ export const LANE_LEVEL: Record<Lane, number> = {
   lead: 0.75,
   arp: 0.8,
   clean: 1.0,
+  piano: 1.0,
+  cgtr: 1.0,
   stab: 1.1,
   pad: 0.48,
   fx: 1.1,
@@ -104,7 +131,7 @@ export interface CompiledCue {
   bar: number;
 }
 
-const GTR: Record<string, number> = { d: 38, e: 39, k: 40, f: 41, n: 42, g: 43, h: 44, a: 45, b: 46, m: 47, c: 48, p: 49, q: 50 };
+const GTR: Record<string, number> = { j: 37, d: 38, e: 39, k: 40, f: 41, n: 42, g: 43, h: 44, a: 45, b: 46, m: 47, c: 48, p: 49, q: 50 };
 const NOTE_PC: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
 export function noteMidi(tok: string): number {
@@ -189,8 +216,15 @@ function compileSections(def: CueDef, sections: Section[], keys: Set<string>): S
     // Bass.
     const bassSrc = T.bass === 'follow' ? gtrBars : T.bass ? expand(T.bass, sec.bars) : null;
     if (bassSrc) {
+      const soft = def.bassTone === 'soft';
       for (const r of charRuns(bassSrc, s0)) {
         const mute = r.ch === r.ch.toLowerCase();
+        if (soft) {
+          // Round bass an octave up; lowercase is a short note.
+          const midi = GTR[r.ch.toLowerCase()] + tr;
+          push({ t: at(r.step), key: `m.bassS.${midi}.0`, dur: mute ? Math.min(r.len, 2) * step : r.len * step, vel: 0.9, lane: 'bass' });
+          continue;
+        }
         const midi = GTR[r.ch.toLowerCase()] - 12 + tr;
         const inst = mute ? 'bassM' : 'bassO';
         push({ t: at(r.step), key: `m.${inst}.${midi}.0`, dur: r.len * step, vel: 0.9, lane: 'bass' });
@@ -209,18 +243,27 @@ function compileSections(def: CueDef, sections: Section[], keys: Set<string>): S
           push({ t: at(s0 + i), key: `m.${k}.0.0`, dur: Infinity, vel: vel(c), lane });
         });
     };
-    drum('kick', () => 'kick', 'kick');
-    drum('snare', () => 'snare', 'snare');
-    drum('hat', (c) => (c === 'O' ? 'hatO' : 'hatC'), 'hat');
+    const soft = def.kit === 'soft';
+    drum('kick', () => (soft ? 'kickS' : 'kick'), 'kick');
+    drum('snare', (c) => (c === 'r' ? 'rim' : soft ? 'snareS' : 'snare'), 'snare');
+    drum('hat', (c) => (c === 'O' ? 'hatO' : c === 's' ? 'swish' : soft ? 'hatS' : 'hatC'), 'hat');
     drum('cym', (c) => (c === 'r' ? 'ride' : 'crash'), 'cym');
     drum('tom', (c) => (c === '1' ? 'tom1' : c === '2' ? 'tom2' : c === '3' ? 'tom3' : null), 'tom');
     // Melodic token lanes.
-    for (const id of ['lead', 'arp', 'clean'] as const) {
+    for (const id of ['lead', 'arp', 'clean', 'piano', 'cgtr'] as const) {
       const p = T[id];
       if (!p || p === 'follow') continue;
+      const variant = id === 'cgtr' && def.cgtrTone === 'drive' ? 1 : 0;
+      // Chords: piano rolls a little, guitar strums low to high.
+      const spread = id === 'cgtr' ? 0.012 : id === 'piano' ? 0.006 : 0;
       for (const r of tokenRuns(expand(p, sec.bars), s0)) {
-        const midi = noteMidi(r.tok) + tr;
-        push({ t: at(r.step), key: `m.${id}.${midi}.0`, dur: r.len * step, vel: 0.9, lane: id });
+        const softTok = r.tok.startsWith('~');
+        const notes = (softTok ? r.tok.slice(1) : r.tok).split('+');
+        notes.forEach((n, k) => {
+          const midi = noteMidi(n) + tr;
+          const vel = (softTok ? 0.5 : 0.9) * (notes.length > 1 ? 1 - 0.25 * (k / (notes.length - 1)) * (id === 'piano' ? 1 : 0.4) : 1);
+          push({ t: at(r.step) + k * spread, key: `m.${id}.${midi}.${variant}`, dur: r.len * step - k * spread, vel, lane: id });
+        });
       }
     }
     for (const id of ['stab', 'pad'] as const) {

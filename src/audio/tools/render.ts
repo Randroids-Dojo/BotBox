@@ -151,6 +151,69 @@ if (what.has('tour')) {
   report.tour = res.cues;
 }
 
+if (what.has('career')) {
+  // The career cues and stingers: long renders that cross the loop seams, the knockout cut,
+  // the prologue under a mock fight, the workshop under UI sounds.
+  console.log('\ncareer cues');
+  const r: Record<string, unknown> = {};
+  for (const [cue, secs] of [
+    ['prologue', 80],
+    ['montage', 80],
+    ['workshop', 140],
+  ] as const) {
+    const res = await page.evaluate(([c, s]) => window.__botboxAudio!.renderCue(c, s, { wav: true }), [cue, secs] as const);
+    save(`music-${cue}.wav`, res.wav);
+    line(cue, res.stats, res.ms);
+    r[cue] = res.stats;
+  }
+  const cut = await page.evaluate(() => window.__botboxAudio!.renderCue('prologue', 20, { wav: true, then: { at: 12, cue: 'none', fade: 0 } }));
+  save('prologue-cut-at-12s.wav', cut.wav);
+  line('prologue cut dead at 12 s', cut.stats, cut.ms);
+  const ui: [number, string][] = [];
+  for (let t = 4; t < 28; t += 0.9) ui.push([t, (['move', 'move', 'select', 'move', 'back', 'buy', 'move', 'repair', 'tick', 'error'] as const)[ui.length % 10]]);
+  const wui = await page.evaluate((u) => window.__botboxAudio!.renderCue('workshop', 30, { wav: true, ui: u as never }), ui);
+  save('workshop-with-ui.wav', wui.wav);
+  line('workshop + ui sounds', wui.stats, wui.ms);
+  report.career = r;
+
+  console.log('\nprologue under a mock fight');
+  for (const [name, o] of [
+    ['fight-prologue', { cue: 'prologue' }],
+    ['fight-prologue-world-only', { cue: 'prologue', musicMute: true }],
+    ['fight-prologue-ko-heartbreak', { cue: 'prologue', stinger: { at: 20, id: 'heartbreak', cut: true } }],
+    ['fight-fightcue', { cue: 'fight' }],
+  ] as const) {
+    const res = await page.evaluate(([opts]) => window.__botboxAudio!.renderFight(30, { ...opts, wav: true, bots: ['megahurtz', 'tax-audit'] } as never), [o] as const);
+    save(`${name}.wav`, res.wav);
+    line(name, res.stats, res.ms);
+  }
+
+  console.log('\ncareer stingers');
+  for (const [id, secs] of [
+    ['heartbreak', 9.5],
+    ['cash', 2.7],
+    ['rankup', 3.3],
+    ['unlock', 3.5],
+  ] as const) {
+    const res = await page.evaluate(([i, s]) => window.__botboxAudio!.renderStinger(i, s), [id, secs] as const);
+    save(`stinger-${id}.wav`, res.wav);
+    line(id, res.stats, res.ms);
+  }
+}
+
+if (what.has('cost')) {
+  console.log('\nper-cue graph cost over the bare mixer, sample memory, cold render');
+  const cues = ['title', 'menu', 'pits', 'fight', 'defeat', 'prologue', 'montage', 'workshop'] as const;
+  const r: Record<string, unknown> = {};
+  for (const cue of cues) {
+    const c = await page.evaluate((x) => window.__botboxAudio!.cueCost(x), cue);
+    const cold = await page.evaluate((x) => window.__botboxAudio!.coldRender(x), cue);
+    console.log(`  ${cue.padEnd(10)} graph ${(c.graph * 100).toFixed(2)}% of real time   ${c.keys} samples ${(c.bytes / 1048576).toFixed(1)} MB   cold render ${cold.seconds.toFixed(2)} s cpu, ${cold.wall.toFixed(2)} s wall`);
+    r[cue] = { ...c, cold };
+  }
+  report.cost = r;
+}
+
 if (what.has('keys')) {
   const keys = ['m.gtrM.38.0', 'm.gtrO.38.0', 'm.gtrO.41.1', 'm.crO.38.0', 'm.lead.69.0', 'm.bassM.26.0', 'm.kick.0.0', 'm.snare.0.0', 'm.crash.0.0', 'm.stab.Dm.0', 'ring.steel.0', 'ring.titanium.0', 'ring.aluminum.0', 'ring.uhmw.0', 'ring.polycarb.0', 'tr.crack.0', 'crowd.murmur', 'crowd.roar', 'crowd.cheer'];
   for (const k of keys) {

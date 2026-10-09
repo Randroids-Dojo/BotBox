@@ -6,7 +6,7 @@
 // Two takes with different detune are rendered for the left and right doubles.
 
 import type { Bank } from '../bank';
-import { biquad, gain, makeImpulse, mtof, noise, osc, pulseWave, rng, shaperCurve } from '../dsp';
+import { Biquad, biquad, gain, makeImpulse, mtof, noise, osc, pulseWave, rng, shaperCurve } from '../dsp';
 import { burst, thump } from '../sounds/kit';
 
 type C = OfflineAudioContext;
@@ -24,6 +24,10 @@ export const NOTE_SECONDS: Record<string, number> = {
   pad: 5,
   arp: 0.45,
   clean: 1.8,
+  piano: 3,
+  cgtr: 1.8,
+  cgtrD: 3,
+  bassS: 2.4,
 };
 
 /** Render rate per instrument: guitars roll off by 7 kHz, bass and pads lower still. Saves
@@ -40,6 +44,10 @@ const NOTE_RATE: Record<string, number> = {
   pad: 22050,
   arp: 32000,
   clean: 22050,
+  piano: 22050,
+  cgtr: 22050,
+  cgtrD: 24000,
+  bassS: 22050,
   riser: 32000,
 };
 
@@ -318,6 +326,154 @@ function clean(ctx: C, out: AudioNode, midi: number): void {
   g.gain.setTargetAtTime(0, 0.01, 0.7);
 }
 
+/** Felt-soft upright piano by additive synthesis: stretched partials (inharmonicity grows up the
+ *  keyboard), a strike-position comb, two or three detuned strings per note so the tone beats and
+ *  has a fast prompt decay over a long aftersound, and a short hammer knock. */
+function pianoNote(rate: number, midi: number): Float32Array[] {
+  const n = Math.ceil(NOTE_SECONDS.piano * rate);
+  const out = new Float32Array(n);
+  const f0 = mtof(midi);
+  const B = 0.00012 * Math.pow(2, (midi - 48) / 15);
+  const tau = 2.2 * Math.pow(2, -(midi - 48) / 22);
+  const strings = midi < 45 ? 2 : 3;
+  const r = rng(midi * 13 + 5);
+  for (let k = 1; k <= 28; k++) {
+    const fk = f0 * k * Math.sqrt(1 + B * k * k);
+    if (fk > rate * 0.45) break;
+    // Hammer at about 1/8 of the string, a soft felt rolling off the top, and a body bump.
+    const strike = 0.2 + 0.8 * Math.abs(Math.sin((Math.PI * k) / 8.3));
+    const felt = 1 / (1 + Math.pow(fk / 1800, 2));
+    const amp = (strike * felt) / Math.pow(k, 0.9);
+    if (amp < 0.002) continue;
+    const tk = tau / (1 + fk / 1400);
+    for (let st = 0; st < strings; st++) {
+      const cents = (st - (strings - 1) / 2) * (0.5 + r() * 0.4);
+      const w = (2 * Math.PI * fk * Math.pow(2, cents / 1200)) / rate;
+      // Recursive sine: y[n] = 2cos(w) y[n-1] - y[n-2].
+      const c = 2 * Math.cos(w);
+      const ph = r() * Math.PI * 2;
+      let y1 = Math.sin(ph - w);
+      let y2 = Math.sin(ph - 2 * w);
+      const fast = Math.exp(-1 / (tk * 0.3 * rate));
+      const slow = Math.exp(-1 / (tk * 2.2 * rate));
+      let ef = (amp * 0.62) / strings;
+      let es = (amp * 0.38) / strings;
+      for (let i = 0; i < n; i++) {
+        const y = c * y1 - y2;
+        y2 = y1;
+        y1 = y;
+        out[i] += y * (ef + es);
+        ef *= fast;
+        es *= slow;
+        if (ef + es < 1e-5) break;
+      }
+    }
+  }
+  // Hammer knock and a soft attack ramp.
+  const knock = new Biquad(rate, 'bp', Math.min(2400, f0 * 3), 0.9);
+  const rr = rng(midi);
+  const kn = Math.floor(rate * 0.025);
+  for (let i = 0; i < kn; i++) out[i] += knock.run((rr() * 2 - 1) * Math.exp(-i / (rate * 0.004))) * 0.12;
+  const att = Math.floor(rate * 0.002);
+  for (let i = 0; i < att; i++) out[i] *= i / att;
+  // Soundboard: a little low-mid warmth, a gentle top.
+  const body = new Biquad(rate, 'peak', 250, 0.8, 2);
+  const top = new Biquad(rate, 'lp', 7000, 0.6);
+  for (let i = 0; i < n; i++) out[i] = top.run(body.run(out[i]));
+  return [out];
+}
+
+/** Electric guitar string by Karplus-Strong: a picked noise burst circulating in a tuned delay
+ *  with a damping filter. Variant 0 is a clean neck pickup; variant 1 a light overdrive with
+ *  delayed vibrato, for melodies. */
+function electricNote(rate: number, midi: number, variant: number): Float32Array[] {
+  const secs = NOTE_SECONDS[variant ? 'cgtrD' : 'cgtr'];
+  const n = Math.ceil(secs * rate);
+  const out = new Float32Array(n);
+  const f0 = mtof(midi);
+  const period = rate / f0;
+  const size = Math.ceil(period * 1.05) + 4;
+  const line = new Float32Array(size);
+  const r = rng(midi * 31 + variant * 7);
+  // Excitation: one period of noise, softened by the pick, combed by the pick position.
+  const exc = new Float32Array(Math.ceil(period));
+  const soft = new Biquad(rate, 'lp', variant ? 5000 : 6000, 0.6);
+  for (let i = 0; i < exc.length; i++) exc[i] = soft.run(r() * 2 - 1);
+  const pickPos = Math.max(1, Math.floor(exc.length * 0.16));
+  for (let i = exc.length - 1; i >= pickPos; i--) exc[i] -= exc[i - pickPos];
+  // Decay: a long ring low on the neck, shorter up high; the lead rings longer still.
+  const t60 = (variant ? 10 : 7) * Math.pow(2, -(midi - 52) / 36);
+  const loss = Math.pow(10, -3 / (t60 * f0));
+  const bright = variant ? 0.2 : 0.15; // one-zero damping: more averaging is darker
+  // The loop is an integer delay, a first-order allpass for the fraction (no loss, so every
+  // note keeps the same tone) and the damping filter; together exactly one period long.
+  const N = Math.max(1, Math.round(period - bright) - 1);
+  let w = 0;
+  let prev = 0;
+  let apX = 0;
+  let apY = 0;
+  const vib = variant ? 0.0045 : 0; // about 8 cents
+  for (let i = 0; i < n; i++) {
+    const t = i / rate;
+    const depth = vib * Math.min(1, Math.max(0, (t - 0.35) / 0.5));
+    const p = period * (1 - depth * Math.sin(2 * Math.PI * 5.2 * t));
+    const frac = p - bright - N;
+    const eta = (1 - frac) / (1 + frac);
+    let ri = w - N;
+    if (ri < 0) ri += size;
+    const x = line[ri];
+    const ap = eta * x + apX - eta * apY;
+    apX = x;
+    apY = ap;
+    const y = loss * ((1 - bright) * ap + bright * prev);
+    prev = ap;
+    line[w] = y + (i < exc.length ? exc[i] * 0.5 : 0);
+    out[i] = line[w];
+    w = (w + 1) % size;
+  }
+  // Pickup and amp.
+  const hp = new Biquad(rate, 'hp', 90, 0.7);
+  const mid = new Biquad(rate, 'peak', variant ? 900 : 1800, 0.9, variant ? 5 : 2);
+  const cab1 = new Biquad(rate, 'lp', variant ? 4600 : 5600, 0.7);
+  const cab2 = new Biquad(rate, 'lp', variant ? 6000 : 8000, 0.6);
+  // The lead clips enough to hold a long note up; the clean tone barely touches the curve.
+  const drive = variant ? 2.6 : 1.1;
+  const norm = Math.tanh(drive);
+  let peak = 0;
+  for (let i = 0; i < n; i++) peak = Math.max(peak, Math.abs(out[i]));
+  const pre = 1 / (peak + 1e-9);
+  for (let i = 0; i < n; i++) {
+    const x = mid.run(hp.run(out[i] * pre));
+    out[i] = cab2.run(cab1.run(Math.tanh(drive * (x + 0.06 * x * x)) / norm));
+  }
+  // Remove the DC the asymmetric clipper leaves.
+  const dc = new Biquad(rate, 'hp', 30, 0.6);
+  for (let i = 0; i < n; i++) out[i] = dc.run(out[i]);
+  const f = Math.floor(rate * 0.0015);
+  for (let i = 0; i < f; i++) out[i] *= i / f;
+  return [out];
+}
+
+/** Round fingered bass: sine and triangle with a soft filtered saw for definition. */
+function softBass(ctx: C, out: AudioNode, midi: number): void {
+  const seconds = NOTE_SECONDS.bassS;
+  const f = mtof(midi);
+  const lp = biquad(ctx, 'lowpass', 700, 0.7);
+  const env = gain(ctx, 0);
+  env.connect(lp).connect(biquad(ctx, 'highpass', 35, 0.7)).connect(out);
+  osc(ctx, 'sine', f, 0, seconds).connect(gain(ctx, 0.6)).connect(env);
+  osc(ctx, 'triangle', f, 0, seconds, 4).connect(gain(ctx, 0.35)).connect(env);
+  osc(ctx, 'sawtooth', f, 0, seconds, -5).connect(gain(ctx, 0.12)).connect(env);
+  lp.frequency.setValueAtTime(1400, 0);
+  lp.frequency.setTargetAtTime(500, 0.005, 0.12);
+  env.gain.setValueAtTime(0, 0);
+  env.gain.linearRampToValueAtTime(1, 0.006);
+  env.gain.setTargetAtTime(0.6, 0.02, 0.3);
+  env.gain.setTargetAtTime(0.25, 0.4, 1.2);
+  env.gain.setValueAtTime(0.3, seconds - 0.3);
+  env.gain.linearRampToValueAtTime(0, seconds - 0.02);
+}
+
 // ---- drums
 
 function room(ctx: C, out: AudioNode, wet: number, seconds = 0.7): AudioNode {
@@ -393,6 +549,44 @@ export const DRUMS: Record<string, DrumDef> = {
   tom1: { seconds: 0.8, render: (ctx, out) => tom(ctx, out, 210) },
   tom2: { seconds: 0.9, render: (ctx, out) => tom(ctx, out, 150) },
   tom3: { seconds: 1.0, render: (ctx, out) => tom(ctx, out, 100) },
+  // The soft kit: a felt kick, brushes, a cross-stick, a dark closed hat and a brush sweep.
+  kickS: {
+    seconds: 0.7,
+    render: (ctx, out) => {
+      thump(ctx, out, 0, { f0: 120, f1: 52, drop: 0.05, amp: 0.9, decay: 0.2 });
+      burst(ctx, out, 0, { type: 'lowpass', f: 1100, q: 0.7, amp: 0.18, decay: 0.01, color: 'pink', seed: 11 });
+    },
+  },
+  snareS: {
+    seconds: 0.8,
+    render: (ctx, out) => {
+      const o = room(ctx, out, 0.3);
+      burst(ctx, o, 0, { type: 'bandpass', f: 3400, q: 0.6, amp: 0.6, attack: 0.004, decay: 0.06, seed: 12 });
+      burst(ctx, o, 0, { type: 'highpass', f: 6000, q: 0.5, amp: 0.18, attack: 0.006, decay: 0.12, seed: 13 });
+      thump(ctx, o, 0, { f0: 210, f1: 175, drop: 0.03, amp: 0.2, decay: 0.05, type: 'triangle' });
+    },
+  },
+  rim: {
+    seconds: 0.5,
+    render: (ctx, out) => {
+      const o = room(ctx, out, 0.22);
+      thump(ctx, o, 0, { f0: 430, f1: 390, drop: 0.01, amp: 0.4, decay: 0.018 });
+      burst(ctx, o, 0, { type: 'bandpass', f: 2500, q: 1.2, amp: 0.45, decay: 0.004, seed: 14 });
+      for (const [f, a] of [
+        [1650, 0.2],
+        [2420, 0.1],
+        [3790, 0.05],
+      ])
+        thump(ctx, o, 0, { f0: f, f1: f, drop: 0.01, amp: a, decay: 0.02 });
+    },
+  },
+  hatS: { seconds: 0.2, render: (ctx, out) => metal(ctx, out, 1.3, 0.018, 0.35, 5500) },
+  swish: {
+    seconds: 0.6,
+    render: (ctx, out) => {
+      burst(ctx, out, 0, { type: 'bandpass', f: 3000, q: 0.5, amp: 0.5, attack: 0.16, decay: 0.07, seed: 15, fEnd: 5500, fTime: 0.2 });
+    },
+  },
   boom: {
     seconds: 3.0,
     render: (ctx, out) => {
@@ -453,6 +647,14 @@ const NOTE_PEAK: Record<string, number> = {
   tom3: 0.9,
   boom: 0.95,
   riser: 0.8,
+  piano: 0.9,
+  cgtr: 0.9,
+  bassS: 0.9,
+  kickS: 0.95,
+  snareS: 0.9,
+  rim: 0.9,
+  hatS: 0.9,
+  swish: 0.9,
 };
 
 /** Make sure a music sample key is defined in the bank. */
@@ -461,7 +663,7 @@ export function defineNote(bank: Bank, key: string): void {
   const [, inst, arg, v] = key.split('.');
   const variant = Number(v ?? 0);
   const midi = Number(arg);
-  let def: { seconds: number; rate?: number; render: (ctx: C, out: AudioNode) => void } | null = null;
+  let def: { seconds: number; rate?: number; render?: (ctx: C, out: AudioNode) => void; make?: (rate: number) => Float32Array[] } | null = null;
   switch (inst) {
     case 'gtrM':
     case 'gtrO':
@@ -491,6 +693,18 @@ export function defineNote(bank: Bank, key: string): void {
     case 'clean':
       def = { seconds: NOTE_SECONDS.clean, render: (ctx, out) => clean(ctx, out, midi) };
       break;
+    case 'piano':
+      def = { seconds: NOTE_SECONDS.piano, make: (rate) => pianoNote(rate, midi) };
+      break;
+    case 'cgtr': {
+      // Clean strums are short and sit in a radio; the lead rings long and needs more top.
+      const k = variant ? 'cgtrD' : 'cgtr';
+      def = { seconds: NOTE_SECONDS[k], rate: NOTE_RATE[k], make: (rate) => electricNote(rate, midi, variant) };
+      break;
+    }
+    case 'bassS':
+      def = { seconds: NOTE_SECONDS.bassS, render: (ctx, out) => softBass(ctx, out, midi) };
+      break;
     case 'riser': {
       const secs = midi / 1000;
       def = { seconds: secs + 0.1, render: (ctx, out) => riser(ctx, out, secs) };
@@ -502,6 +716,6 @@ export function defineNote(bank: Bank, key: string): void {
     }
   }
   if (!def) throw new Error(`unknown music sample ${key}`);
-  const align = inst !== 'riser' && inst !== 'boom' && inst !== 'pad';
+  const align = inst !== 'riser' && inst !== 'boom' && inst !== 'pad' && inst !== 'swish';
   bank.define(key, { ...def, rate: def.rate ?? NOTE_RATE[inst], align, peak: NOTE_PEAK[inst] });
 }

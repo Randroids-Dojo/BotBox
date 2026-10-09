@@ -1,6 +1,7 @@
 // Plays compiled cues from bank samples with a lookahead scheduler and crossfades between cues.
 
 import type { Bank } from '../bank';
+import { makeImpulse, noiseBuffer, shaperCurve } from '../dsp';
 import type { MusicCue } from '../types';
 import { CUES } from './cues';
 import { defineNote } from './instruments';
@@ -26,9 +27,25 @@ export function cueKeys(bank: Bank, cue: Cue): string[] {
 
 function release(key: string): number {
   if (key.startsWith('m.pad')) return 0.35;
+  if (key.startsWith('m.piano')) return 0.28; // the damper comes down
+  if (key.startsWith('m.cgtr')) return 0.08;
+  if (key.startsWith('m.bassS')) return 0.06;
   if (key.startsWith('m.gtrO') || key.startsWith('m.crO') || key.startsWith('m.bassO')) return 0.045;
   if (key.startsWith('m.lead') || key.startsWith('m.clean')) return 0.06;
   return 0.02;
+}
+
+/** Default reverb sends: drums mostly dry so the groove stays tight. */
+const DRY_LANES: Partial<Record<Lane, number>> = { kick: 0.1, bass: 0.1, hat: 0.3, snare: 0.5, cym: 0.4 };
+
+const impulses = new WeakMap<BaseAudioContext, Map<number, AudioBuffer>>();
+/** A warm, darkening room impulse, made once per context and length. */
+function cueImpulse(ctx: BaseAudioContext, seconds: number): AudioBuffer {
+  let m = impulses.get(ctx);
+  if (!m) impulses.set(ctx, (m = new Map()));
+  let b = m.get(seconds);
+  if (!b) m.set(seconds, (b = makeImpulse(ctx, { seconds, decay: seconds * 0.8, preDelay: 0.022, seed: 41, damp: 0.75 })));
+  return b;
 }
 
 class CueVoice {
@@ -44,6 +61,8 @@ class CueVoice {
   private head: AudioNode;
   private def: CueDef;
   private solo: Set<Lane> | null;
+  private verbIn: ConvolverNode | null = null;
+  private hiss: AudioBufferSourceNode | null = null;
 
   constructor(
     private ctx: BaseAudioContext,
@@ -76,7 +95,40 @@ class CueVoice {
       s2.gain.value = -2.5;
       chainTo(s2);
     }
-    if (def.radio) {
+    if (def.radio && typeof def.radio === 'object') {
+      // A cheap little radio: steep band-pass, a small speaker's honk, some crunch, mono.
+      const o = def.radio;
+      const f = (type: BiquadFilterType, freq: number, q: number, db = 0) => {
+        const b = ctx.createBiquadFilter();
+        b.type = type;
+        b.frequency.value = freq;
+        b.Q.value = q;
+        b.gain.value = db;
+        return b;
+      };
+      chainTo(f('lowpass', o.lp, 0.9));
+      chainTo(f('lowpass', o.lp * 1.15, 0.6));
+      const sh = ctx.createWaveShaper();
+      sh.curve = shaperCurve(o.drive, 0.08, 2048);
+      chainTo(sh);
+      chainTo(f('peaking', 1300, 1.1, o.honk));
+      chainTo(f('highpass', o.hp, 0.8));
+      chainTo(f('highpass', o.hp * 0.8, 0.6));
+      const mono = ctx.createGain();
+      mono.channelCount = 1;
+      mono.channelCountMode = 'explicit';
+      mono.channelInterpretation = 'speakers';
+      chainTo(mono);
+      // Hiss sits after the band-pass in the radio's own speaker.
+      const hiss = ctx.createBufferSource();
+      hiss.buffer = noiseBuffer(ctx, 'pink', 2, 1);
+      hiss.loop = true;
+      const hg = ctx.createGain();
+      hg.gain.value = Math.pow(10, o.hissDb / 20);
+      hiss.connect(f('bandpass', 2600, 0.5)).connect(hg).connect(mono);
+      hiss.start(start, 0.37);
+      this.hiss = hiss;
+    } else if (def.radio) {
       // A boombox on a workbench: narrow band, a little crunch.
       const lp = ctx.createBiquadFilter();
       lp.type = 'lowpass';
@@ -98,6 +150,15 @@ class CueVoice {
     const level = ctx.createGain();
     level.gain.value = def.level ?? 1;
     chainTo(level);
+    if (def.verb) {
+      // One room for the whole cue; lanes send into it.
+      const c = ctx.createConvolver();
+      c.buffer = cueImpulse(ctx, def.verb.seconds);
+      const wet = ctx.createGain();
+      wet.gain.value = def.verb.wet;
+      c.connect(wet).connect(head);
+      this.verbIn = c;
+    }
     this.out.connect(dest);
     this.head = head;
     this.def = def;
@@ -175,6 +236,14 @@ class CueVoice {
       g.gain.value *= Math.SQRT1_2;
       g.connect(this.head);
     }
+    if (this.verbIn) {
+      const send = this.def.verb?.sends?.[lane] ?? DRY_LANES[lane] ?? 1;
+      if (send > 0) {
+        const sg = this.ctx.createGain();
+        sg.gain.value = send;
+        g.connect(sg).connect(this.verbIn);
+      }
+    }
     this.lanes.set(lane, g);
     return g;
   }
@@ -186,10 +255,16 @@ class CueVoice {
     g.setValueAtTime(g.value, at);
     g.linearRampToValueAtTime(0, at + Math.max(0.02, sec));
     for (const s of this.sources) if (s.end > at + sec) s.src.stop(at + sec + 0.05);
+    this.hiss?.stop(at + sec + 0.05);
   }
 
   dispose(): void {
     this.done = true;
+    try {
+      this.hiss?.stop();
+    } catch {
+      /* already stopped */
+    }
     try {
       this.out.disconnect();
     } catch {
