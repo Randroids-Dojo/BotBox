@@ -6,7 +6,7 @@ import { CLASSES, CLASS_LABEL, CLASS_LIMIT_LB } from '../data/parts';
 import type { MainMenuChoice, SaveSummary, Settings } from './types';
 import { el, exit, item, sleep } from './core';
 import { slamFx, wipe, type UiCtx } from './fx';
-import { button, cycler, nutIcon, slider, toggle } from './widgets';
+import { button, cycler, slider, toggle } from './widgets';
 
 // ------------------------------------------------------------------------------------------
 // Loading
@@ -93,27 +93,8 @@ export function title(ctx: UiCtx): Promise<void> {
 // ------------------------------------------------------------------------------------------
 // Main menu
 
-const MENU_SUBS: Record<MainMenuChoice, string> = {
-  career: 'Back to the workshop',
-  quick: 'One-off fights and rumbles',
-  continue: '',
-  season: 'Three fights for the Nut',
-  exhibition: 'One-off fights and rumbles',
-  garage: 'Build and paint your robot',
-  settings: 'Sound, camera, controls',
-  credits: 'Who built this',
-};
-
 export function mainMenu(ctx: UiCtx, save: SaveSummary): Promise<MainMenuChoice> {
   return new Promise((resolve) => {
-    const list = el('div.menu-list');
-    const choices: { id: MainMenuChoice; label: string; sub: string }[] = [];
-    if (save.season) choices.push({ id: 'continue', label: 'Continue', sub: save.season });
-    choices.push({ id: 'season', label: save.season ? 'New season' : 'Season', sub: MENU_SUBS.season });
-    choices.push({ id: 'exhibition', label: 'Exhibition', sub: MENU_SUBS.exhibition });
-    choices.push({ id: 'garage', label: 'Garage', sub: save.robot ? save.robot.name : MENU_SUBS.garage });
-    choices.push({ id: 'settings', label: 'Settings', sub: MENU_SUBS.settings });
-    choices.push({ id: 'credits', label: 'Credits', sub: MENU_SUBS.credits });
     let done = false;
     const pick = (id: MainMenuChoice) => {
       if (done) return;
@@ -123,33 +104,25 @@ export function mainMenu(ctx: UiCtx, save: SaveSummary): Promise<MainMenuChoice>
       ctx.nav.pop(scope);
       void exit(node, 260).then(() => resolve(id));
     };
-    choices.forEach((c, i) => {
-      const b = button(c.label, { sub: c.sub, activate: () => pick(c.id), cls: c.id === 'continue' ? 'primary' : '' });
-      b.style.animationDelay = `${i * 45}ms`;
-      list.append(b);
-    });
-
-    const nuts = el('div.nut-row');
-    for (const cls of CLASSES) {
-      const n = save.nuts[cls] ?? 0;
-      nuts.append(el(`div.nut-slot${n ? '.won' : ''}`, [nutIcon(n ? 'won' : 'empty'), el('span.nut-cls', CLASS_LABEL[cls].replace(' heavyweight', ' heavy')), el('span.nut-n.cond', n ? `x${n}` : '0')]));
-    }
-    const card = el('div.save-card.panel.scan', [
-      el('div.kicker', 'Your shop'),
-      el('div.save-robot.wide', save.robot ? save.robot.name : 'No robot yet'),
-      el('div.save-line', save.robot ? `${CLASS_LABEL[save.robot.cls]} build` : 'Head to the garage and bolt one together.'),
-      save.season ? el('div.save-season', [el('span.tag', 'On air'), el('span', save.season)]) : null,
-      el('div.kicker.nut-kicker', 'Giant Nuts'),
-      nuts,
+    // One big way in, three quiet ones underneath.
+    const career = item(
+      el('div.btn.primary.mm-career', [el('span.label', 'Career'), el('span.mm-career-sub', save.career ?? 'Start your career')]),
+      { activate: () => pick('career') },
+    );
+    const list = el('div.menu-list.mm-list', [
+      career,
+      button('Quick fight', { cls: 'small', activate: () => pick('quick') }),
+      button('Settings', { cls: 'small', activate: () => pick('settings') }),
+      button('Credits', { cls: 'small', activate: () => pick('credits') }),
     ]);
+    [...list.children].forEach((b, i) => ((b as HTMLElement).style.animationDelay = `${i * 45}ms`));
 
-    const node = el('div.screen.main-menu', [
+    const node = el('div.screen.main-menu.calm', [
       el('div.mm-left', [el('div.mm-brand', [el('span.mm-logo.logo-type.chrome-text', 'BOTBOX'), el('span.mm-season.kicker', 'Season 2001')]), list]),
-      card,
       el('div.mm-hints.hint-row', [el('span', [...key('Enter', 'A'), 'Select']), el('span', [...key('↑↓', '✛'), 'Move'])]),
     ]);
     ctx.layers.screen.append(node);
-    const scope = ctx.nav.push({ root: node, wrap: true, initial: list.firstElementChild as HTMLElement });
+    const scope = ctx.nav.push({ root: node, wrap: true, initial: career });
   });
 }
 

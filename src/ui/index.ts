@@ -8,6 +8,7 @@ import './css/menus.css';
 import './css/garage.css';
 import './css/broadcast.css';
 import './css/hud.css';
+import './css/career.css';
 
 import type { AudioEngine } from '../audio/types';
 import type { Input } from '../input/input';
@@ -16,6 +17,8 @@ import { Nav, Sfx, el } from './core';
 import type { UiCtx } from './fx';
 import { Broadcast } from './broadcast';
 import { bracket } from './bracket';
+import { careerLadder, rewards, workshop } from './career';
+import { Cinema } from './cinema';
 import { exhibition } from './exhibition';
 import { garage } from './garage';
 import { Hud } from './hud';
@@ -40,6 +43,7 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
   let bc: Broadcast | null = null;
   let hud: Hud | null = null;
   let touch: TouchControls | null = null;
+  let cinema: Cinema | null = null;
 
   const need = (): UiCtx => {
     if (!ctx) throw new Error('BroadcastUI.init(root) must be called first');
@@ -58,6 +62,7 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
       bc = new Broadcast(ctx);
       hud = new Hud(ctx);
       touch = new TouchControls(ctx);
+      cinema = new Cinema(ctx);
       // Keep the device class current for hint glyphs.
       const setDev = (d: string) => (bx.dataset.device = d);
       setDev(deps.input.lastDevice);
@@ -102,13 +107,12 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
     touchControls: (o) => touch?.set(o),
     skippable: (on) => bc?.skippable(on),
 
-    // Career screens: placeholders until the real ones land.
-    workshop: async () => 'fight',
-    career: async () => undefined,
-    rewards: async () => undefined,
-    montage: (card) => new Promise<void>((r) => setTimeout(r, card.sec * 1000)),
-    story: (_lines, sec) => new Promise<void>((r) => setTimeout(r, sec * 1000)),
-    coach: () => undefined,
+    workshop: (v) => workshop(need(), v),
+    career: (v) => careerLadder(need(), v),
+    rewards: (v) => rewards(need(), v),
+    montage: (card) => cinema!.montage(card),
+    story: (lines, sec) => cinema!.story(lines, sec),
+    coach: (text, action) => cinema?.coach(text, action),
 
     debug: {
       get ctx() {
@@ -120,6 +124,8 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
         nav.clear();
         for (const l of [c.layers.screen, c.layers.over, c.layers.gfx]) l.replaceChildren();
         bc = new Broadcast(c);
+        cinema?.clear();
+        cinema = new Cinema(c);
       },
     },
   };

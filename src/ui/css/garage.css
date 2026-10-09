@@ -855,3 +855,282 @@
   background: #2a2f37;
   opacity: 0.4;
 }
+
+/* ---- career store: funds, prices, purchase confirm */
+.bx .gfunds {
+  flex: none;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+  padding: 0.1em 0 0.35em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.bx .gf-num {
+  font-size: calc(var(--u) * 2.4);
+  line-height: 1;
+  color: #ffe2b8;
+}
+.bx .gf-num.bump {
+  animation: bx-bump 0.4s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+.bx .gfunds.broke .gf-num {
+  color: var(--dim);
+}
+.bx .gf-note {
+  margin-left: auto;
+  font-size: calc(var(--u) * 1.05);
+  color: var(--yellow);
+}
+@keyframes bx-bump {
+  0% {
+    transform: scale(1.25);
+    color: #fff;
+  }
+  100% {
+    transform: none;
+  }
+}
+.bx .opt-price {
+  flex: none;
+  min-width: 3.6em;
+  text-align: right;
+  font-size: calc(var(--u) * 1.2);
+  color: #ffe2b8;
+  white-space: nowrap;
+}
+.bx .opt-price.owned {
+  font-size: calc(var(--u) * 0.68);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.bx .opt-price.short {
+  color: #ff8a7e;
+}
+.bx .opt-price.locked {
+  color: #6b7480;
+}
+.bx .opt.s-locked {
+  opacity: 0.42;
+}
+.bx .opt.s-locked.is-focus {
+  opacity: 0.75;
+}
+.bx .opt-why.lock {
+  color: var(--dim);
+  font-weight: 600;
+}
+.bx .opt-why.lock::before {
+  content: '';
+  display: inline-block;
+  width: 0.75em;
+  height: 0.9em;
+  margin-right: 0.45em;
+  vertical-align: -0.08em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Cpath d='M3 6V4a3 3 0 0 1 6 0v2' fill='none' stroke='%239aa4b2' stroke-width='1.6'/%3E%3Crect x='1' y='6' width='10' height='8' rx='1' fill='%239aa4b2'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+}
+.bx .gp-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 1.2em;
+  background: rgba(3, 4, 6, 0.72);
+  animation: bx-fade 0.14s ease-out both;
+}
+.bx .gc-card {
+  width: min(100%, calc(var(--u) * 26));
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  padding: 1.1em 1.2em 1.2em;
+  background: #14171c;
+  border-left: 4px solid var(--orange);
+  box-shadow: 0 1em 3em rgba(0, 0, 0, 0.7);
+  animation: bx-slam-up 0.24s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+.bx .gc-q {
+  font-size: calc(var(--u) * 1.45);
+  font-weight: 700;
+  line-height: 1.25;
+}
+.bx .gc-after {
+  font-size: calc(var(--u) * 1.1);
+  color: var(--dim);
+}
+.bx .gc-btns {
+  display: flex;
+  gap: 0.5em;
+  margin-top: 0.4em;
+}
+.bx .gc-btns .btn {
+  flex: 1;
+}
+@keyframes bx-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---- career repairs */
+.bx .rep-btn.cash {
+  width: auto;
+  padding: 0 0.55em;
+  font-size: 0.95em;
+  font-stretch: 62%;
+}
+.bx .career .rep-row {
+  grid-template-columns: 7.2em minmax(0, 1fr) 3.2em auto;
+}
+.bx .career .rep-n {
+  min-width: 2.8em;
+  color: #ffe2b8;
+}
+.bx .rep-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+.bx .rep-total {
+  margin-left: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  font-size: calc(var(--u) * 1.5);
+  color: #ffe2b8;
+}
+
+/* ---- guided first rebuild */
+.bx .gtab.empty {
+  color: #c9d1db;
+  grid-auto-flow: row;
+  gap: 0;
+  line-height: 1.05;
+}
+.bx .gtab-empty {
+  font-size: 0.68em;
+  letter-spacing: 0.14em;
+  color: #ff8a7e;
+}
+.bx .gtab.is-focus .gtab-empty,
+.bx .gtab.on .gtab-empty {
+  color: #7a1a10;
+}
+.bx .gtab.step:not(.on) {
+  animation: bx-step 1.4s ease-in-out infinite;
+}
+@keyframes bx-step {
+  0%,
+  100% {
+    background: #1c2026;
+  }
+  50% {
+    background: #4a2a12;
+  }
+}
+.bx .gp-coach {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  padding: 0.55em 0.8em 0.6em;
+  background: linear-gradient(90deg, rgba(255, 106, 0, 0.2), rgba(255, 106, 0, 0.03));
+  border-left: 4px solid var(--orange);
+  animation: bx-slam-left 0.3s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+.bx .gp-coach.all {
+  background: linear-gradient(90deg, rgba(59, 227, 107, 0.2), rgba(59, 227, 107, 0.03));
+  border-left-color: var(--green);
+}
+.bx .gp-coach.all .kicker {
+  color: var(--green);
+}
+.bx .gc-step {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+}
+.bx .gc-dots {
+  display: flex;
+  gap: 0.3em;
+}
+.bx .gc-dot {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: #3a414b;
+}
+.bx .gc-dot.on {
+  background: var(--green);
+}
+.bx .gc-dot.cur {
+  background: var(--orange);
+  box-shadow: 0 0 0.5em var(--orange);
+}
+.bx .gc-text {
+  font-size: calc(var(--u) * 1.45);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.bx .gc-sub {
+  align-self: flex-start;
+  margin-top: 0.15em;
+  padding: 0.2em 0.6em;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  font-size: calc(var(--u) * 0.9);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--orange);
+  border: 1px solid rgba(255, 106, 0, 0.5);
+}
+.bx .keep-name {
+  margin-top: 0.5em;
+  align-self: flex-start;
+}
+.bx .gp-foot .btn.ready {
+  animation: bx-ready 0.9s ease-out 2;
+}
+@keyframes bx-ready {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 227, 107, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 0 1.2em rgba(59, 227, 107, 0);
+  }
+}
+@media (max-height: 620px) {
+  .bx .gfunds {
+    padding: 0;
+  }
+  .bx .gf-num {
+    font-size: calc(var(--u) * 1.9);
+  }
+  .bx .gp-coach {
+    padding: 0.35em 0.7em 0.4em;
+  }
+  .bx .gc-text {
+    font-size: calc(var(--u) * 1.2);
+  }
+  .bx .career .wm-track,
+  .bx .guided .gp-stats .flags {
+    display: none;
+  }
+}
+.bx .gtab.empty.on {
+  color: #0b0d10;
+}
+.bx .gtab.empty.is-focus {
+  color: #000;
+}
+/* The first rebuild stays focused on the one step: no tips, no legend. */
+.bx .guided .gp-warn .w.tip,
+.bx .guided .wm-legend {
+  display: none;
+}

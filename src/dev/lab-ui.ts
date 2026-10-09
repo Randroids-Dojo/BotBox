@@ -6,9 +6,10 @@
 
 import * as THREE from 'three';
 import type { AudioEngine, UiSound } from '../audio/types';
-import { COMPONENTS, FACETS, type BotSpec, type Component, type Corner, type Facet, type JudgeCard, type Loadout, type MatchResult, type WorldFrame } from '../contract';
+import { COMPONENTS, FACETS, type BotSpec, type Component, type Corner, type Facet, type JudgeCard, type Loadout, type MatchResult, type PartKey, type WorldFrame } from '../contract';
 import { ARENA_HALF, KILLSAWS, PULVERIZERS, START_SQUARES } from '../data/arena';
 import { CLASS_LABEL, WEAPONS } from '../data/parts';
+import { ACTS, FIGHTS, PART_PRICES, RANKED_NAMES, SCRAP_LOADOUT, STARTING_OWNED, careerRivalById } from '../data/campaign';
 import { ROSTER, rivalById, rivalsFor } from '../data/roster';
 import { Input } from '../input/input';
 import { createBotView } from '../render/bots';
@@ -16,7 +17,7 @@ import { createNutTrophy } from '../render/props/nut';
 import type { BotView } from '../render/types';
 import { buildSpec } from '../sim/spec';
 import { createBroadcastUI } from '../ui';
-import type { BracketView, Damage, DecisionView, HudEntrant, RivalSummary, Settings } from '../ui/types';
+import type { BracketView, CareerShop, CareerView, Damage, DecisionView, GarageCategory, HudEntrant, MontageCard, RewardsView, RivalSummary, Settings, WorkshopView } from '../ui/types';
 import { MockWorld } from './mock';
 
 // ------------------------------------------------------------------------------------------
@@ -145,6 +146,158 @@ function matchResult(won: boolean): MatchResult {
     stats: { player: won ? st(812, 290) : st(380, 640), flapjack: won ? st(290, 812) : st(640, 380) },
   };
 }
+
+// ------------------------------------------------------------------------------------------
+// Career fakes
+
+const csum = (id: string): RivalSummary => {
+  const r = careerRivalById(id)!;
+  return { id: r.id, card: r.card, cls: r.loadout.cls, spec: buildSpec(r.loadout), style: r.style, seed: r.seed };
+};
+
+/** Fights won so far (0..13) drives every career fake. */
+function careerAt(won: number) {
+  const next = FIGHTS[won] ?? null;
+  const actIdx = next ? ACTS.findIndex((a) => a.id === next.act) : ACTS.length - 1;
+  const act = ACTS[actIdx];
+  const rank = won ? FIGHTS[won - 1].rankAfter : null;
+  const earnings = FIGHTS.slice(0, won).reduce((s, f) => s + f.prize, 0);
+  return { next, actIdx, act, rank, earnings };
+}
+
+const RESULTS = ['KO 1:42', '24-9', 'KO 0:58', 'KO 2:31', '19-14', 'KO 1:05', '21-12', 'KO 2:02', '26-7', 'KO 0:44', '18-15', 'KO 1:51', 'KO 2:59'];
+const ROBOT = { name: 'Juggernaut', spec: buildSpec(SCRAP_LOADOUT) };
+
+function workshopView(won: number, opts: { funds: number; damaged?: boolean; gig?: boolean; news?: string | null; losses?: number; name?: string }): WorkshopView {
+  const c = careerAt(won);
+  const n = c.next;
+  const gigFight = FIGHTS[Math.max(0, won - 1)];
+  return {
+    robot: opts.name ? { name: opts.name, spec: ROBOT.spec } : ROBOT,
+    funds: opts.funds,
+    rank: c.rank,
+    record: { w: won, l: opts.losses ?? 0 },
+    act: { title: c.act.title, subtitle: c.act.subtitle, index: c.actIdx, total: ACTS.length },
+    next: n ? { title: n.title, opponent: csum(n.opponent), prize: n.prize, blurb: n.blurb } : null,
+    damaged: !!opts.damaged,
+    sideGig: opts.gig ? { title: 'Parking lot exhibition', opponent: csum(gigFight.opponent), prize: Math.round((n?.prize ?? 1000) * 0.35 / 50) * 50 } : null,
+    news: opts.news === undefined ? null : opts.news,
+    tier: c.act.tier,
+  };
+}
+
+function careerView(won: number): CareerView {
+  const c = careerAt(won);
+  const acts = ACTS.map((a) => ({
+    title: a.title,
+    subtitle: a.subtitle,
+    fights: FIGHTS.filter((f) => f.act === a.id).map((f) => {
+      const i = FIGHTS.indexOf(f);
+      const state: 'won' | 'next' | 'locked' = i < won ? 'won' : i === won ? 'next' : 'locked';
+      return { title: f.title, opponent: careerRivalById(f.opponent)?.card.name ?? f.opponent, prize: f.prize, state, result: state === 'won' ? RESULTS[i] : null };
+    }),
+  }));
+  const rankings: CareerView['rankings'] = [];
+  const names = [...RANKED_NAMES];
+  if (c.rank !== null && c.rank <= 10) names.splice(c.rank - 1, 0, 'Juggernaut');
+  names.slice(0, 10).forEach((name, i) => rankings.push({ rank: i + 1, name, you: name === 'Juggernaut' }));
+  if (c.rank !== null && c.rank > 10) rankings.push({ rank: c.rank, name: 'Juggernaut', you: true });
+  return { acts, rankings, funds: [0, 350, 120, 2450, 900, 3800][Math.min(5, won)] ?? 6200, earnings: c.earnings, record: { w: won, l: Math.floor(won / 3) } };
+}
+
+const LOCK_REASON: Record<number, string> = { 1: 'Unlocks at the Regionals', 2: 'Unlocks on The Show', 3: 'Unlocks at the Championship' };
+
+function fakeShop(tier: number, funds: number, owned: PartKey[], repairPer10: number): CareerShop {
+  const prices = Object.fromEntries(Object.entries(PART_PRICES).map(([k, v]) => [k, v.price])) as Record<PartKey, number>;
+  const locked: Partial<Record<PartKey, string>> = {};
+  for (const [k, v] of Object.entries(PART_PRICES)) if (v.tier > tier) locked[k as PartKey] = LOCK_REASON[v.tier];
+  const shop: CareerShop = {
+    funds,
+    owned: [...owned],
+    prices,
+    locked,
+    repairPer10,
+    freePatch: 0.4,
+    buy(k) {
+      if (locked[k] || prices[k] > shop.funds) {
+        log(`buy refused: ${k}`);
+        return null;
+      }
+      shop.funds -= prices[k];
+      shop.owned.push(k);
+      log(`bought ${k} for $${prices[k]}, $${shop.funds} left`);
+      return shop.funds;
+    },
+  };
+  return shop;
+}
+
+function careerDamage(): Damage {
+  const d = pitsDamage();
+  // The free patch already lifted anything under 40 percent.
+  for (const f of FACETS) d.facets[f] = Math.max(0.4, d.facets[f]);
+  for (const c of COMPONENTS) d.parts[c] = Math.max(0.4, d.parts[c]);
+  return d;
+}
+
+const MONTAGE: MontageCard[] = [
+  { kind: 'headline', title: 'Juggernaut dethroned', sub: 'Terminal Velocity ends a three-year reign with one hit', sec: 2.6 },
+  { kind: 'rank', title: 'Juggernaut', rank: { from: 1, to: 3 }, sec: 2.2 },
+  { kind: 'result', title: 'Fall Classic, round one', result: { opponent: 'Megahurtz', method: 'KO 0:48' }, sec: 2 },
+  { kind: 'headline', title: 'Sponsors walk out on Team Juggernaut', sub: 'Bolt-Rite Hardware ends a six-year deal', sec: 2.4 },
+  { kind: 'result', title: 'Pacific Open, quarterfinal', result: { opponent: 'Flapjack', method: 'Decision 2-1' }, sub: 'Juggernaut flipped twice, never got its disk up to speed', sec: 2.2 },
+  { kind: 'rank', title: 'Juggernaut', rank: { from: 38, to: null }, sub: 'Dropped from the top 50', sec: 2.6 },
+];
+
+function rewardsView(kind: 'win' | 'loss' | 'act' | 'first'): RewardsView {
+  if (kind === 'loss')
+    return { won: false, prize: 0, fundsBefore: 420, fundsAfter: 420, rankBefore: 47, rankAfter: 47, unlocks: [], actComplete: null, note: 'Lawn Dart got lucky. Rematch any time, and the garage has your repairs.' };
+  if (kind === 'first')
+    return { won: true, prize: 300, fundsBefore: 0, fundsAfter: 300, rankBefore: null, rankAfter: 52, unlocks: [], actComplete: null, note: 'First win in two seasons. The phone might ring again.' };
+  if (kind === 'act')
+    return {
+      won: true,
+      prize: 600,
+      fundsBefore: 380,
+      fundsAfter: 980,
+      rankBefore: 43,
+      rankAfter: 40,
+      unlocks: ['4WD wheelchair motors', 'NiCad packs', 'Vertical disk', 'Drum spinner', 'Electric lifter', 'Hardened steel', 'Srimech'],
+      actComplete: { title: 'The Scrapyard Circuit', next: 'Regionals' },
+      note: null,
+    };
+  return { won: true, prize: 1500, fundsBefore: 850, fundsAfter: 2350, rankBefore: 31, rankAfter: 24, unlocks: [], actComplete: null, note: 'Chop Suey swung at nothing all night.' };
+}
+
+const careerGarage = (o: { tier: number; funds: number; owned: PartKey[]; repairPer10: number; damage?: Damage; guided?: GarageCategory[]; loadout: Loadout; opponent?: string }) => {
+  stage.setMode('garage');
+  return ui
+    .garage({
+      mode: 'career',
+      career: fakeShop(o.tier, o.funds, o.owned, o.repairPer10),
+      guided: o.guided,
+      loadout: o.loadout,
+      classLocked: true,
+      damage: o.damage,
+      opponent: o.opponent ? csum(o.opponent) : undefined,
+      preview: (l, _d, missing) => {
+        stage.showGarage(l);
+        if (missing) log(`preview missing: ${missing.join(', ') || 'none'}`);
+      },
+      orbit: (dx, dy) => stage.orbit(dx, dy),
+    })
+    .then((r) => log(`career garage: ${r ? JSON.stringify({ funds: r.funds, bought: r.bought, loadout: r.loadout, damage: r.damage }) : 'back'}`));
+};
+
+const shopWorkshop = (v: WorkshopView) => {
+  stage.setMode('garage');
+  stage.showGarage(SCRAP_LOADOUT);
+  return ui.workshop(v).then((c) => log(`workshop: ${c}`));
+};
+
+const coachDevice = (d: 'keyboard' | 'gamepad' | 'touch') => {
+  ui.debug.ctx.root.dataset.device = d;
+};
 
 // ------------------------------------------------------------------------------------------
 // Fake audio that records what the UI asked for.
@@ -563,6 +716,88 @@ const ITEMS: Record<string, { group: string; label: string; run: () => unknown }
   skipon: { group: 'Broadcast', label: 'Skip hint on', run: () => ui.skippable(true) },
   skipoff: { group: 'Broadcast', label: 'Skip hint off', run: () => ui.skippable(false) },
 
+  ws1: { group: 'Career', label: 'Workshop: first fight', run: () => shopWorkshop(workshopView(0, { funds: 0, news: 'Doorstop is waiting. Tuesday, 8 pm, the Box.' })) },
+  ws1b: { group: 'Career', label: 'Workshop: Act I, damaged, side gig', run: () => shopWorkshop(workshopView(2, { funds: 350, damaged: true, gig: true, losses: 1, news: 'New in the store: ground skirts' })) },
+  ws2: { group: 'Career', label: 'Workshop: Act II', run: () => shopWorkshop(workshopView(5, { funds: 2450, gig: true, news: 'New in the store: NiCad packs, spinners and hardened steel' })) },
+  ws3: { group: 'Career', label: 'Workshop: Act III', run: () => shopWorkshop(workshopView(9, { funds: 7800, damaged: true, gig: true, losses: 3 })) },
+  ws4: { group: 'Career', label: 'Workshop: Act IV', run: () => shopWorkshop(workshopView(12, { funds: 14250, gig: true, losses: 4, news: 'Terminal Velocity says it remembers you' })) },
+  wslong: { group: 'Career', label: 'Workshop: long names', run: () => shopWorkshop(workshopView(10, { funds: 123456, damaged: true, gig: true, losses: 12, name: 'Sir Reginald Clankington III', news: 'General Discontent has filed a formal complaint about your paint job and also the weather' })) },
+  wsdone: { group: 'Career', label: 'Workshop: champion', run: () => shopWorkshop(workshopView(13, { funds: 31200, losses: 4 })) },
+  gcareer: {
+    group: 'Career',
+    label: 'Garage: career store',
+    run: () =>
+      careerGarage({
+        tier: 1,
+        funds: 1250,
+        owned: [...STARTING_OWNED, 'armor:uhmw', 'extra:spikes'],
+        repairPer10: 15,
+        damage: careerDamage(),
+        loadout: { ...SCRAP_LOADOUT, extras: ['wedgeplate', 'spikes'] },
+        opponent: 'homewrecker',
+      }),
+  },
+  gbroke: {
+    group: 'Career',
+    label: 'Garage: career, broke',
+    run: () => careerGarage({ tier: 0, funds: 40, owned: [...STARTING_OWNED], repairPer10: 5, damage: careerDamage(), loadout: SCRAP_LOADOUT }),
+  },
+  gguided: {
+    group: 'Career',
+    label: 'Garage: guided rebuild',
+    run: () => careerGarage({ tier: 0, funds: 0, owned: [...STARTING_OWNED], repairPer10: 5, guided: ['drive', 'power', 'armor', 'name'], loadout: SCRAP_LOADOUT }),
+  },
+  ladder1: { group: 'Career', label: 'Career ladder (early)', run: () => (stage.setMode('garage'), ui.career(careerView(1)).then(() => log('ladder done'))) },
+  ladder2: { group: 'Career', label: 'Career ladder (late)', run: () => (stage.setMode('garage'), ui.career(careerView(10)).then(() => log('ladder done'))) },
+  rwfirst: { group: 'Career', label: 'Rewards: first win', run: () => (stage.setMode('garage'), ui.rewards(rewardsView('first')).then(() => log('rewards done'))) },
+  rwwin: { group: 'Career', label: 'Rewards: win', run: () => (stage.setMode('garage'), ui.rewards(rewardsView('win')).then(() => log('rewards done'))) },
+  rwloss: { group: 'Career', label: 'Rewards: loss', run: () => (stage.setMode('garage'), ui.rewards(rewardsView('loss')).then(() => log('rewards done'))) },
+  rwact: { group: 'Career', label: 'Rewards: act complete', run: () => (stage.setMode('garage'), ui.rewards(rewardsView('act')).then(() => log('rewards done'))) },
+  montage: {
+    group: 'Career',
+    label: 'Montage (6 cards)',
+    run: async () => {
+      startFight(2, { countdown: 0 });
+      ui.hud(null);
+      ui.touchControls(null);
+      for (const c of MONTAGE) await ui.montage(c);
+      log('montage done');
+    },
+  },
+  ...Object.fromEntries(
+    MONTAGE.map((c, i) => [
+      `mt${i + 1}`,
+      {
+        group: 'Career',
+        label: `Montage card ${i + 1} (${c.kind})`,
+        run: async () => {
+          stage.setMode('arena');
+          // Headlines alternate paper and TV: play the earlier ones in a blink so each card looks as it would in sequence.
+          for (const e of MONTAGE.slice(0, i).filter((x) => x.kind === 'headline')) await ui.montage({ ...e, sec: 0.4 });
+          await ui.montage({ ...c, sec: 30 });
+        },
+      },
+    ]),
+  ),
+  story: { group: 'Career', label: 'Story', run: () => ui.story(['Two seasons later.', 'A rented storage unit in Oakland.'], 5).then(() => log('story done')) },
+  storyhold: { group: 'Career', label: 'Story (hold)', run: () => ui.story(['Two seasons later.', 'A rented storage unit in Oakland.'], 60) },
+  coachkb: { group: 'Career', label: 'Coach: keyboard (drive)', run: () => (coachDevice('keyboard'), ui.coach('Drive at Terminal Velocity', 'drive')) },
+  coachpad: { group: 'Career', label: 'Coach: gamepad (weapon)', run: () => (coachDevice('gamepad'), ui.coach('Spin up the disk', 'weapon')) },
+  coachtouch: { group: 'Career', label: 'Coach: touch (weapon)', run: () => (coachDevice('touch'), ui.coach('Spin up the disk', 'weapon')) },
+  coachright: { group: 'Career', label: 'Coach: self-right', run: () => ui.coach('Flip yourself back over', 'selfRight') },
+  coachcam: { group: 'Career', label: 'Coach: camera', run: () => ui.coach('Switch the camera', 'camera') },
+  coachtext: { group: 'Career', label: 'Coach: text only', run: () => ui.coach('Hit it. Hit it again.') },
+  coachoff: { group: 'Career', label: 'Coach off', run: () => ui.coach(null) },
+  coachfight: {
+    group: 'Career',
+    label: 'Coach over a fight',
+    run: () => {
+      startFight(2, { countdown: 0 });
+      ui.caption('Dale', 'Forty-five seconds left and Juggernaut is still the champ.');
+      ui.coach('Spin up the disk', 'weapon');
+    },
+  },
+
   fight: { group: 'Fight', label: 'Mock fight (duel)', run: () => startFight(2) },
   fightlive: { group: 'Fight', label: 'Mock fight (no countdown)', run: () => startFight(2, { countdown: 0 }) },
   rumble: { group: 'Fight', label: 'Mock rumble (4)', run: () => startFight(4, { countdown: 0 }) },
@@ -626,7 +861,8 @@ syncDrawer();
 function open(id: string): unknown {
   const it = ITEMS[id];
   if (!it) return log(`no item ${id}`);
-  const fresh = (it.group === 'Screens' && !['settings', 'pause', 'loading', 'loadinghold'].includes(id)) || ['fight', 'fightlive', 'rumble', 'ko'].includes(id);
+  const careerFresh = it.group === 'Career' && !id.startsWith('coach');
+  const fresh = (it.group === 'Screens' && !['settings', 'pause', 'loading', 'loadinghold'].includes(id)) || ['fight', 'fightlive', 'rumble', 'ko', 'coachfight'].includes(id) || careerFresh;
   if (fresh || ['decision', 'resultwon', 'resultlost', 'ceremony', 'eliminated'].includes(id)) {
     if (fresh) stopFight();
     ui.debug.reset();
