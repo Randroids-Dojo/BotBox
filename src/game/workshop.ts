@@ -3,7 +3,7 @@
 // Giant Nut.
 
 import type { BotCard, Entrant } from '../contract';
-import { FIGHTS, NEMESIS, PLAYER_TEAM, careerRivalById, type CampaignFight } from '../data/campaign';
+import { FIGHTS, NEMESIS, PLAYER_TEAM, careerRivalById, fightLoadout, type CampaignFight } from '../data/campaign';
 import { buildSpec } from '../sim/spec';
 import {
   careerShop,
@@ -100,7 +100,7 @@ async function fight(g: Game, c: CareerSave, f: CampaignFight | null, gig: SideG
   g.stage.setDressing(act.id === 'championship' ? 'championship' : act.id === 'scrapyard' ? 'qualifier' : 'normal');
   const entrants: Entrant[] = [
     { id: PLAYER, corner: 'red', spec: buildSpec(c.loadout), card: careerCard(c), control: 'player', skill: 1, carried: c.damage ?? undefined },
-    { id: rival.id, corner: 'blue', spec: buildSpec(rival.loadout), card: rival.card, control: 'ai', skill: f ? f.skill : gig!.skill },
+    { id: rival.id, corner: 'blue', spec: buildSpec(fightLoadout(f ?? FIGHTS.find((x) => x.opponent === oppId)!)), card: rival.card, control: 'ai', skill: f ? f.skill : gig!.skill },
   ];
   const out = await runFight(g, {
     entrants,

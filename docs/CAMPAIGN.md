@@ -21,8 +21,8 @@ One weight class (heavyweight). Four acts, thirteen fights. Each act raises the 
 
 | Act | Venue and feel | Fights | Rank after | Prize per win | Store tier |
 | --- | --- | --- | --- | --- | --- |
-| I. The Scrapyard Circuit | Tuesday-night garage league in the Box. Half-empty stands, no TV, quick lights and go. | 4 | #52, #47, #43, #40 | $300 to $600 | 0: scrap and basics |
-| II. Regionals | Taped for the regional broadcast. Robot intros and lower thirds, the commentators pick you up. | 4 | #31, #24, #19, #16 | $1,200 to $2,000 | 1: real drive, NiCads, spinners, lifter, steel |
+| I. The Scrapyard Circuit | Tuesday-night garage league in the Box. Half-empty stands, no TV, quick lights and go. | 4 | #52, #47, #43, #40 | $400 to $1,000 | 0: scrap and basics, wheel guards, a srimech |
+| II. Regionals | Taped for the regional broadcast. Robot intros and lower thirds, the commentators pick you up. | 4 | #31, #24, #19, #16 | $1,500 to $2,600 | 1: real drive, NiCads, spinners, lifter, steel |
 | III. The Show | BotBox proper: full broadcast, replays, interviews. | 4 | #11, #7, #4, #2 | $3,500 to $6,000 | 2: Magmotors, 6WD, NiMH, bars, flippers, axes, titanium |
 | IV. The Championship | The rematch with Terminal Velocity for the Giant Nut and #1. | 1 | #1 | $25,000 | 3: everything |
 
@@ -43,6 +43,7 @@ Rivals get a little sharper the higher you climb. Lose and you can rematch as of
   - Parts in the garage: every part shows its price, and you buy it the moment you fit it. Parts above your tier are visible but locked ("Unlocks at the Regionals").
   - Armor thickness is free once you own the material. Weight is the limit.
   - Repairs cost money per 10 percent restored ($15 in Act I, $40 in Act II, $100 in Act III and IV). Anything below 40 percent gets a free patch job, so you can always field a working robot.
+- **Balance, from AI-vs-AI ladders:** a srimech decides most early fights (a flipped box is counted out), so it is in the Act I store. The Regionals want a spinner on chair motors with steel and a srimech; the regional versions of Homewrecker and Undertow run aluminum and lead-acid (`tweak` in `FIGHTS`). Prime Juggernaut against Terminal Velocity is close to a coin flip.
 
 ## Fight presentation by act
 

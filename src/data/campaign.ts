@@ -75,8 +75,9 @@ export const PART_PRICES: Record<PartKey, { price: number; tier: 0 | 1 | 2 | 3 }
   'extra:wedgeplate': { price: 0, tier: 0 },
   'extra:spikes': { price: 120, tier: 0 },
   'extra:skirts': { price: 250, tier: 0 },
-  'extra:wheelguards': { price: 350, tier: 1 },
-  'extra:srimech': { price: 900, tier: 1 },
+  'extra:wheelguards': { price: 350, tier: 0 },
+  // A box that gets flipped is counted out. The first thing worth saving for.
+  'extra:srimech': { price: 900, tier: 0 },
 };
 
 export type ActId = 'scrapyard' | 'regionals' | 'show' | 'championship';
@@ -119,6 +120,9 @@ export interface CampaignFight {
   skill: number;
   /** One line shown on the next-fight card. */
   blurb: string;
+  /** The rival as it ran that night, when it differs from its roster build (regional robots
+   *  run cheaper armor and batteries than their prime-time versions). */
+  tweak?: Partial<Pick<Loadout, 'armor' | 'power' | 'drive' | 'extras'>>;
 }
 
 // ---- new robots for the career
@@ -195,20 +199,26 @@ export function careerRivalById(id: string): Rival | undefined {
 }
 
 export const FIGHTS: CampaignFight[] = [
-  { id: 'c1', act: 'scrapyard', opponent: 'doorstop', title: 'Garage league qualifier', prize: 300, rankAfter: 52, skill: 0.15, blurb: 'Your first fight back. Shove it into something sharp.' },
-  { id: 'c2', act: 'scrapyard', opponent: 'trash-panda', title: 'Garage league, week two', prize: 400, rankAfter: 47, skill: 0.25, blurb: 'It rams. Keep your nose pointed at it.' },
-  { id: 'c3', act: 'scrapyard', opponent: 'lawn-dart', title: 'Garage league, week three', prize: 500, rankAfter: 43, skill: 0.32, blurb: 'A spinner. Hit it before the disk gets up to speed.' },
-  { id: 'c4', act: 'scrapyard', opponent: 'buzz-off', title: 'Garage league final', prize: 600, rankAfter: 40, skill: 0.38, blurb: 'Win this and the regional producers will call.' },
-  { id: 'c5', act: 'regionals', opponent: 'homewrecker', title: 'Regional qualifier', prize: 1200, rankAfter: 31, skill: 0.55, blurb: 'A shell spinner. Slow to wind up, brutal once it does.' },
-  { id: 'c6', act: 'regionals', opponent: 'chop-suey', title: 'Regional round of 16', prize: 1500, rankAfter: 24, skill: 0.58, blurb: 'An axe. Make it swing at nothing.' },
-  { id: 'c7', act: 'regionals', opponent: 'undertow', title: 'Regional semifinal', prize: 1800, rankAfter: 19, skill: 0.66, blurb: 'A lifter that carries robots to the Pulverizer.' },
-  { id: 'c8', act: 'regionals', opponent: 'snowplow', title: 'Regional final', prize: 2000, rankAfter: 16, skill: 0.72, blurb: 'Six wheels and hardened steel. It will try to push you around.' },
-  { id: 'c9', act: 'show', opponent: 'tax-audit', title: 'BotBox, opening night', prize: 3500, rankAfter: 11, skill: 0.76, blurb: 'Prime time. An axe with an accountant behind the sticks.' },
-  { id: 'c10', act: 'show', opponent: 'general-discontent', title: 'BotBox quarterfinal', prize: 4000, rankAfter: 7, skill: 0.82, blurb: 'Forty inches of bar at knee height.' },
-  { id: 'c11', act: 'show', opponent: 'flapjack', title: 'BotBox semifinal', prize: 5000, rankAfter: 4, skill: 0.86, blurb: 'The flipper that has flipped everything it met.' },
-  { id: 'c12', act: 'show', opponent: 'megahurtz', title: 'Title eliminator', prize: 6000, rankAfter: 2, skill: 0.9, blurb: 'Win and you get your rematch.' },
-  { id: 'c13', act: 'championship', opponent: 'terminal-velocity', title: 'The championship', prize: 25000, rankAfter: 1, skill: 0.96, blurb: 'The robot that ended you. For the Giant Nut.' },
+  { id: 'c1', act: 'scrapyard', opponent: 'doorstop', title: 'Garage league qualifier', prize: 400, rankAfter: 52, skill: 0.15, blurb: 'Your first fight back. Shove it into something sharp.' },
+  { id: 'c2', act: 'scrapyard', opponent: 'trash-panda', title: 'Garage league, week two', prize: 600, rankAfter: 47, skill: 0.25, blurb: 'It rams. Keep your nose pointed at it.' },
+  { id: 'c3', act: 'scrapyard', opponent: 'lawn-dart', title: 'Garage league, week three', prize: 800, rankAfter: 43, skill: 0.3, blurb: 'A spinner. Hit it before the disk gets up to speed.' },
+  { id: 'c4', act: 'scrapyard', opponent: 'buzz-off', title: 'Garage league final', prize: 1000, rankAfter: 40, skill: 0.36, blurb: 'Win this and the regional producers will call.' },
+  { id: 'c5', act: 'regionals', opponent: 'homewrecker', title: 'Regional qualifier', prize: 1500, rankAfter: 31, skill: 0.42, blurb: 'A shell spinner. Slow to wind up, brutal once it does.', tweak: { armor: { material: 'aluminum', grade: 1 }, power: 'sla' } },
+  { id: 'c6', act: 'regionals', opponent: 'chop-suey', title: 'Regional round of 16', prize: 1800, rankAfter: 24, skill: 0.48, blurb: 'An axe. Make it swing at nothing.' },
+  { id: 'c7', act: 'regionals', opponent: 'undertow', title: 'Regional semifinal', prize: 2200, rankAfter: 19, skill: 0.54, blurb: 'A lifter that carries robots to the Pulverizer.', tweak: { armor: { material: 'aluminum', grade: 1 }, power: 'sla' } },
+  { id: 'c8', act: 'regionals', opponent: 'snowplow', title: 'Regional final', prize: 2600, rankAfter: 16, skill: 0.6, blurb: 'Six wheels and hardened steel. It will try to push you around.' },
+  { id: 'c9', act: 'show', opponent: 'tax-audit', title: 'BotBox, opening night', prize: 3500, rankAfter: 11, skill: 0.66, blurb: 'Prime time. An axe with an accountant behind the sticks.' },
+  { id: 'c10', act: 'show', opponent: 'general-discontent', title: 'BotBox quarterfinal', prize: 4000, rankAfter: 7, skill: 0.72, blurb: 'Forty inches of bar at knee height.' },
+  { id: 'c11', act: 'show', opponent: 'flapjack', title: 'BotBox semifinal', prize: 5000, rankAfter: 4, skill: 0.78, blurb: 'The flipper that has flipped everything it met.' },
+  { id: 'c12', act: 'show', opponent: 'megahurtz', title: 'Title eliminator', prize: 6000, rankAfter: 2, skill: 0.84, blurb: 'Win and you get your rematch.' },
+  { id: 'c13', act: 'championship', opponent: 'terminal-velocity', title: 'The championship', prize: 25000, rankAfter: 1, skill: 0.92, blurb: 'The robot that ended you. For the Giant Nut.' },
 ];
+
+/** The rival's loadout for a campaign fight. */
+export function fightLoadout(f: CampaignFight): Loadout {
+  const base = careerRivalById(f.opponent)!.loadout;
+  return { ...base, ...f.tweak, extras: [...(f.tweak?.extras ?? base.extras)] };
+}
 
 /** Side gigs pay this share of the next campaign purse (rounded to $50). */
 export const SIDE_GIG_SHARE = 0.35;

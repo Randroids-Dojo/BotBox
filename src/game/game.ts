@@ -191,8 +191,9 @@ export class Game {
       jumpTo(this.save.career, Number(jump) || 0);
       this.persist();
     }
-    // First launch: straight into the last seconds of a championship final.
-    if (!this.save.career?.prologueDone) await this.guarded(() => this.career());
+    // First launch: straight into the last seconds of a championship final. The dev jump goes
+    // straight to the workshop too.
+    if (!this.save.career?.prologueDone || jump !== null) await this.guarded(() => this.career());
     for (;;) {
       this.stage.setScene('title');
       this.audio.music('menu', 1);
