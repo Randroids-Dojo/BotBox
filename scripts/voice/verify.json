@@ -47,6 +47,30 @@
     "score": 1.0,
     "issues": []
   },
+  "chuck.comeback.1": {
+    "sha": "589997c9baee",
+    "heard": "There it is! The champ is back, baby!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.comeback.2": {
+    "sha": "69395d5bb7ae",
+    "heard": "That's the juggernaut I remember, vintage.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.comeback.3": {
+    "sha": "ea9b6f22af3f",
+    "heard": "You can't teach that, Dale. That's muscle memory.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.comeback.4": {
+    "sha": "de040bfc4da1",
+    "heard": "The old champ still got the arm. Still got the arm.",
+    "score": 0.98,
+    "issues": []
+  },
   "chuck.count.1": {
     "sha": "1eccc6203e4b",
     "heard": "The count's on. Get up. Get up.",
@@ -146,6 +170,24 @@
   "chuck.drivedown.4": {
     "sha": "2f07f7f9bbe5",
     "heard": "Spinning in place. That's a bad ankle.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.fall.1": {
+    "sha": "79767851acb7",
+    "heard": "That robot used to own this place, Dale.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.fall.2": {
+    "sha": "9921eff42a0b",
+    "heard": "I know that look. You take a hit like that, you're never the same.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.fall.3": {
+    "sha": "f61379dacc67",
+    "heard": "Stay down, champ. Just stay down.",
     "score": 1.0,
     "issues": []
   },
@@ -404,6 +446,48 @@
   "chuck.pin.4": {
     "sha": "bfde7390c873",
     "heard": "Bear hug! Don't let go!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.down.1": {
+    "sha": "18e6f7a01d34",
+    "heard": "Oh, oh no! The champ is upside down! It's on fire!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.down.2": {
+    "sha": "95f8564e5123",
+    "heard": "That's not possible. Nobody hits the champ like that. Nobody.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.taste.1": {
+    "sha": "cb71df5cbd4d",
+    "heard": "That's a champion's hit, Dale. That's why it's the champ.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.taste.2": {
+    "sha": "e495e70e8915",
+    "heard": "The champs in victory formation. Just take a knee, baby.",
+    "score": 0.991,
+    "issues": []
+  },
+  "chuck.pro.taste.3": {
+    "sha": "3ee16ecd78b8",
+    "heard": "Put it in the trophy case. This dynasty is not done.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.turn.1": {
+    "sha": "8b0d55e197d6",
+    "heard": "Hold on! Listen to that bar wind up! Look out, champ!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.turn.2": {
+    "sha": "c59a5b98ab6b",
+    "heard": "It's coming. Juggernaut doesn't see it. Look out.",
     "score": 1.0,
     "issues": []
   },
@@ -857,6 +941,30 @@
     "score": 1.0,
     "issues": []
   },
+  "dale.comeback.1": {
+    "sha": "85c3637156e6",
+    "heard": "Well, well, the old champ still remembers how to do that.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.comeback.2": {
+    "sha": "7cffa2e5ad19",
+    "heard": "Two seasons in a storage unit and it still hits like the rent is due.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.comeback.3": {
+    "sha": "cb4cb25df79c",
+    "heard": "I miss that sound. I'm not crying, it's the smoke!",
+    "score": 0.979,
+    "issues": []
+  },
+  "dale.comeback.4": {
+    "sha": "3f2028db555f",
+    "heard": "Okay, I take back what I said about this comeback. Most of it.",
+    "score": 1.0,
+    "issues": []
+  },
   "dale.count.1": {
     "sha": "df98777ab2b0",
     "heard": "And the count is on.",
@@ -957,6 +1065,24 @@
     "sha": "4dd2650b1b2b",
     "heard": "Look at its spin. It's having a moment.",
     "score": 0.986,
+    "issues": []
+  },
+  "dale.fall.1": {
+    "sha": "a4072640710d",
+    "heard": "Ooh, that's the old champ. Hard to watch.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.fall.2": {
+    "sha": "5314473da36b",
+    "heard": "Remember when it used to win? I do. I miss it.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.fall.3": {
+    "sha": "b5b4ca0fd177",
+    "heard": "Down again. Somebody give that robot a hug.",
+    "score": 1.0,
     "issues": []
   },
   "dale.fire.1": {
@@ -1232,6 +1358,48 @@
   "dale.pin.4": {
     "sha": "149833cf1bee",
     "heard": "Pinned. Very rude.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pro.down.1": {
+    "sha": "a8c40439e423",
+    "heard": "Oh no. Oh no. It hit the ceiling. The champ hit the ceiling.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pro.down.2": {
+    "sha": "0897bae6768c",
+    "heard": "I don't have a joke. I don't have anything.",
+    "score": 0.985,
+    "issues": []
+  },
+  "dale.pro.taste.1": {
+    "sha": "d6920f51eb99",
+    "heard": "Juggernaut is just toying with it now. This isn't a fight. It's a coronation.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pro.taste.2": {
+    "sha": "a3ea3b668a43",
+    "heard": "somebody start polishing the giant nut again.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pro.taste.3": {
+    "sha": "f5136092815b",
+    "heard": "Oh, that's mean. That's championship mean.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pro.turn.1": {
+    "sha": "3b4003dae821",
+    "heard": "Wait, wait, what is that bar doing?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pro.turn.2": {
+    "sha": "6d1cd87c5556",
+    "heard": "Uh-oh, that's not a spinner anymore. That's a jet engine.",
     "score": 1.0,
     "issues": []
   },
@@ -1625,6 +1793,54 @@
     "score": 1.0,
     "issues": []
   },
+  "jenna.comeback.1": {
+    "sha": "663e02a6ee3c",
+    "heard": "Juggernaut wins again! Two seasons ago, this robot was a box of scrap. How does this feel?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.comeback.2": {
+    "sha": "cfad38c7f77d",
+    "heard": "I'm here with Team Juggernaut and folks, the old champ is climbing. Talk to me.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.comeback.3": {
+    "sha": "ab51b468cadc",
+    "heard": "From a storage unit to the winner's circle, what's going through your head right now?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.fall.1": {
+    "sha": "78a64561ad3a",
+    "heard": "Stunner tonight, former champ Juggernaut crashes out in the first round.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.fall.2": {
+    "sha": "2d3a4c1666e7",
+    "heard": "Two more sponsors walk away from Team Juggernaut.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.fall.3": {
+    "sha": "5445e8671951",
+    "heard": "Juggernaut has dropped out of the rankings entirely.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.fall.4": {
+    "sha": "a37fcff29314",
+    "heard": "Team Juggernaut has sold its famous disc. Yes, that disc.",
+    "score": 0.963,
+    "issues": []
+  },
+  "jenna.fall.5": {
+    "sha": "5045de57838b",
+    "heard": "Another loss for the former champ. It just can't buy a win.",
+    "score": 1.0,
+    "issues": []
+  },
   "jenna.final.1": {
     "sha": "c75e5008b447",
     "heard": "This is it, the final! How are you feeling right now?",
@@ -1691,6 +1907,12 @@
     "score": 1.0,
     "issues": []
   },
+  "jenna.rematch": {
+    "sha": "cfa698b8984a",
+    "heard": "This is the rematch everybody wanted, Juggernaut against the robot that broke it. Are you ready?",
+    "score": 1.0,
+    "issues": []
+  },
   "jenna.win.1": {
     "sha": "74f301d309a8",
     "heard": "I'm here with the winners. How does it feel?",
@@ -1715,6 +1937,24 @@
     "score": 1.0,
     "issues": []
   },
+  "vic.act.championship": {
+    "sha": "e4f79f9b0bc4",
+    "heard": "This is it. One box, one giant nut, and one score to settle. The Bot Box Championship.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.act.regionals": {
+    "sha": "a66e7c529d16",
+    "heard": "The cameras are rolling. The stands are filling up. Welcome to the Bot Box Regionals!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.act.show": {
+    "sha": "f24077e57582",
+    "heard": "Prime time, ladies and gentlemen. Every seat is full. Every camera is live. This is Bot Box.",
+    "score": 1.0,
+    "issues": []
+  },
   "vic.blue": {
     "sha": "4fa5c27fed48",
     "heard": "And in the blue square!",
@@ -1733,10 +1973,22 @@
     "score": 1.0,
     "issues": []
   },
+  "vic.bot.buzz-off": {
+    "sha": "96a66779da54",
+    "heard": "From Sacramento, California, a beekeeper with a grudge and a 220-pound horizontal spinner, buzz off.",
+    "score": 0.984,
+    "issues": []
+  },
   "vic.bot.buzzkill": {
     "sha": "8dd124ac1a71",
     "heard": "From Gainesville, Florida, a 120-pound horizontal spinner that ends the party buzzkill.",
     "score": 0.983,
+    "issues": []
+  },
+  "vic.bot.chop-suey": {
+    "sha": "0ac78d9f6198",
+    "heard": "From San Jose, California, a 220-pound pneumatic axe. Number nine, extra spicy chop suey.",
+    "score": 0.982,
     "issues": []
   },
   "vic.bot.ctrl-alt-defeat": {
@@ -1749,6 +2001,12 @@
     "sha": "3735997fdfa5",
     "heard": "From Columbus, Ohio, a 60-pound drum spinner that takes forever to connect. Dial up.",
     "score": 1.0,
+    "issues": []
+  },
+  "vic.bot.doorstop": {
+    "sha": "83f689225bbd",
+    "heard": "From Fresno, California, a 220-pound wedge made from a door hinge and pure optimism, DoorStop.",
+    "score": 0.983,
     "issues": []
   },
   "vic.bot.flapjack": {
@@ -1785,6 +2043,12 @@
     "sha": "56fa82f203cd",
     "heard": "From Pittsburgh, Pennsylvania, 340 pounds of rammer, today's special knuckle sandwich.",
     "score": 0.983,
+    "issues": []
+  },
+  "vic.bot.lawn-dart": {
+    "sha": "16f48858341d",
+    "heard": "From Modesto, California, a 220-pound vertical spinner that wobbles like a shopping cart, Lawn Dart!",
+    "score": 0.984,
     "issues": []
   },
   "vic.bot.lunchbox": {
@@ -1859,6 +2123,12 @@
     "score": 0.981,
     "issues": []
   },
+  "vic.bot.terminal-velocity": {
+    "sha": "3122c7cc2ab6",
+    "heard": "From Boston, Massachusetts, undefeated, a titanium bar spinning at highway speed, the robot that ended a dynasty, Terminal Velocity.",
+    "score": 1.0,
+    "issues": []
+  },
   "vic.bot.the-contractor": {
     "sha": "4b0bec3cd3ac",
     "heard": "From Las Vegas, Nevada, a 340-pound axe that shows up late, the contractor.",
@@ -1869,6 +2139,12 @@
     "sha": "54ef5b452b3d",
     "heard": "From Asheville, North Carolina, a dentist, 60-pound, horizontal spinner, Tooth Fairy!",
     "score": 0.988,
+    "issues": []
+  },
+  "vic.bot.trash-panda": {
+    "sha": "985d4a91a108",
+    "heard": "From Stockton, California, a 220-pound spiked rammer that eats whatever you leave lying around, Trash Panda!",
+    "score": 0.985,
     "issues": []
   },
   "vic.bot.undertow": {
@@ -1922,6 +2198,12 @@
   "vic.class.super": {
     "sha": "9bf989005f4a",
     "heard": "Super Heavyweight Division!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.comeback": {
+    "sha": "aff7a79d29b3",
+    "heard": "From a storage unit in Oakland to the top of the world, the comeback is complete!",
     "score": 1.0,
     "issues": []
   },
@@ -1988,6 +2270,12 @@
   "vic.decision": {
     "sha": "cd0d038706c8",
     "heard": "Ladies and gentlemen, we go to the judges.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.final.open": {
+    "sha": "dd4fc63c98e2",
+    "heard": "In one square, the robot that fell. In the other, the robot that broke it. Two seasons in the making. This is The Rematch.",
     "score": 1.0,
     "issues": []
   },
@@ -2063,9 +2351,21 @@
     "score": 1.0,
     "issues": []
   },
+  "vic.name.buzz-off": {
+    "sha": "4a210f65c5fb",
+    "heard": "Buzz off!",
+    "score": 1.0,
+    "issues": []
+  },
   "vic.name.buzzkill": {
     "sha": "22cd53466a72",
     "heard": "Buzzkill!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.chop-suey": {
+    "sha": "0cb152a9a0e4",
+    "heard": "Chop Suey!",
     "score": 1.0,
     "issues": []
   },
@@ -2078,6 +2378,12 @@
   "vic.name.dial-up": {
     "sha": "78c27cd05f7b",
     "heard": "Dial up",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.doorstop": {
+    "sha": "d2ddce11f10a",
+    "heard": "Door stop!",
     "score": 1.0,
     "issues": []
   },
@@ -2114,6 +2420,12 @@
   "vic.name.knuckle-sandwich": {
     "sha": "fca683ef0542",
     "heard": "Knuckle sandwich.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.lawn-dart": {
+    "sha": "8cd277c43f4c",
+    "heard": "Lawn dart.",
     "score": 1.0,
     "issues": []
   },
@@ -2189,6 +2501,12 @@
     "score": 1.0,
     "issues": []
   },
+  "vic.name.terminal-velocity": {
+    "sha": "b2da4976805d",
+    "heard": "Terminal Velocity!",
+    "score": 1.0,
+    "issues": []
+  },
   "vic.name.the-contractor": {
     "sha": "6acfabfb6c2c",
     "heard": "The contractor!",
@@ -2198,6 +2516,12 @@
   "vic.name.tooth-fairy": {
     "sha": "0553cfdc025b",
     "heard": "Tooth Fairy!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.trash-panda": {
+    "sha": "eb87be711ba6",
+    "heard": "Trash Panda!",
     "score": 1.0,
     "issues": []
   },
@@ -2541,6 +2865,30 @@
     "score": 1.0,
     "issues": []
   },
+  "vic.player.comeback.1": {
+    "sha": "5e184936e2d1",
+    "heard": "Once the king of the box, rebuilt from scrap in an Oakland storage unit.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.comeback.2": {
+    "sha": "fa5e0b87fe7e",
+    "heard": "They sold the disc. They lost the sponsors. They kept the name.",
+    "score": 0.983,
+    "issues": []
+  },
+  "vic.player.comeback.3": {
+    "sha": "875a7a8b68fd",
+    "heard": "Knocked out, counted out, written off, and still here, the former champion.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.comeback.4": {
+    "sha": "66f0605641f6",
+    "heard": "Bent, patched, and nowhere near finished, the fallen champion.",
+    "score": 1.0,
+    "issues": []
+  },
   "vic.player.crowbar": {
     "sha": "50d885d2dbc2",
     "heard": "Crowbar!",
@@ -2696,6 +3044,24 @@
   "vic.player.wrecking-ball": {
     "sha": "9e42a5ab5c7f",
     "heard": "Wrecking Ball!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.pro.ko.1": {
+    "sha": "c84668baaf0a",
+    "heard": "It's over. I don't believe it. Juggernaut is down. It's over.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.pro.ko.2": {
+    "sha": "b5b64769c209",
+    "heard": "Ladies and gentlemen, the reign is over. Your new Bot Box champion, Terminal Velocity.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.pro.open": {
+    "sha": "8dc39fba44fa",
+    "heard": "45 seconds left in the championship final. This house is on its feet, and the champ is rolling.",
     "score": 1.0,
     "issues": []
   },

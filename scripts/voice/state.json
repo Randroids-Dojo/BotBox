@@ -1,6 +1,6 @@
 {
-  "chars_sent": 26389,
-  "renders": 625,
+  "chars_sent": 35705,
+  "renders": 733,
   "clips": {
     "vic.bot.megahurtz": {
       "stamp": "d567ca02a021:5:-16.0:1.2",
@@ -1869,6 +1869,250 @@
     "jenna.champ.3": {
       "stamp": "a1eaf4298192:5:-16.0:1.0",
       "sha": "30ad9ad93bae"
+    },
+    "vic.bot.doorstop": {
+      "stamp": "ba86697bb735:5:-16.0:1.12",
+      "sha": "83f689225bbd"
+    },
+    "vic.bot.trash-panda": {
+      "stamp": "71072e1742c8:5:-16.0:1.18",
+      "sha": "985d4a91a108"
+    },
+    "vic.bot.lawn-dart": {
+      "stamp": "eef482889b6a:5:-16.0:1.1",
+      "sha": "16f48858341d"
+    },
+    "vic.bot.buzz-off": {
+      "stamp": "364b299797df:5:-16.0:1.13",
+      "sha": "96a66779da54"
+    },
+    "vic.bot.chop-suey": {
+      "stamp": "8737c0842ebc:5:-16.0:1.2",
+      "sha": "0ac78d9f6198"
+    },
+    "vic.bot.terminal-velocity": {
+      "stamp": "ff7782ae851c:5:-16.0:1.06",
+      "sha": "3122c7cc2ab6"
+    },
+    "vic.name.doorstop": {
+      "stamp": "5b3a656ca924:5:-16.0:1.0",
+      "sha": "d2ddce11f10a"
+    },
+    "vic.name.trash-panda": {
+      "stamp": "78ceb11aab2c:5:-16.0:1.0",
+      "sha": "eb87be711ba6"
+    },
+    "vic.name.lawn-dart": {
+      "stamp": "13aa70c57f8d:5:-16.0:1.0",
+      "sha": "8cd277c43f4c"
+    },
+    "vic.name.buzz-off": {
+      "stamp": "8f560f21789d:5:-16.0:1.0",
+      "sha": "4a210f65c5fb"
+    },
+    "vic.name.chop-suey": {
+      "stamp": "9ebf2f630579:5:-16.0:1.0",
+      "sha": "0cb152a9a0e4"
+    },
+    "vic.name.terminal-velocity": {
+      "stamp": "09e6d0cf54f1:5:-16.0:1.0",
+      "sha": "b2da4976805d"
+    },
+    "vic.pro.open": {
+      "stamp": "90402b1b8cb4:5:-16.0:1.1",
+      "sha": "8dc39fba44fa"
+    },
+    "vic.pro.ko.1": {
+      "stamp": "9a7e757348e0:5:-16.0:1.0",
+      "sha": "c84668baaf0a"
+    },
+    "vic.pro.ko.2": {
+      "stamp": "26f43d3c93f6:5:-16.0:1.1",
+      "sha": "b5b64769c209"
+    },
+    "dale.pro.taste.1": {
+      "stamp": "cdeee36bb707:5:-16.0:1.0",
+      "sha": "d6920f51eb99"
+    },
+    "dale.pro.taste.2": {
+      "stamp": "c12f4318232b:5:-16.0:1.0",
+      "sha": "a3ea3b668a43"
+    },
+    "dale.pro.taste.3": {
+      "stamp": "a4c5597d38b0:5:-16.0:1.0",
+      "sha": "f5136092815b"
+    },
+    "chuck.pro.taste.1": {
+      "stamp": "5c6bdb17188f:5:-16.0:1.0",
+      "sha": "cb71df5cbd4d"
+    },
+    "chuck.pro.taste.2": {
+      "stamp": "4c5d8dfc9a10:5:-16.0:1.0",
+      "sha": "e495e70e8915"
+    },
+    "chuck.pro.taste.3": {
+      "stamp": "6cf51ab54ff6:5:-16.0:1.1",
+      "sha": "3ee16ecd78b8"
+    },
+    "dale.pro.turn.1": {
+      "stamp": "67ca6626922b:5:-16.0:1.0",
+      "sha": "3b4003dae821"
+    },
+    "dale.pro.turn.2": {
+      "stamp": "2477025c54b8:5:-16.0:1.0",
+      "sha": "6d1cd87c5556"
+    },
+    "chuck.pro.turn.1": {
+      "stamp": "f13f8f77142f:5:-16.0:1.0",
+      "sha": "8b0d55e197d6"
+    },
+    "chuck.pro.turn.2": {
+      "stamp": "e366c2efa19f:5:-16.0:1.0",
+      "sha": "c59a5b98ab6b"
+    },
+    "dale.pro.down.1": {
+      "stamp": "cafa02ce35f2:5:-16.0:1.0",
+      "sha": "a8c40439e423"
+    },
+    "dale.pro.down.2": {
+      "stamp": "234b6e797fd9:5:-16.0:1.0",
+      "sha": "0897bae6768c"
+    },
+    "chuck.pro.down.1": {
+      "stamp": "1c802ef5871e:5:-16.0:1.0",
+      "sha": "18e6f7a01d34"
+    },
+    "chuck.pro.down.2": {
+      "stamp": "ce6ede717db5:5:-16.0:1.0",
+      "sha": "95f8564e5123"
+    },
+    "jenna.fall.1": {
+      "stamp": "d6c580d125d7:5:-16.0:1.0",
+      "sha": "78a64561ad3a"
+    },
+    "jenna.fall.2": {
+      "stamp": "f2df1c201de0:5:-16.0:1.0",
+      "sha": "2d3a4c1666e7"
+    },
+    "jenna.fall.3": {
+      "stamp": "c1e4924735eb:5:-16.0:1.0",
+      "sha": "5445e8671951"
+    },
+    "jenna.fall.4": {
+      "stamp": "21a633d6ee70:5:-16.0:1.0",
+      "sha": "a37fcff29314"
+    },
+    "jenna.fall.5": {
+      "stamp": "20b072466d5b:5:-16.0:1.0",
+      "sha": "5045de57838b"
+    },
+    "dale.fall.1": {
+      "stamp": "968525fbd64d:5:-16.0:1.0",
+      "sha": "a4072640710d"
+    },
+    "dale.fall.2": {
+      "stamp": "046a5f9495ec:5:-16.0:1.0",
+      "sha": "5314473da36b"
+    },
+    "dale.fall.3": {
+      "stamp": "4e5b6e42ec9a:5:-16.0:1.0",
+      "sha": "b5b4ca0fd177"
+    },
+    "chuck.fall.1": {
+      "stamp": "6ce25f233b26:5:-16.0:1.0",
+      "sha": "79767851acb7"
+    },
+    "chuck.fall.2": {
+      "stamp": "d8b955a381cc:5:-16.0:1.08",
+      "sha": "9921eff42a0b"
+    },
+    "chuck.fall.3": {
+      "stamp": "3b3509a0dc6e:5:-16.0:1.0",
+      "sha": "f61379dacc67"
+    },
+    "vic.player.comeback.1": {
+      "stamp": "525736b7e1fc:5:-16.0:1.0",
+      "sha": "5e184936e2d1"
+    },
+    "vic.player.comeback.2": {
+      "stamp": "be74b7b62193:5:-16.0:1.0",
+      "sha": "fa5e0b87fe7e"
+    },
+    "vic.player.comeback.3": {
+      "stamp": "2d7b74b38c04:5:-16.0:1.0",
+      "sha": "875a7a8b68fd"
+    },
+    "vic.player.comeback.4": {
+      "stamp": "c3ac99913aac:5:-16.0:1.0",
+      "sha": "66f0605641f6"
+    },
+    "vic.act.regionals": {
+      "stamp": "6b79f7551962:5:-16.0:1.0",
+      "sha": "a66e7c529d16"
+    },
+    "vic.act.show": {
+      "stamp": "a9062269cba0:5:-16.0:1.0",
+      "sha": "f24077e57582"
+    },
+    "vic.act.championship": {
+      "stamp": "24fe3bc7674a:5:-16.0:1.0",
+      "sha": "e4f79f9b0bc4"
+    },
+    "vic.final.open": {
+      "stamp": "b16489939927:5:-16.0:1.1",
+      "sha": "dd4fc63c98e2"
+    },
+    "vic.comeback": {
+      "stamp": "f4da4a48e36c:5:-16.0:1.0",
+      "sha": "aff7a79d29b3"
+    },
+    "dale.comeback.1": {
+      "stamp": "77d445908b67:5:-16.0:1.0",
+      "sha": "85c3637156e6"
+    },
+    "dale.comeback.2": {
+      "stamp": "6a242a7c9942:5:-16.0:1.0",
+      "sha": "7cffa2e5ad19"
+    },
+    "dale.comeback.3": {
+      "stamp": "d0d0d2cc79f8:5:-16.0:1.0",
+      "sha": "cb4cb25df79c"
+    },
+    "dale.comeback.4": {
+      "stamp": "67f65f6a9400:5:-16.0:1.0",
+      "sha": "3f2028db555f"
+    },
+    "chuck.comeback.1": {
+      "stamp": "e9c2790cc28a:5:-16.0:1.0",
+      "sha": "589997c9baee"
+    },
+    "chuck.comeback.2": {
+      "stamp": "137e020084f1:5:-16.0:1.0",
+      "sha": "69395d5bb7ae"
+    },
+    "chuck.comeback.3": {
+      "stamp": "f60548c2f2d7:5:-16.0:1.0",
+      "sha": "ea9b6f22af3f"
+    },
+    "chuck.comeback.4": {
+      "stamp": "b6d41f790724:5:-16.0:1.0",
+      "sha": "de040bfc4da1"
+    },
+    "jenna.comeback.1": {
+      "stamp": "3e706d06764a:5:-16.0:1.0",
+      "sha": "663e02a6ee3c"
+    },
+    "jenna.comeback.2": {
+      "stamp": "bf454b4925a3:5:-16.0:1.0",
+      "sha": "cfad38c7f77d"
+    },
+    "jenna.comeback.3": {
+      "stamp": "e0f6cc8461be:5:-16.0:1.0",
+      "sha": "ab51b468cadc"
+    },
+    "jenna.rematch": {
+      "stamp": "51ef72096b61:5:-16.0:1.0",
+      "sha": "cfa698b8984a"
     }
   }
 }

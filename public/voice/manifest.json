@@ -49,6 +49,30 @@
       "speaker": "Chuck",
       "dur": 2.37
     },
+    "chuck.comeback.1": {
+      "file": "chuck/comeback-1.mp3",
+      "text": "THERE it is! The champ is BACK, baby!",
+      "speaker": "Chuck",
+      "dur": 2.91
+    },
+    "chuck.comeback.2": {
+      "file": "chuck/comeback-2.mp3",
+      "text": "That's the Juggernaut I remember! Vintage!",
+      "speaker": "Chuck",
+      "dur": 2.75
+    },
+    "chuck.comeback.3": {
+      "file": "chuck/comeback-3.mp3",
+      "text": "You can't teach that, Dale! That's muscle memory!",
+      "speaker": "Chuck",
+      "dur": 2.94
+    },
+    "chuck.comeback.4": {
+      "file": "chuck/comeback-4.mp3",
+      "text": "The old champ's still got the arm! Still got the arm!",
+      "speaker": "Chuck",
+      "dur": 3.51
+    },
     "chuck.count.1": {
       "file": "chuck/count-1.mp3",
       "text": "The count's on! Get up! Get up!",
@@ -150,6 +174,24 @@
       "text": "Spinning in place! That's a bad ankle!",
       "speaker": "Chuck",
       "dur": 2.69
+    },
+    "chuck.fall.1": {
+      "file": "chuck/fall-1.mp3",
+      "text": "That robot used to own this place, Dale.",
+      "speaker": "Chuck",
+      "dur": 2.22
+    },
+    "chuck.fall.2": {
+      "file": "chuck/fall-2.mp3",
+      "text": "I know that look. You take a hit like that, you're never the same.",
+      "speaker": "Chuck",
+      "dur": 3.87
+    },
+    "chuck.fall.3": {
+      "file": "chuck/fall-3.mp3",
+      "text": "Stay down, champ. Just stay down.",
+      "speaker": "Chuck",
+      "dur": 2.6
     },
     "chuck.fire.1": {
       "file": "chuck/fire-1.mp3",
@@ -408,6 +450,48 @@
       "text": "Bear hug! Don't let go!",
       "speaker": "Chuck",
       "dur": 1.96
+    },
+    "chuck.pro.down.1": {
+      "file": "chuck/pro-down-1.mp3",
+      "text": "OH! OH NO! The champ is upside down! It's on FIRE!",
+      "speaker": "Chuck",
+      "dur": 4.18
+    },
+    "chuck.pro.down.2": {
+      "file": "chuck/pro-down-2.mp3",
+      "text": "That's not possible. Nobody hits the champ like that. Nobody.",
+      "speaker": "Chuck",
+      "dur": 4.24
+    },
+    "chuck.pro.taste.1": {
+      "file": "chuck/pro-taste-1.mp3",
+      "text": "That's a CHAMPION'S hit, Dale! That's why it's the champ!",
+      "speaker": "Chuck",
+      "dur": 3.42
+    },
+    "chuck.pro.taste.2": {
+      "file": "chuck/pro-taste-2.mp3",
+      "text": "The champ's in victory formation! Just take a knee, baby!",
+      "speaker": "Chuck",
+      "dur": 4.0
+    },
+    "chuck.pro.taste.3": {
+      "file": "chuck/pro-taste-3.mp3",
+      "text": "Put it in the trophy case! This dynasty is NOT done!",
+      "speaker": "Chuck",
+      "dur": 3.98
+    },
+    "chuck.pro.turn.1": {
+      "file": "chuck/pro-turn-1.mp3",
+      "text": "Hold on! Listen to that bar wind up! Look out, champ!",
+      "speaker": "Chuck",
+      "dur": 3.66
+    },
+    "chuck.pro.turn.2": {
+      "file": "chuck/pro-turn-2.mp3",
+      "text": "It's coming! Juggernaut doesn't see it! LOOK OUT!",
+      "speaker": "Chuck",
+      "dur": 3.24
     },
     "chuck.pulverizer.1": {
       "file": "chuck/pulverizer-1.mp3",
@@ -859,6 +943,30 @@
       "speaker": "Dale",
       "dur": 1.97
     },
+    "dale.comeback.1": {
+      "file": "dale/comeback-1.mp3",
+      "text": "Well, well. The old champ still remembers how to do that.",
+      "speaker": "Dale",
+      "dur": 3.17
+    },
+    "dale.comeback.2": {
+      "file": "dale/comeback-2.mp3",
+      "text": "Two seasons in a storage unit, and it still hits like the rent is due.",
+      "speaker": "Dale",
+      "dur": 3.79
+    },
+    "dale.comeback.3": {
+      "file": "dale/comeback-3.mp3",
+      "text": "I missed that sound. I'm not crying, it's the smoke.",
+      "speaker": "Dale",
+      "dur": 2.97
+    },
+    "dale.comeback.4": {
+      "file": "dale/comeback-4.mp3",
+      "text": "Okay, I take back what I said about this comeback. Most of it.",
+      "speaker": "Dale",
+      "dur": 2.87
+    },
     "dale.count.1": {
       "file": "dale/count-1.mp3",
       "text": "And the count is on.",
@@ -960,6 +1068,24 @@
       "text": "Look at it spin. It's having a moment.",
       "speaker": "Dale",
       "dur": 2.23
+    },
+    "dale.fall.1": {
+      "file": "dale/fall-1.mp3",
+      "text": "Ooh. That's the old champ. Hard to watch.",
+      "speaker": "Dale",
+      "dur": 2.64
+    },
+    "dale.fall.2": {
+      "file": "dale/fall-2.mp3",
+      "text": "Remember when it used to win? I do. I miss it.",
+      "speaker": "Dale",
+      "dur": 3.12
+    },
+    "dale.fall.3": {
+      "file": "dale/fall-3.mp3",
+      "text": "Down again. Somebody give that robot a hug.",
+      "speaker": "Dale",
+      "dur": 2.26
     },
     "dale.fire.1": {
       "file": "dale/fire-1.mp3",
@@ -1236,6 +1362,48 @@
       "text": "Pinned. Very rude.",
       "speaker": "Dale",
       "dur": 1.71
+    },
+    "dale.pro.down.1": {
+      "file": "dale/pro-down-1.mp3",
+      "text": "Oh no. Oh, no. It hit the ceiling. The champ hit the ceiling.",
+      "speaker": "Dale",
+      "dur": 4.0
+    },
+    "dale.pro.down.2": {
+      "file": "dale/pro-down-2.mp3",
+      "text": "I... I don't have a joke. I don't have anything.",
+      "speaker": "Dale",
+      "dur": 2.56
+    },
+    "dale.pro.taste.1": {
+      "file": "dale/pro-taste-1.mp3",
+      "text": "Juggernaut is just toying with it now. This isn't a fight, it's a coronation.",
+      "speaker": "Dale",
+      "dur": 4.08
+    },
+    "dale.pro.taste.2": {
+      "file": "dale/pro-taste-2.mp3",
+      "text": "Somebody start polishing the Giant Nut. Again.",
+      "speaker": "Dale",
+      "dur": 3.66
+    },
+    "dale.pro.taste.3": {
+      "file": "dale/pro-taste-3.mp3",
+      "text": "Oh, that's mean. That's championship mean!",
+      "speaker": "Dale",
+      "dur": 2.91
+    },
+    "dale.pro.turn.1": {
+      "file": "dale/pro-turn-1.mp3",
+      "text": "Wait. Wait, what is that bar doing?",
+      "speaker": "Dale",
+      "dur": 1.92
+    },
+    "dale.pro.turn.2": {
+      "file": "dale/pro-turn-2.mp3",
+      "text": "Uh oh. That's not a spinner anymore. That's a jet engine.",
+      "speaker": "Dale",
+      "dur": 3.36
     },
     "dale.pulverizer.1": {
       "file": "dale/pulverizer-1.mp3",
@@ -1627,6 +1795,54 @@
       "speaker": "Jenna",
       "dur": 2.69
     },
+    "jenna.comeback.1": {
+      "file": "jenna/comeback-1.mp3",
+      "text": "Juggernaut wins again! Two seasons ago this robot was a box of scrap. How does this feel?",
+      "speaker": "Jenna",
+      "dur": 4.96
+    },
+    "jenna.comeback.2": {
+      "file": "jenna/comeback-2.mp3",
+      "text": "I'm here with Team Juggernaut, and folks, the old champ is climbing! Talk to me!",
+      "speaker": "Jenna",
+      "dur": 4.92
+    },
+    "jenna.comeback.3": {
+      "file": "jenna/comeback-3.mp3",
+      "text": "From a storage unit to the winner's circle! What's going through your head right now?",
+      "speaker": "Jenna",
+      "dur": 3.36
+    },
+    "jenna.fall.1": {
+      "file": "jenna/fall-1.mp3",
+      "text": "Stunner tonight: former champ Juggernaut crashes out in the first round.",
+      "speaker": "Jenna",
+      "dur": 3.2
+    },
+    "jenna.fall.2": {
+      "file": "jenna/fall-2.mp3",
+      "text": "Two more sponsors walk away from Team Juggernaut.",
+      "speaker": "Jenna",
+      "dur": 2.44
+    },
+    "jenna.fall.3": {
+      "file": "jenna/fall-3.mp3",
+      "text": "Juggernaut has dropped out of the rankings entirely.",
+      "speaker": "Jenna",
+      "dur": 3.02
+    },
+    "jenna.fall.4": {
+      "file": "jenna/fall-4.mp3",
+      "text": "Team Juggernaut has sold its famous disk. Yes, that disk.",
+      "speaker": "Jenna",
+      "dur": 3.4
+    },
+    "jenna.fall.5": {
+      "file": "jenna/fall-5.mp3",
+      "text": "Another loss for the former champ. It just can't buy a win.",
+      "speaker": "Jenna",
+      "dur": 3.22
+    },
     "jenna.final.1": {
       "file": "jenna/final-1.mp3",
       "text": "This is it, the final! How are you feeling right now?",
@@ -1693,6 +1909,12 @@
       "speaker": "Jenna",
       "dur": 4.0
     },
+    "jenna.rematch": {
+      "file": "jenna/rematch.mp3",
+      "text": "This is the rematch everybody wanted. Juggernaut against the robot that broke it. Are you ready?",
+      "speaker": "Jenna",
+      "dur": 4.26
+    },
     "jenna.win.1": {
       "file": "jenna/win-1.mp3",
       "text": "I'm here with the winners! How does it feel?",
@@ -1717,6 +1939,24 @@
       "speaker": "Jenna",
       "dur": 2.89
     },
+    "vic.act.championship": {
+      "file": "vic/act-championship.mp3",
+      "text": "This is it! One Box, one Giant Nut, and one score to settle... the BotBox CHAMPIONSHIP!",
+      "speaker": "Vic",
+      "dur": 8.82
+    },
+    "vic.act.regionals": {
+      "file": "vic/act-regionals.mp3",
+      "text": "The cameras are rolling, the stands are filling up... welcome to the BotBox REGIONALS!",
+      "speaker": "Vic",
+      "dur": 7.91
+    },
+    "vic.act.show": {
+      "file": "vic/act-show.mp3",
+      "text": "Prime time, ladies and gentlemen! Every seat is full, every camera is live... this is BOTBOX!",
+      "speaker": "Vic",
+      "dur": 9.52
+    },
     "vic.blue": {
       "file": "vic/blue.mp3",
       "text": "And in the blue square...",
@@ -1735,11 +1975,23 @@
       "speaker": "Vic",
       "dur": 7.86
     },
+    "vic.bot.buzz-off": {
+      "file": "vic/bot-buzz-off.mp3",
+      "text": "From Sacramento, California, a beekeeper with a grudge and a two hundred and twenty pound horizontal spinner... BUZZ OFF!",
+      "speaker": "Vic",
+      "dur": 10.71
+    },
     "vic.bot.buzzkill": {
       "file": "vic/bot-buzzkill.mp3",
       "text": "From Gainesville, Florida, a one hundred and twenty pound horizontal spinner that ends the party... BUZZKILL!",
       "speaker": "Vic",
       "dur": 9.75
+    },
+    "vic.bot.chop-suey": {
+      "file": "vic/bot-chop-suey.mp3",
+      "text": "From San Jose, California, a two hundred and twenty pound pneumatic axe. Number nine, extra spicy... CHOP SUEY!",
+      "speaker": "Vic",
+      "dur": 11.48
     },
     "vic.bot.ctrl-alt-defeat": {
       "file": "vic/bot-ctrl-alt-defeat.mp3",
@@ -1752,6 +2004,12 @@
       "text": "From Columbus, Ohio, a sixty pound drum spinner that takes forever to connect... DIAL-UP!",
       "speaker": "Vic",
       "dur": 8.27
+    },
+    "vic.bot.doorstop": {
+      "file": "vic/bot-doorstop.mp3",
+      "text": "From Fresno, California, a two hundred and twenty pound wedge made from a door hinge and pure optimism... DOORSTOP!",
+      "speaker": "Vic",
+      "dur": 10.54
     },
     "vic.bot.flapjack": {
       "file": "vic/bot-flapjack.mp3",
@@ -1788,6 +2046,12 @@
       "text": "From Pittsburgh, Pennsylvania, three hundred and forty pounds of rammer. Today's special... KNUCKLE SANDWICH!",
       "speaker": "Vic",
       "dur": 10.09
+    },
+    "vic.bot.lawn-dart": {
+      "file": "vic/bot-lawn-dart.mp3",
+      "text": "From Modesto, California, a two hundred and twenty pound vertical spinner that wobbles like a shopping cart... LAWN DART!",
+      "speaker": "Vic",
+      "dur": 10.61
     },
     "vic.bot.lunchbox": {
       "file": "vic/bot-lunchbox.mp3",
@@ -1861,6 +2125,12 @@
       "speaker": "Vic",
       "dur": 9.96
     },
+    "vic.bot.terminal-velocity": {
+      "file": "vic/bot-terminal-velocity.mp3",
+      "text": "From Boston, Massachusetts... undefeated. A titanium bar spinning at highway speed. The robot that ended a dynasty... TERMINAL VELOCITY!",
+      "speaker": "Vic",
+      "dur": 12.52
+    },
     "vic.bot.the-contractor": {
       "file": "vic/bot-the-contractor.mp3",
       "text": "From Las Vegas, Nevada, a three hundred and forty pound axe that shows up late... THE CONTRACTOR!",
@@ -1872,6 +2142,12 @@
       "text": "From Asheville, North Carolina, a dentist's sixty pound horizontal spinner... TOOTH FAIRY!",
       "speaker": "Vic",
       "dur": 8.56
+    },
+    "vic.bot.trash-panda": {
+      "file": "vic/bot-trash-panda.mp3",
+      "text": "From Stockton, California, a two hundred and twenty pound spiked rammer that eats whatever you leave lying around... TRASH PANDA!",
+      "speaker": "Vic",
+      "dur": 10.66
     },
     "vic.bot.undertow": {
       "file": "vic/bot-undertow.mp3",
@@ -1926,6 +2202,12 @@
       "text": "Super heavyweight division!",
       "speaker": "Vic",
       "dur": 2.88
+    },
+    "vic.comeback": {
+      "file": "vic/comeback.mp3",
+      "text": "From a storage unit in Oakland to the top of the world... the comeback is COMPLETE!",
+      "speaker": "Vic",
+      "dur": 7.67
     },
     "vic.count.1": {
       "file": "vic/count-1.mp3",
@@ -1992,6 +2274,12 @@
       "text": "Ladies and gentlemen... we go to the judges.",
       "speaker": "Vic",
       "dur": 4.16
+    },
+    "vic.final.open": {
+      "file": "vic/final-open.mp3",
+      "text": "In one square, the robot that fell. In the other, the robot that broke it. Two seasons in the making... this is the REMATCH!",
+      "speaker": "Vic",
+      "dur": 11.58
     },
     "vic.go.1": {
       "file": "vic/go-1.mp3",
@@ -2065,11 +2353,23 @@
       "speaker": "Vic",
       "dur": 1.59
     },
+    "vic.name.buzz-off": {
+      "file": "vic/name-buzz-off.mp3",
+      "text": "BUZZ OFF!",
+      "speaker": "Vic",
+      "dur": 1.71
+    },
     "vic.name.buzzkill": {
       "file": "vic/name-buzzkill.mp3",
       "text": "BUZZKILL!",
       "speaker": "Vic",
       "dur": 1.58
+    },
+    "vic.name.chop-suey": {
+      "file": "vic/name-chop-suey.mp3",
+      "text": "CHOP SUEY!",
+      "speaker": "Vic",
+      "dur": 1.9
     },
     "vic.name.ctrl-alt-defeat": {
       "file": "vic/name-ctrl-alt-defeat.mp3",
@@ -2082,6 +2382,12 @@
       "text": "DIAL-UP!",
       "speaker": "Vic",
       "dur": 1.3
+    },
+    "vic.name.doorstop": {
+      "file": "vic/name-doorstop.mp3",
+      "text": "DOORSTOP!",
+      "speaker": "Vic",
+      "dur": 1.47
     },
     "vic.name.flapjack": {
       "file": "vic/name-flapjack.mp3",
@@ -2118,6 +2424,12 @@
       "text": "KNUCKLE SANDWICH!",
       "speaker": "Vic",
       "dur": 1.71
+    },
+    "vic.name.lawn-dart": {
+      "file": "vic/name-lawn-dart.mp3",
+      "text": "LAWN DART!",
+      "speaker": "Vic",
+      "dur": 1.65
     },
     "vic.name.lunchbox": {
       "file": "vic/name-lunchbox.mp3",
@@ -2191,6 +2503,12 @@
       "speaker": "Vic",
       "dur": 1.36
     },
+    "vic.name.terminal-velocity": {
+      "file": "vic/name-terminal-velocity.mp3",
+      "text": "TERMINAL VELOCITY!",
+      "speaker": "Vic",
+      "dur": 2.42
+    },
     "vic.name.the-contractor": {
       "file": "vic/name-the-contractor.mp3",
       "text": "THE CONTRACTOR!",
@@ -2202,6 +2520,12 @@
       "text": "TOOTH FAIRY!",
       "speaker": "Vic",
       "dur": 1.47
+    },
+    "vic.name.trash-panda": {
+      "file": "vic/name-trash-panda.mp3",
+      "text": "TRASH PANDA!",
+      "speaker": "Vic",
+      "dur": 2.37
     },
     "vic.name.undertow": {
       "file": "vic/name-undertow.mp3",
@@ -2539,6 +2863,30 @@
       "speaker": "Vic",
       "dur": 2.24
     },
+    "vic.player.comeback.1": {
+      "file": "vic/player-comeback-1.mp3",
+      "text": "Once the king of the Box, rebuilt from scrap in an Oakland storage unit...",
+      "speaker": "Vic",
+      "dur": 5.87
+    },
+    "vic.player.comeback.2": {
+      "file": "vic/player-comeback-2.mp3",
+      "text": "They sold the disk. They lost the sponsors. They kept the name...",
+      "speaker": "Vic",
+      "dur": 5.35
+    },
+    "vic.player.comeback.3": {
+      "file": "vic/player-comeback-3.mp3",
+      "text": "Knocked out, counted out, written off... and still here. The former champion...",
+      "speaker": "Vic",
+      "dur": 7.76
+    },
+    "vic.player.comeback.4": {
+      "file": "vic/player-comeback-4.mp3",
+      "text": "Bent, patched, and nowhere near finished... the fallen champion...",
+      "speaker": "Vic",
+      "dur": 5.64
+    },
     "vic.player.crowbar": {
       "file": "vic/player-crowbar.mp3",
       "text": "CROWBAR!",
@@ -2694,6 +3042,24 @@
       "text": "WRECKING BALL!",
       "speaker": "Vic",
       "dur": 1.89
+    },
+    "vic.pro.ko.1": {
+      "file": "vic/pro-ko-1.mp3",
+      "text": "It's over! I don't believe it... Juggernaut is DOWN! It's OVER!",
+      "speaker": "Vic",
+      "dur": 6.6
+    },
+    "vic.pro.ko.2": {
+      "file": "vic/pro-ko-2.mp3",
+      "text": "Ladies and gentlemen... the reign is over. Your NEW BotBox champion... TERMINAL VELOCITY!",
+      "speaker": "Vic",
+      "dur": 9.48
+    },
+    "vic.pro.open": {
+      "file": "vic/pro-open.mp3",
+      "text": "Forty five seconds left in the championship final! This house is ON ITS FEET, and the champ is ROLLING!",
+      "speaker": "Vic",
+      "dur": 8.6
     },
     "vic.ready": {
       "file": "vic/ready.mp3",

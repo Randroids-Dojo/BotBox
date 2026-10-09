@@ -52,6 +52,7 @@ AUDITIONS = HERE / "auditions"
 OUT = ROOT / "public" / "voice"
 MANIFEST = OUT / "manifest.json"
 ROSTER = ROOT / "src" / "data" / "roster.ts"
+CAMPAIGN = ROOT / "src" / "data" / "campaign.ts"
 API = "https://api.elevenlabs.io"
 WHISPER = "mlx-community/whisper-large-v3-turbo"
 WORKERS = 3
@@ -69,7 +70,7 @@ PAD_IN, PAD_OUT = 0.03, 0.08
 CLEAN = "aformat=sample_rates=44100:channel_layouts=mono,highpass=f=60"
 
 VOICE_TAG_WORDS = {"shouting", "shouts", "excited", "deadpan", "laughs", "laughing", "sarcastic", "whispers",
-                   "dramatically", "sighs", "chuckles", "roaring", "booming", "hoarse", "cheerfully", "warmly"}
+                   "dramatically", "dramatic", "sad", "sighs", "chuckles", "roaring", "booming", "hoarse", "cheerfully", "warmly"}
 
 # Flags reviewed and accepted: Whisper spells the right sound differently, or the pace is on purpose.
 ACCEPT = {
@@ -165,6 +166,18 @@ VIC_VARIANTS = {"vic.open": 3, "vic.tonight": 2, "vic.player.intro": 3, "vic.go"
 COMMENTARY = ("start hit huge flip airborne saw pulverizer ramrod spikes wall panel wheel fire smoke weapondown "
               "drivedown count ko righted pin spinup whiff chase timelow decision upset idle intro rookie desk").split()
 JENNA_VARIANTS = {"jenna.pits": 3, "jenna.win": 3, "jenna.lose": 3, "jenna.final": 2, "jenna.champ": 2}
+# The career (docs/VOICE.md, Career): the prologue, the fall, the climb and the rematch.
+CAREER_FIXED = ["vic.pro.open", "vic.act.regionals", "vic.act.show", "vic.act.championship", "vic.final.open",
+                "vic.comeback", "jenna.rematch"]
+CAREER_VARIANTS = {"vic.pro.ko": 2, "vic.player.comeback": 3, "jenna.fall": 4, "jenna.comeback": 3}
+for _who in ("dale", "chuck"):
+    CAREER_VARIANTS.update({f"{_who}.pro.taste": 3, f"{_who}.pro.turn": 2, f"{_who}.pro.down": 2,
+                            f"{_who}.fall": 3, f"{_who}.comeback": 4})
+
+
+def career_bots():
+    """Ids of the robots new to the career, read from src/data/campaign.ts."""
+    return re.findall(r"careerRival\(\s*'([a-z0-9-]+)'", CAMPAIGN.read_text(encoding="utf-8"))
 
 
 def required():
@@ -173,12 +186,15 @@ def required():
     fixed = set(VIC_FIXED)
     fixed |= {f"vic.bot.{r}" for r in rivals} | {f"vic.name.{r}" for r in rivals}
     fixed |= {f"vic.player.{s}" for s, _ in players}
+    bots = career_bots()
+    fixed |= {f"vic.bot.{r}" for r in bots} | {f"vic.name.{r}" for r in bots} | set(CAREER_FIXED)
     variants = dict(VIC_VARIANTS)
     for who in ("dale", "chuck"):
         for cat in COMMENTARY:
             variants[f"{who}.{cat}"] = 6 if cat == "idle" else 3
     variants["dale.bumper"] = 3
     variants.update(JENNA_VARIANTS)
+    variants.update(CAREER_VARIANTS)
     return fixed, variants
 
 
