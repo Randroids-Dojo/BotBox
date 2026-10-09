@@ -71,21 +71,24 @@ export const LANE_PAN: Record<Lane, number> = {
   fx: 0,
 };
 
+/** Lane levels, set from solo-lane renders (tools/lanes.ts) toward a rock mix: kick and snare
+ *  peaks level, the guitar pair a little under the kick, hats well back, crashes and stabs as
+ *  accents. Samples are peak-normalized, so these are the whole mix. */
 export const LANE_LEVEL: Record<Lane, number> = {
-  gtrL: 0.62,
-  gtrR: 0.62,
-  bass: 0.7,
+  gtrL: 0.88,
+  gtrR: 0.88,
+  bass: 0.93,
   kick: 0.95,
-  snare: 0.8,
-  hat: 0.3,
-  cym: 0.42,
-  tom: 0.7,
-  lead: 0.5,
-  arp: 0.35,
-  clean: 0.45,
-  stab: 0.42,
-  pad: 0.3,
-  fx: 0.55,
+  snare: 1.27,
+  hat: 0.46,
+  cym: 1.1,
+  tom: 0.75,
+  lead: 0.75,
+  arp: 0.8,
+  clean: 1.0,
+  stab: 1.1,
+  pad: 0.48,
+  fx: 1.1,
 };
 
 export interface Segment {

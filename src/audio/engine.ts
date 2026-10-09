@@ -51,6 +51,7 @@ export class Core {
     this.lastTick = now;
     this.music.pump(lookahead);
     if (now - this.lastFrameAt > 0.2) this.world.crowd.update(dt, null);
+    this.world.maintain();
   }
 
   stinger(id: Stinger): void {

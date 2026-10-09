@@ -238,6 +238,7 @@ function startFight(): void {
   audio.setEntrants(specs);
   mock = new MockWorld(specs, { seed: Math.floor(Math.random() * 1000), countdown: 4, clashEvery: 2.2 });
   audio.music('fight', 1);
+  for (const [k, x] of cueButtons) x.classList.toggle('on', k === 'fight');
   fightBtn.textContent = 'stop mock fight';
   let last = performance.now();
   const loop = () => {

@@ -90,7 +90,7 @@ const title: CueDef = {
     },
     breakC,
   ],
-  mix: { stab: 0.3 },
+  mix: { stab: 0.8 },
 };
 
 const menu: CueDef = {
@@ -131,13 +131,14 @@ const menu: CueDef = {
       },
     },
   ],
-  mix: { gtrL: 0.45, gtrR: 0.45, arp: 0.28 },
+  mix: { gtrL: 0.65, gtrR: 0.65, arp: 0.66, pad: 0.66 },
 };
 
 const pits: CueDef = {
   bpm: 116,
   crunch: true,
   radio: true,
+  level: 1.5,
   swing: 0.12,
   loopFrom: 0,
   sections: [
@@ -170,7 +171,7 @@ const pits: CueDef = {
       },
     },
   ],
-  mix: { lead: 0.38 },
+  mix: { lead: 0.5 },
 };
 
 const intro: CueDef = {
@@ -193,13 +194,13 @@ const intro: CueDef = {
       },
     },
   ],
-  mix: { pad: 0.36, gtrL: 0.55, gtrR: 0.55 },
+  mix: { pad: 0.58, gtrL: 0.8, gtrR: 0.8 },
 };
 
 const fight: CueDef = {
   bpm: 140,
   loopFrom: 0,
-  level: 0.42,
+  level: 0.55,
   scoop: true,
   sections: [
     {
@@ -214,7 +215,7 @@ const fight: CueDef = {
       },
     },
   ],
-  mix: { gtrL: 0.5, gtrR: 0.5, hat: 0.22 },
+  mix: { gtrL: 0.75, gtrR: 0.75, hat: 0.36 },
 };
 
 const victory: CueDef = {
@@ -245,7 +246,7 @@ const victory: CueDef = {
       },
     },
   ],
-  mix: { gtrL: 0.5, gtrR: 0.5 },
+  mix: { gtrL: 0.75, gtrR: 0.75 },
 };
 
 const defeat: CueDef = {
@@ -278,7 +279,7 @@ const defeat: CueDef = {
       },
     },
   ],
-  mix: { pad: 0.42, clean: 0.5, bass: 0.5 },
+  mix: { pad: 0.6, clean: 1.1, bass: 0.7 },
 };
 
 const bumper: CueDef = {
@@ -342,7 +343,7 @@ const nut: CueDef = {
     },
     breakC,
   ],
-  mix: { stab: 0.34, cym: 0.48 },
+  mix: { stab: 0.9, cym: 1.2 },
 };
 
 export const CUES: Record<Exclude<MusicCue, 'none'>, CueDef> = { title, menu, pits, intro, fight, victory, defeat, bumper, nut };

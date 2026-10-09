@@ -18,6 +18,8 @@ interface Manifest {
 }
 
 const BASE = (import.meta.env?.BASE_URL ?? '/') + 'voice/';
+/** Manifest files are relative to public/voice; absolute and blob URLs pass through (tests). */
+const url = (file: string) => (/^(blob:|data:|https?:|\/)/.test(file) ? file : BASE + file);
 
 /** Loads the manifest once, shared by every engine instance. */
 let manifestPromise: Promise<Manifest | null> | null = null;
@@ -133,7 +135,7 @@ export class VoicePlayer {
     if (p) return p;
     const line = this.manifest.lines[id];
     if (!line) return Promise.resolve(null);
-    const job = fetch(BASE + line.file)
+    const job = fetch(url(line.file))
       .then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(`${r.status}`))))
       .then((ab) => this.ctx.decodeAudioData(ab))
       .then((b) => {
@@ -151,8 +153,8 @@ export class VoicePlayer {
   }
 
   /** Warm the cache for lines that are about to be needed. */
-  preload(ids: string[]): void {
-    for (const id of ids) void this.load(id);
+  preload(ids: string[]): Promise<void> {
+    return Promise.all(ids.map((id) => this.load(id))).then(() => undefined);
   }
 
   play(id: string, interrupt: boolean): Promise<boolean> {

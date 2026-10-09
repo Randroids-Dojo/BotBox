@@ -118,6 +118,29 @@ if (what.has('layers')) {
   }
 }
 
+if (what.has('cpu')) {
+  console.log('\naudio graph cost (offline render time / audio time, steady state)');
+  for (let k = 0; k < 2; k++) {
+    const r = await page.evaluate(() => window.__botboxAudio!.cpuProfile());
+    for (const [name, x] of Object.entries(r)) console.log(`  ${name.padEnd(30)} ${(x * 100).toFixed(2)}% of real time`);
+    report.cpu = r;
+  }
+}
+
+if (what.has('voice')) {
+  console.log('\nvoice');
+  const duck = await page.evaluate(() => window.__botboxAudio!.renderVoiceTest({ musicOnly: true }));
+  console.log('  music level with the voice bus muted (shows the duck):');
+  for (const [k, v] of Object.entries(duck.windows)) console.log(`    ${k.padEnd(34)} ${fmt(v)} dB`);
+  const voice = await page.evaluate((w) => window.__botboxAudio!.renderVoiceTest({ wav: w }), wav);
+  save('voice-test.wav', voice.wav);
+  console.log('  voice bus alone (music muted), speaker chains:');
+  for (const [k, v] of Object.entries(voice.windows)) console.log(`    ${k.padEnd(34)} ${fmt(v)} dB`);
+  console.log('  promises:');
+  for (const [k, v] of Object.entries(voice.results)) console.log(`    ${k.padEnd(28)} ${v.ok}  (called ${fmt(v.at, 2)} s, resolved ${fmt(v.resolvedAt, 2)} s)`);
+  report.voice = { duck, voice: { ...voice, wav: undefined } };
+}
+
 if (what.has('tour')) {
   console.log('\neffects tour');
   const res = await page.evaluate((w) => window.__botboxAudio!.renderTour({ wav: w }), wav);

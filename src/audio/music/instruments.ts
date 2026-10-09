@@ -429,6 +429,32 @@ function riser(ctx: C, out: AudioNode, seconds: number): void {
   sg.gain.linearRampToValueAtTime(0, seconds + 0.05);
 }
 
+/** Every music sample is peak-normalized so lane levels in score.ts are the mix. */
+const NOTE_PEAK: Record<string, number> = {
+  gtrM: 0.9,
+  gtrO: 0.9,
+  crM: 0.9,
+  crO: 0.9,
+  lead: 0.9,
+  bassM: 0.9,
+  bassO: 0.9,
+  stab: 0.9,
+  pad: 0.9,
+  arp: 0.9,
+  clean: 0.9,
+  kick: 0.95,
+  snare: 0.95,
+  hatC: 0.9,
+  hatO: 0.9,
+  crash: 0.9,
+  ride: 0.9,
+  tom1: 0.9,
+  tom2: 0.9,
+  tom3: 0.9,
+  boom: 0.95,
+  riser: 0.8,
+};
+
 /** Make sure a music sample key is defined in the bank. */
 export function defineNote(bank: Bank, key: string): void {
   if (bank.has(key)) return;
@@ -477,5 +503,5 @@ export function defineNote(bank: Bank, key: string): void {
   }
   if (!def) throw new Error(`unknown music sample ${key}`);
   const align = inst !== 'riser' && inst !== 'boom' && inst !== 'pad';
-  bank.define(key, { ...def, rate: def.rate ?? NOTE_RATE[inst], align });
+  bank.define(key, { ...def, rate: def.rate ?? NOTE_RATE[inst], align, peak: NOTE_PEAK[inst] });
 }

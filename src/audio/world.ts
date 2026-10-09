@@ -77,20 +77,42 @@ export class World {
   }
 
   setEntrants(entrants: { id: string; spec: BotSpec }[]): void {
-    const keep = new Set(entrants.map((e) => e.id));
-    for (const [id, v] of this.robots)
-      if (!keep.has(id) || entrants.find((e) => e.id === id)!.spec !== v.spec) {
+    // Keyed by what the robot sounds like, so rebuilding spec objects every call is free.
+    const key = (s: BotSpec) => `${s.loadout.drive}/${s.loadout.weapon}/${s.loadout.cls}/${s.scale}`;
+    const want = new Map(entrants.map((e) => [e.id, e.spec]));
+    for (const [id, v] of this.robots) {
+      const s = want.get(id);
+      if (!s || key(s) !== key(v.spec)) {
         v.dispose();
         this.robots.delete(id);
       }
+    }
     for (const e of entrants)
       if (!this.robots.has(e.id)) this.robots.set(e.id, new RobotVoice(this.ctx, this.bank, e.id, e.spec, this.mixer.worldIn, this.mixer.hallIn));
+  }
+
+  /** While the world is off, the whole world subgraph is detached so it costs nothing. */
+  private attached = true;
+  private offSince = 0;
+
+  maintain(): void {
+    const now = this.ctx.currentTime;
+    if (!this.active && this.attached && now - this.offSince > 0.6) {
+      this.mixer.detachWorld();
+      this.attached = false;
+    }
+    this.crowd.maintain();
   }
 
   setActive(on: boolean): void {
     if (on === this.active) return;
     this.active = on;
     const t = this.ctx.currentTime;
+    if (on && !this.attached) {
+      this.mixer.attachWorld();
+      this.attached = true;
+    }
+    if (!on) this.offSince = t;
     this.mixer.worldGate.gain.setTargetAtTime(on ? 1 : 0, t, on ? 0.08 : 0.1);
     if (!on) {
       for (const r of this.robots.values()) r.silence();
@@ -496,9 +518,28 @@ export class Crowd {
     this.gate();
   }
 
+  private gateOn = true;
+  private gateOffAt = 0;
+  private crowdAttached = true;
+
   private gate(): void {
     const on = this.worldActive || this.scripted > 0;
-    this.mixer.crowdGate.gain.setTargetAtTime(on ? 1 : 0, this.ctx.currentTime, on ? 0.2 : 0.15);
+    const t = this.ctx.currentTime;
+    if (on && !this.crowdAttached) {
+      this.mixer.attachCrowd();
+      this.crowdAttached = true;
+    }
+    if (!on && this.gateOn) this.gateOffAt = t;
+    this.gateOn = on;
+    this.mixer.crowdGate.gain.setTargetAtTime(on ? 1 : 0, t, on ? 0.2 : 0.15);
+  }
+
+  /** Detach the crowd loops once they have faded out. */
+  maintain(): void {
+    if (!this.gateOn && this.crowdAttached && this.ctx.currentTime - this.gateOffAt > 1) {
+      this.mixer.detachCrowd();
+      this.crowdAttached = false;
+    }
   }
 
   setRate(r: number): void {

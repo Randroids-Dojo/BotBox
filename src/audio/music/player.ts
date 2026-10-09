@@ -4,7 +4,7 @@ import type { Bank } from '../bank';
 import type { MusicCue } from '../types';
 import { CUES } from './cues';
 import { defineNote } from './instruments';
-import { compileCue, LANE_LEVEL, LANE_PAN, type CompiledCue, type Lane, type NoteEvent, type Segment } from './score';
+import { compileCue, LANE_LEVEL, LANE_PAN, type CompiledCue, type CueDef, type Lane, type NoteEvent, type Segment } from './score';
 
 type Cue = Exclude<MusicCue, 'none'>;
 
@@ -41,6 +41,9 @@ class CueVoice {
   private sources: { src: AudioBufferSourceNode; end: number }[] = [];
   done = false;
   stopAt = Infinity;
+  private head: AudioNode;
+  private def: CueDef;
+  private solo: Set<Lane> | null;
 
   constructor(
     private ctx: BaseAudioContext,
@@ -96,14 +99,9 @@ class CueVoice {
     level.gain.value = def.level ?? 1;
     chainTo(level);
     this.out.connect(dest);
-    for (const lane of Object.keys(LANE_PAN) as Lane[]) {
-      const g = ctx.createGain();
-      g.gain.value = solo && !solo.has(lane) ? 0 : (def.mix?.[lane] ?? LANE_LEVEL[lane]);
-      const p = ctx.createStereoPanner();
-      p.pan.value = LANE_PAN[lane];
-      g.connect(p).connect(head);
-      this.lanes.set(lane, g);
-    }
+    this.head = head;
+    this.def = def;
+    this.solo = solo;
     this.seg = c.intro.events.length ? c.intro : (c.loop ?? c.intro);
     this.inLoop = this.seg === c.loop;
     this.segStart = start;
@@ -149,7 +147,7 @@ class CueVoice {
     src.buffer = buf;
     const g = this.ctx.createGain();
     g.gain.value = e.vel;
-    src.connect(g).connect(this.lanes.get(e.lane)!);
+    src.connect(g).connect(this.lane(e.lane));
     src.start(t);
     let end = t + buf.duration;
     if (Number.isFinite(e.dur) && e.dur < buf.duration) {
@@ -160,6 +158,25 @@ class CueVoice {
       src.stop(end);
     }
     this.sources.push({ src, end });
+  }
+
+  /** Lanes are made on first use, so a sparse cue does not pay for unused ones. */
+  private lane(lane: Lane): GainNode {
+    let g = this.lanes.get(lane);
+    if (g) return g;
+    g = this.ctx.createGain();
+    g.gain.value = this.solo && !this.solo.has(lane) ? 0 : (this.def.mix?.[lane] ?? LANE_LEVEL[lane]);
+    if (LANE_PAN[lane]) {
+      const p = this.ctx.createStereoPanner();
+      p.pan.value = LANE_PAN[lane];
+      g.connect(p).connect(this.head);
+    } else {
+      // Keep the equal-power pan law of the panned lanes (a centered panner is -3 dB).
+      g.gain.value *= Math.SQRT1_2;
+      g.connect(this.head);
+    }
+    this.lanes.set(lane, g);
+    return g;
   }
 
   fadeOut(at: number, sec: number): void {

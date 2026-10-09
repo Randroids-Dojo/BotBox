@@ -81,6 +81,7 @@ export class Mixer {
     const hall = ctx.createConvolver();
     hall.buffer = makeImpulse(ctx, { seconds: 2.4, decay: 2.0, preDelay: 0.03, seed: 9, damp: 0.6 });
     const hallWet = g(0.5);
+    this.hall = hall;
     this.worldIn.connect(this.worldLP);
     this.hallIn.connect(hall).connect(hallWet).connect(this.worldLP);
     this.worldLP.connect(this.worldGate).connect(this.sfxVol);
@@ -118,6 +119,23 @@ export class Mixer {
   }
 
   readonly crowdSlowLP: BiquadFilterNode;
+
+  private hall!: ConvolverNode;
+
+  detachWorld(): void {
+    this.worldIn.disconnect();
+    this.hallIn.disconnect();
+  }
+  attachWorld(): void {
+    this.worldIn.connect(this.worldLP);
+    this.hallIn.connect(this.hall);
+  }
+  detachCrowd(): void {
+    this.crowdIn.disconnect();
+  }
+  attachCrowd(): void {
+    this.crowdIn.connect(this.crowdLP);
+  }
 
   setVolumes(v: { master: number; music: number; sfx: number; voice: number }): void {
     const t = this.ctx.currentTime;

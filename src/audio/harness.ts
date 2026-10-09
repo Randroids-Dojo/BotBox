@@ -12,6 +12,7 @@ import { defineNote } from './music/instruments';
 import { cueKeys } from './music/player';
 import { MATERIALS } from './sounds/sfx';
 import type { MusicCue, Stinger, UiSound } from './types';
+import { Biquad } from './dsp';
 import { VoiceManifest } from './voice';
 
 export const RATE = 48000;
@@ -361,6 +362,95 @@ export async function renderTour(o: { wav?: boolean; group?: 'all' | 'show' | 'i
   return { stats: stats(out), wav: o.wav ? wavBase64(out) : undefined, ms: performance.now() - t0, info: {}, cues: per };
 }
 
+/** A speech-like test line: a buzzy voice through moving formants with syllables. */
+function fakeSpeech(seconds: number, f0: number): Float32Array {
+  const n = Math.floor(RATE * seconds);
+  const out = new Float32Array(n);
+  let ph = 0;
+  const f1 = new Biquad(RATE, 'bp', 700, 5);
+  const f2 = new Biquad(RATE, 'bp', 1200, 8);
+  for (let i = 0; i < n; i++) {
+    const t = i / RATE;
+    const syl = Math.max(0, Math.sin(t * Math.PI * 4.5)) ** 0.6;
+    if (i % 2400 === 0) {
+      const v = [[730, 1090], [530, 1840], [300, 2200], [570, 840]][Math.floor(t * 4.5) % 4];
+      f1.set('bp', v[0], 5);
+      f2.set('bp', v[1], 8);
+    }
+    ph += (f0 * (1 + 0.1 * Math.sin(t * 3))) / RATE;
+    const src = (ph % 1) * 2 - 1;
+    out[i] = (f1.run(src) + 0.6 * f2.run(src)) * syl * 2.2;
+  }
+  return out;
+}
+
+export interface VoiceTest {
+  results: Record<string, { ok: boolean; at: number; resolvedAt: number }>;
+  windows: Record<string, number>;
+  wav?: string;
+}
+
+/** Voice playback through the engine: ducking, skip, interrupt, missing ids, speaker chains.
+ *  `musicOnly` renders with the voice bus muted, to read the duck on the music. */
+export async function renderVoiceTest(o: { musicOnly?: boolean; wav?: boolean } = {}): Promise<VoiceTest> {
+  const bank = await harnessBank();
+  await bank.ensure(cueKeys(bank, 'menu'));
+  const ctx = offline(16);
+  const man = new VoiceManifest();
+  await man.ready;
+  const blob = (f0: number) => URL.createObjectURL(new Blob([Uint8Array.from(atob(wavBase64([fakeSpeech(1.6, f0)])), (c) => c.charCodeAt(0))], { type: 'audio/wav' }));
+  man.lines = {
+    'test.vic': { file: blob(110), text: 'Test Vic', speaker: 'Vic', dur: 1.6 },
+    'test.dale': { file: blob(140), text: 'Test Dale', speaker: 'Dale', dur: 1.6 },
+    'test.jenna': { file: blob(220), text: 'Test Jenna', speaker: 'Jenna', dur: 1.6 },
+  };
+  const core = new Core(ctx, bank, man);
+  core.world.setActive(false);
+  core.mixer.crowdGate.gain.value = 0;
+  core.setVolumes({ master: 1, music: o.musicOnly ? 1 : 0, sfx: 1, voice: o.musicOnly ? 0 : 1 });
+  await core.voice.preload(Object.keys(man.lines));
+  core.musicCue('menu', 0);
+  await core.music.idle();
+  const results: VoiceTest['results'] = {};
+  const say = (name: string, id: string, interrupt = false) => {
+    const at = ctx.currentTime;
+    void core.voice.play(id, interrupt).then((ok) => (results[name] = { ok, at, resolvedAt: ctx.currentTime }));
+  };
+  const plan: [number, () => void][] = [
+    [3, () => say('vic', 'test.vic')],
+    [3.5, () => say('dale while busy (skipped)', 'test.dale')],
+    [8, () => say('dale', 'test.dale')],
+    [8.6, () => say('jenna interrupts', 'test.jenna', true)],
+    [12, () => say('missing id', 'nope.1')],
+  ];
+  const out = await run({
+    ctx,
+    core,
+    seconds: 16,
+    hook: async (t, step) => {
+      for (const [at, fn] of plan) if (t >= at && t - step < at) fn();
+      // Let a pending decode attach its source before audio time moves on.
+      await new Promise((r) => setTimeout(r, 5));
+    },
+  });
+  const win = (a: number, b: number) => stats(out.map((c) => c.subarray(Math.floor(a * RATE), Math.floor(b * RATE)))).rmsDb;
+  return {
+    results,
+    windows: {
+      'before (1-3 s)': win(1, 3),
+      'vic line (3.3-4.5 s)': win(3.3, 4.5),
+      'just after vic ends (4.7-5.5 s)': win(4.7, 5.5),
+      'recovered (6.5-7.9 s)': win(6.5, 7.9),
+      'dale line (8.1-8.5 s)': win(8.1, 8.5),
+      'after dale cut (8.62-8.66 s)': win(8.62, 8.66),
+      'jenna line (8.7-10.2 s)': win(8.7, 10.2),
+      'jenna tail (10.35-10.9 s)': win(10.35, 10.9),
+      'late (13-15.5 s)': win(13, 15.5),
+    },
+    wav: o.wav ? wavBase64(out) : undefined,
+  };
+}
+
 function emptyWorld(): WorldFrame {
   return { t: 0, bots: [], debris: [], hazards: [], match: { phase: 'fight', clock: 100, lights: 4, timeScale: 1 } };
 }
@@ -380,5 +470,45 @@ export async function bankInfo(): Promise<{ ids: number; bytes: number; renderSe
   return { ids: bank.ids().length, bytes: bank.bytes(), renderSeconds: bank.renderSeconds };
 }
 
-export const harness = { renderCue, renderFight, renderTour, renderKey, bankInfo, stats };
+/** Audio-graph cost in steady state: build a scene, then render 20 s with no main-thread hooks.
+ *  Returns the render time as a fraction of real time for each scene. */
+export async function cpuProfile(): Promise<Record<string, number>> {
+  const bank = await harnessBank();
+  await bank.ensure(cueKeys(bank, 'fight'));
+  const specs = rosterSpecs(['megahurtz', 'homewrecker']);
+  const scenes: [string, { music?: boolean; crowd?: boolean; robots?: number; hall?: boolean }][] = [
+    ['bare mixer', { crowd: false, hall: false }],
+    ['+ fight music', { music: true, crowd: false, hall: false }],
+    ['+ crowd', { music: true, crowd: true, hall: false }],
+    ['+ 2 robots (spinners)', { music: true, crowd: true, robots: 2, hall: false }],
+    ['+ arena reverb (full fight)', { music: true, crowd: true, robots: 2, hall: true }],
+  ];
+  const out: Record<string, number> = {};
+  for (const [name, o] of scenes) {
+    const secs = 20;
+    const ctx = offline(secs);
+    const core = new Core(ctx, bank, manifest);
+    if (!o.crowd) core.mixer.crowdGate.gain.value = 0;
+    if (!o.hall) core.mixer.hallIn.disconnect();
+    if (o.robots) core.setEntrants(specs.slice(0, o.robots));
+    if (o.music) {
+      core.musicCue('fight', 0);
+      await core.music.idle();
+    }
+    // Spin the robots up and set every param once, then let the graph run on its own.
+    const mock = new MockWorld(specs.slice(0, o.robots ?? 0), { countdown: 0 });
+    for (let i = 0; i < 300; i++) mock.step(1 / 60);
+    const { frame } = mock.step(1 / 60);
+    core.frame(frame, [], orbitListener(0), 1 / 60);
+    if (o.crowd) core.world.crowd.update(0.1, frame);
+    // Music needs pumping; schedule the whole 20 s up front.
+    core.music.pump(secs);
+    const t0 = performance.now();
+    await ctx.startRendering();
+    out[name] = (performance.now() - t0) / 1000 / secs;
+  }
+  return out;
+}
+
+export const harness = { renderCue, renderFight, renderTour, renderKey, renderVoiceTest, cpuProfile, bankInfo, stats };
 export type Harness = typeof harness;
