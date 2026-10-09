@@ -35,8 +35,13 @@ export function idleWorld(t = 0): WorldFrame {
   };
 }
 
+const params = new URLSearchParams(typeof location === 'undefined' ? '' : location.search);
+
 export class Game {
   save: SaveData = load();
+  /** Dev and test hooks: ?autopilot drives the player's robot with the AI, ?speed=N runs fights faster. */
+  readonly autopilot = params.has('autopilot');
+  readonly speed = Math.max(1, Number(params.get('speed') ?? 1));
   skipped = false;
   skipAll = false;
   private tick: Tick | null = null;

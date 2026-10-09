@@ -41,7 +41,8 @@ const CORNER_LINE: Record<Corner, string> = { red: 'vic.red', blue: 'vic.blue', 
 
 export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome> {
   const { stage, audio, ui, input } = g;
-  const match = new Match(g.R, { entrants: setup.entrants, length: setup.length, seed: (Math.random() * 1e9) | 0 });
+  const simEntrants = g.autopilot ? setup.entrants.map((e) => ({ ...e, control: 'ai' as const, skill: e.control === 'player' ? 0.95 : e.skill })) : setup.entrants;
+  const match = new Match(g.R, { entrants: simEntrants, length: setup.length, seed: (Math.random() * 1e9) | 0 });
   const rec = new Recorder();
   const booth = new Commentary(audio, ui, () => g.save.settings);
   const player = setup.playerId ? match.bot(setup.playerId) ?? null : null;
@@ -78,7 +79,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
         if (clock < slowUntil) match.timeScale = 0.22;
         else match.timeScale = Math.min(1, match.timeScale + dt * 2.5);
         audio.setTimeScale(match.timeScale);
-        match.advance(dt);
+        match.advance(dt * g.speed);
       }
       const events = match.drainEvents();
       world = match.frame();
