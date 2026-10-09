@@ -30,6 +30,7 @@ import { createBotView } from '../render/bots';
 import { createDebrisLayer, createFxLayer } from '../render/fx';
 import { createNutTrophy } from '../render/props/nut';
 import type { BotView, DebrisLayer, FxLayer, Quality } from '../render/types';
+import { flameTexture, scorchTexture, smokeTexture } from '../render/fx/textures';
 
 type Mode = 'lineup' | 'carousel' | 'fx' | 'mock' | 'nut';
 
@@ -143,7 +144,7 @@ key.shadow.camera.bottom = -3;
 key.shadow.bias = -0.0006;
 key.shadow.normalBias = 0.035;
 scene.add(key, key.target);
-const rim = new THREE.DirectionalLight('#ffb070', 2.2);
+const rim = new THREE.DirectionalLight('#ffb070', 1.6);
 rim.position.set(-5, 3, -6);
 scene.add(rim);
 const fill = new THREE.HemisphereLight('#9fb4d6', '#1a1714', 0.35);
@@ -153,7 +154,7 @@ scene.add(fill);
 const floorTex = floorTexture();
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(120, 120),
-  new THREE.MeshStandardMaterial({ color: '#2b2d30', roughness: 0.78, metalness: 0.15, map: floorTex, envMapIntensity: 0.25 }),
+  new THREE.MeshStandardMaterial({ color: '#2b2d30', roughness: 0.82, metalness: 0.1, map: floorTex, envMapIntensity: 0.12 }),
 );
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
@@ -254,6 +255,7 @@ const turntableMat = new THREE.MeshStandardMaterial({ color: '#16181b', roughnes
 const ringMat = new THREE.MeshStandardMaterial({ color: '#ff6a00', emissive: '#ff6a00', emissiveIntensity: 0.6, roughness: 0.4 });
 
 function layoutPos(i: number): THREE.Vector3 {
+  if (mode === 'fx') return new THREE.Vector3(0, 0, 0);
   if (mode === 'lineup') {
     const cols = 8;
     const col = i % cols;
@@ -270,8 +272,9 @@ function buildSlots(): void {
     s.labelEl.remove();
   }
   slots.length = 0;
-  if (mode !== 'lineup' && mode !== 'carousel') return;
-  ENTRIES.forEach((entry, i) => {
+  if (mode !== 'lineup' && mode !== 'carousel' && mode !== 'fx') return;
+  const list = mode === 'fx' ? [ENTRIES.find((e) => e.id === (params.get('sel') ?? 'megahurtz')) ?? ENTRIES[0]] : ENTRIES;
+  list.forEach((entry, i) => {
     const view = createBotView(entry.spec, { envMap: env, quality });
     const pos = layoutPos(i);
     const tt = new THREE.Group();
@@ -589,6 +592,8 @@ function setMode(m: Mode): void {
     controls.target.set(0, 0.3, 0);
     camera.position.set(7, 7.5, 11);
   } else if (m === 'fx') {
+    selected = 0;
+    arenaProps(true);
     controls.target.set(0, 0.3, 0);
     camera.position.set(2.8, 1.8, 4.2);
   } else if (m === 'nut') {
@@ -653,7 +658,6 @@ window.addEventListener('keydown', (e) => {
 
 /** A fake bench robot target for fx triggers when no robot is selected. */
 function benchPoint(): THREE.Vector3 {
-  if (mode === 'fx') return new THREE.Vector3(0, 0.25, 0);
   const s = sel();
   return s ? s.pos.clone().setY(0.25) : new THREE.Vector3(0, 0.25, 0);
 }
@@ -686,8 +690,18 @@ function benchEvent(kind: 'shrapnel' | 'grind' | 'killsaw' | 'pulverizer' | 'co2
   simT += 0.001;
   if (kind === 'shrapnel') pendingEvents.push({ type: 'shrapnel', t: simT, bot: 'bench', point: { x: p.x, y: p.y, z: p.z }, dir: { x: 0.3, y: 0.6, z: 0.5 }, count: 16, material: 'steel' });
   if (kind === 'grind') grindUntil = simT + 2.5;
-  if (kind === 'killsaw') pendingEvents.push({ type: 'hazard', t: simT, hazard: KILLSAWS[1].id, kind: 'killsaw', action: 'strike', target: null });
-  if (kind === 'pulverizer') pendingEvents.push({ type: 'hazard', t: simT, hazard: PULVERIZERS[0].id, kind: 'pulverizer', action: 'strike', target: null });
+  if (kind === 'killsaw') {
+    const k = KILLSAWS[1];
+    camera.position.set(k.center.x + 1.8, 1.1, k.center.z + 2.2);
+    controls.target.set(k.center.x, 0.3, k.center.z);
+    pendingEvents.push({ type: 'hazard', t: simT, hazard: k.id, kind: 'killsaw', action: 'strike', target: 'bench' });
+  }
+  if (kind === 'pulverizer') {
+    const pv = PULVERIZERS[0];
+    camera.position.set(pv.center.x + 2.6, 1.6, pv.center.z + 3.2);
+    controls.target.set(pv.center.x, 0.3, pv.center.z);
+    pendingEvents.push({ type: 'hazard', t: simT, hazard: pv.id, kind: 'pulverizer', action: 'strike', target: 'bench' });
+  }
   if (kind === 'co2') {
     const s = sel();
     if (s) pendingEvents.push({ type: 'weapon_fire', t: simT, bot: s.entry.id, kind: 'flipper' });
@@ -702,6 +716,7 @@ function benchEvent(kind: 'shrapnel' | 'grind' | 'killsaw' | 'pulverizer' | 'co2
 
 const clock = new THREE.Timer();
 let fpsText = '';
+let timeScale = 1;
 let frames = 0;
 let fpsAcc = 0;
 const frameTimes: number[] = [];
@@ -710,7 +725,16 @@ const tmpQ = new THREE.Quaternion();
 
 function tick(): void {
   clock.update();
-  const dt = Math.min(0.05, clock.getDelta());
+  const dt = Math.min(0.05, clock.getDelta()) * timeScale;
+  advance(dt);
+  key.target.position.copy(controls.target);
+  key.position.copy(controls.target).add(new THREE.Vector3(4, 9, 5));
+  renderer.info.reset();
+  composer.render(dt);
+  requestAnimationFrame(tick);
+}
+
+function advance(dt: number): void {
   simT += dt;
   frames++;
   fpsAcc += dt;
@@ -827,12 +851,6 @@ function tick(): void {
   pendingEvents.length = 0;
   fx.update(wf, dt, camera, viewById);
   debris.update(wf.debris, viewById);
-
-  renderer.info.reset();
-  key.target.position.copy(controls.target);
-  key.position.copy(controls.target).add(new THREE.Vector3(4, 9, 5));
-  composer.render(dt);
-  requestAnimationFrame(tick);
 }
 
 window.addEventListener('resize', () => {
@@ -891,6 +909,16 @@ window.__lab = {
     return { fps: 1 / avg, p95ms: (sorted[Math.floor(sorted.length * 0.95)] ?? 0) * 1000, calls: renderer.info.render.calls, tris: renderer.info.render.triangles, geos: renderer.info.memory.geometries, tex: renderer.info.memory.textures };
   },
   resetStats: () => (frameTimes.length = 0),
+  timeScale: (k: number) => (timeScale = k),
+  texture: (name: 'scorch' | 'smoke' | 'flame') => ((name === 'scorch' ? scorchTexture() : name === 'smoke' ? smokeTexture() : flameTexture()).image as HTMLCanvasElement).toDataURL(),
+  /** Advance the simulation by fixed steps (for deterministic screenshots). */
+  step: (seconds: number, fps = 60) => {
+    const prev = timeScale;
+    timeScale = 0;
+    for (let t = 0; t < seconds; t += 1 / fps) advance(1 / fps);
+    timeScale = prev;
+  },
+  fxStats: () => (fx as unknown as { stats?: () => unknown }).stats?.(),
   hideUi: (on: boolean) => {
     hud.style.display = on ? 'none' : 'block';
     bar.style.display = on ? 'none' : 'flex';
