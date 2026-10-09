@@ -23,7 +23,8 @@ export const JUGGERNAUT_PRIME: Loadout = {
   paint: { primary: '#14161a', secondary: '#d4a017', accent: '#e8e8e8', pattern: 'stripes', finish: 'gloss', decal: 'CHAMP' },
 };
 
-/** What is left two seasons later: a bent frame and a box of scrap. No weapon. */
+/** What is left two seasons later: a bent frame, a box of scrap and the self-righting arm
+ *  nobody wanted to buy. No weapon. */
 export const SCRAP_LOADOUT: Loadout = {
   name: 'Juggernaut',
   cls: 'heavy',
@@ -32,7 +33,7 @@ export const SCRAP_LOADOUT: Loadout = {
   power: 'sla',
   weapon: 'none',
   armor: { material: 'aluminum', grade: 1 },
-  extras: ['wedgeplate'],
+  extras: ['wedgeplate', 'srimech'],
   paint: { primary: '#5a5148', secondary: '#2a2a2a', accent: '#d4a017', pattern: 'solid', finish: 'raw', decal: 'JUG' },
 };
 
@@ -44,6 +45,7 @@ export const STARTING_OWNED: PartKey[] = [
   'weapon:none',
   'armor:aluminum',
   'extra:wedgeplate',
+  'extra:srimech',
 ];
 
 /** Price and store tier for every part (tier 0 is available from the start). */
@@ -158,10 +160,10 @@ export const NEMESIS: Rival = careerRival(
 export const CAREER_BOTS: Rival[] = [
   careerRival(
     'doorstop',
-    { name: 'Doorstop', team: 'Team Cinderblock', hometown: 'Fresno, California', builders: 'Earl Pruitt and his nephew', blurb: 'A slow wedge built from a door hinge and optimism.', record: '2-9' },
-    { cls: 'heavy', chassis: 'wedge', drive: 'drill2', power: 'sla', weapon: 'none', armor: { material: 'aluminum', grade: 1 }, extras: [], paint: { primary: '#7a6a55', secondary: '#3a3a3a', accent: '#e0c060', pattern: 'solid', finish: 'matte', decal: 'STOP' } },
-    'bully',
-    0.15,
+    { name: 'Doorstop', team: 'Team Cinderblock', hometown: 'Fresno, California', builders: 'Earl Pruitt and his nephew', blurb: 'A slow pusher built from a steel door and optimism.', record: '2-9' },
+    { cls: 'heavy', chassis: 'box', drive: 'drill2', power: 'sla', weapon: 'none', armor: { material: 'polycarb', grade: 1 }, extras: [], paint: { primary: '#7a6a55', secondary: '#3a3a3a', accent: '#e0c060', pattern: 'solid', finish: 'matte', decal: 'STOP' } },
+    'tactical',
+    0.05,
   ),
   careerRival(
     'trash-panda',
@@ -199,7 +201,7 @@ export function careerRivalById(id: string): Rival | undefined {
 }
 
 export const FIGHTS: CampaignFight[] = [
-  { id: 'c1', act: 'scrapyard', opponent: 'doorstop', title: 'Garage league qualifier', prize: 400, rankAfter: 52, skill: 0.15, blurb: 'Your first fight back. Shove it into something sharp.' },
+  { id: 'c1', act: 'scrapyard', opponent: 'doorstop', title: 'Garage league qualifier', prize: 400, rankAfter: 52, skill: 0.05, blurb: 'Your first fight back. Shove it into something sharp.' },
   { id: 'c2', act: 'scrapyard', opponent: 'trash-panda', title: 'Garage league, week two', prize: 600, rankAfter: 47, skill: 0.25, blurb: 'It rams. Keep your nose pointed at it.' },
   { id: 'c3', act: 'scrapyard', opponent: 'lawn-dart', title: 'Garage league, week three', prize: 800, rankAfter: 43, skill: 0.3, blurb: 'A spinner. Hit it before the disk gets up to speed.' },
   { id: 'c4', act: 'scrapyard', opponent: 'buzz-off', title: 'Garage league final', prize: 1000, rankAfter: 40, skill: 0.36, blurb: 'Win this and the regional producers will call.' },

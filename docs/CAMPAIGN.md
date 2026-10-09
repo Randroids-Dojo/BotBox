@@ -37,13 +37,13 @@ Rivals get a little sharper the higher you climb. Lose and you can rematch as of
 
 ## Money
 
-- **Start:** $0 and the scrap of Juggernaut: box frame, 2WD drill motors, a sealed lead-acid pack, light aluminum armor, a front wedge plate. No weapon (the disk went to pay the rent).
+- **Start:** $0 and the scrap of Juggernaut: box frame, 2WD drill motors, a sealed lead-acid pack, light aluminum armor, a front wedge plate and the self-righting arm nobody wanted to buy. No weapon (the disk went to pay the rent).
 - **Earn:** prize money for every campaign win. Side gigs (repeatable exhibition fights against someone from your act) pay a smaller purse, so a bad run never leaves you stuck.
 - **Spend:**
   - Parts in the garage: every part shows its price, and you buy it the moment you fit it. Parts above your tier are visible but locked ("Unlocks at the Regionals").
   - Armor thickness is free once you own the material. Weight is the limit.
   - Repairs cost money per 10 percent restored ($15 in Act I, $40 in Act II, $100 in Act III and IV). Anything below 40 percent gets a free patch job, so you can always field a working robot.
-- **Balance, from AI-vs-AI ladders:** a srimech decides most early fights (a flipped box is counted out), so it is in the Act I store. The Regionals want a spinner on chair motors with steel and a srimech; the regional versions of Homewrecker and Undertow run aluminum and lead-acid (`tweak` in `FIGHTS`). Prime Juggernaut against Terminal Velocity is close to a coin flip.
+- **Balance, from AI-vs-AI ladders:** a srimech decides most early fights (the killsaws flip everything and a flipped box is counted out), so the scrap keeps its old one and Act I is winnable until Buzz Off, the act's wall. The Regionals want a spinner on chair motors with steel and a srimech; the regional versions of Homewrecker and Undertow run aluminum and lead-acid (`tweak` in `FIGHTS`). Prime Juggernaut against Terminal Velocity is close to a coin flip.
 
 ## Fight presentation by act
 

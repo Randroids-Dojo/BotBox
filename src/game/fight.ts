@@ -64,6 +64,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   const minimal = show === 'minimal';
   const crowdMax = setup.crowd ?? 1;
   booth.comeback = setup.comeback && setup.playerId ? setup.playerId : null;
+  // No cameras, no booth at the garage league.
+  booth.enabled = !minimal;
 
   g.onCalm(false);
   stage.setScene('arena');
@@ -266,8 +268,6 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   crowd(0.6);
   audio.crowd(0);
   booth.reset();
-  // No cameras, no booth at the garage league.
-  booth.enabled = !minimal;
   if (player) ui.touchControls(touchOpts());
 
   // ---------------------------------------------------------------- fight
