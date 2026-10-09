@@ -66,6 +66,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   let cinematicUntil = 0;
   let lastCinematic = -99;
   let clock = 0;
+  const lastBanner = new Map<string, number>();
+  let lastAnyBanner = -99;
 
   // The frame loop for this fight: sim when running, always draw.
   g.setTick((dt) => {
@@ -118,12 +120,22 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
         }
         crowdFor(e.severity);
         break;
-      case 'flipped':
-        ui.banner('flipped');
+      case 'flipped': {
+        // Only call it when it matters: a robot that cannot drive upside down, once in a while.
+        const b = match.bot(e.bot);
+        if (b && !b.spec.invertible && clock - (lastBanner.get(`flip:${e.bot}`) ?? -99) > 10 && clock - lastAnyBanner > 4) {
+          lastBanner.set(`flip:${e.bot}`, clock);
+          lastAnyBanner = clock;
+          ui.banner('flipped');
+        }
         crowdFor(0.8);
         break;
+      }
       case 'fire_start':
-        ui.banner('fire');
+        if (clock - lastAnyBanner > 2) {
+          lastAnyBanner = clock;
+          ui.banner('fire');
+        }
         crowdFor(0.9);
         break;
       case 'release':

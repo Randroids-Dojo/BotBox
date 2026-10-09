@@ -942,3 +942,36 @@
     flex-wrap: wrap;
   }
 }
+
+/* ---- banner placement during play: keep the middle of the arena clear */
+.bx .banner.k-flipped,
+.bx .banner.k-fire,
+.bx .banner.k-release {
+  top: calc(var(--pad-t) + var(--u) * 6.4);
+  left: 30%;
+  right: 30%;
+}
+.bx .banner.k-flipped .bn-word,
+.bx .banner.k-fire .bn-word,
+.bx .banner.k-release .bn-word {
+  font-size: calc(var(--u) * 3.2);
+}
+.bx .banner.k-flipped .bn-band,
+.bx .banner.k-fire .bn-band,
+.bx .banner.k-release .bn-band {
+  height: calc(var(--u) * 0.35);
+}
+.bx .banner.k-flipped .bn-core,
+.bx .banner.k-fire .bn-core,
+.bx .banner.k-release .bn-core {
+  padding: calc(var(--u) * 0.25) 0 calc(var(--u) * 0.35);
+}
+.bx .banner.k-fight {
+  top: 15%;
+}
+.bx .banner.k-ko,
+.bx .banner.k-time,
+.bx .banner.k-tapout,
+.bx .banner.k-winner {
+  top: 60%;
+}
