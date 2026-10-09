@@ -489,3 +489,17 @@
     animation-duration: 0.01ms !important;
   }
 }
+
+/* Device-aware hints: keyboard by default, pad buttons on a gamepad, none on touch. */
+.bx .k-pad {
+  display: none;
+}
+.bx[data-device='gamepad'] .k-pad {
+  display: inline-block;
+}
+.bx[data-device='gamepad'] .k-kb {
+  display: none;
+}
+.bx[data-device='touch'] .hint-row {
+  display: none;
+}

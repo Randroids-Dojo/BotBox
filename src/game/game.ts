@@ -46,6 +46,7 @@ export class Game {
   skipAll = false;
   /** Told when it is (or stops being) a good moment to offer a refresh. */
   onCalm: (calm: boolean) => void = () => {};
+  private skippableNow = false;
   private tick: Tick | null = null;
   private frameWaiters: (() => void)[] = [];
   private last = performance.now();
@@ -64,8 +65,21 @@ export class Game {
         this.skipAll = true;
       }
     });
+    // On touch screens a tap anywhere skips a cinematic, not just the small skip button.
+    window.addEventListener('pointerup', (e) => {
+      if (!this.skippableNow || e.pointerType !== 'touch') return;
+      if ((e.target as HTMLElement | null)?.closest('button, input, .nav')) return;
+      this.skipped = true;
+      this.skipAll = true;
+    });
     this.applySettings();
     requestAnimationFrame(this.loop);
+  }
+
+  /** Show or hide the skip hint and accept taps or keys to skip. */
+  setSkippable(on: boolean): void {
+    this.skippableNow = on;
+    this.ui.skippable(on);
   }
 
   // ------------------------------------------------------------------ loop and timing
@@ -342,7 +356,7 @@ export class Game {
   private async episodeOpen(full: boolean): Promise<void> {
     this.skipped = false;
     this.skipAll = false;
-    this.ui.skippable(true);
+    this.setSkippable(true);
     this.stage.setEntrants([]);
     this.stage.setScene('arena');
     this.stage.shot({ kind: 'flyover', duration: 7 });
@@ -365,7 +379,7 @@ export class Game {
       this.audio.music('menu', 1);
       await this.say([this.pickId('dale.desk.'), this.pickId('chuck.desk.')], 9);
     }
-    this.ui.skippable(false);
+    this.setSkippable(false);
     this.skipAll = false;
     this.audio.crowd(0);
   }

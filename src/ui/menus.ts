@@ -1,5 +1,6 @@
 // Loading, title, main menu, class picker, settings, credits and pause.
 
+import { key } from './hints';
 import type { WeightClass } from '../contract';
 import { CLASSES, CLASS_LABEL, CLASS_LIMIT_LB } from '../data/parts';
 import type { MainMenuChoice, SaveSummary, Settings } from './types';
@@ -143,7 +144,7 @@ export function mainMenu(ctx: UiCtx, save: SaveSummary): Promise<MainMenuChoice>
     const node = el('div.screen.main-menu', [
       el('div.mm-left', [el('div.mm-brand', [el('span.mm-logo.logo-type.chrome-text', 'BOTBOX'), el('span.mm-season.kicker', 'Season 2001')]), list]),
       card,
-      el('div.mm-hints.hint-row', [el('span', [el('b', 'Enter'), 'Select']), el('span', [el('b', '↑↓'), 'Move'])]),
+      el('div.mm-hints.hint-row', [el('span', [...key('Enter', 'A'), 'Select']), el('span', [...key('↑↓', '✛'), 'Move'])]),
     ]);
     ctx.layers.screen.append(node);
     const scope = ctx.nav.push({ root: node, wrap: true, initial: list.firstElementChild as HTMLElement });
@@ -195,7 +196,7 @@ export function pickClass(ctx: UiCtx, titleText: string): Promise<WeightClass | 
       el('div.dim-bg'),
       el('div.screen-head', [el('div', [el('div.kicker', 'Pick a weight class'), el('h1.screen-title.wide.chrome-text', titleText)])]),
       grid,
-      el('div.hint-row.foot-hints', [el('span', [el('b', 'Enter'), 'Pick']), el('span', [el('b', 'Esc'), 'Back'])]),
+      el('div.hint-row.foot-hints', [el('span', [...key('Enter', 'A'), 'Pick']), el('span', [...key('Esc', 'B'), 'Back'])]),
     ]);
     ctx.layers.screen.append(node);
     const scope = ctx.nav.push({ root: node, back: () => finish(null), initial });
@@ -292,7 +293,7 @@ export function settings(ctx: UiCtx, current: Settings): Promise<Settings> {
         el('div.modal-head', [el('div.kicker', 'Setup'), el('h1.screen-title.wide.chrome-text', 'Settings')]),
         el('div.hazard-bar'),
         rows,
-        el('div.modal-foot', [done_, el('div.hint-row', [el('span', [el('b', '◀▶'), 'Change']), el('span', [el('b', 'Esc'), 'Done'])])]),
+        el('div.modal-foot', [done_, el('div.hint-row', [el('span', [...key('◀▶', '✛'), 'Change']), el('span', [...key('Esc', 'B'), 'Done'])])]),
       ]),
     ]);
     ctx.layers.over.append(node);

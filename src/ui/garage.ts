@@ -1,5 +1,6 @@
 // The garage: build a robot under the weight limit, or repair and refit it in the pits.
 
+import { key } from './hints';
 import {
   COMPONENTS,
   FACETS,
@@ -241,7 +242,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       body,
       statsBox,
       warn,
-      el('div.gp-foot', [doneBtn, backBtn, el('div.hint-row', [el('span', [el('b', 'Q'), el('b', 'E'), 'Tabs'])])]),
+      el('div.gp-foot', [doneBtn, backBtn, el('div.hint-row', [el('span', [...key('Q', 'LB'), ...key('E', 'RB'), 'Tabs'])])]),
       toast,
     ]);
     const node = el('div.screen.garage' + (pits ? '.pits' : ''), [left, panel]);

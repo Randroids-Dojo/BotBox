@@ -44,7 +44,8 @@ function isTyping(): boolean {
 }
 
 export class Input {
-  lastDevice: Device = 'keyboard';
+  /** Phones and tablets start in touch mode, before the first tap. */
+  lastDevice: Device = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches ? 'touch' : 'keyboard';
   driveMode: DriveMode = 'robot';
 
   private keys = new Set<string>();

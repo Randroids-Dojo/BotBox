@@ -150,12 +150,17 @@ body {
   text-align: center;
 }
 @media (max-height: 480px) {
+  /* Phones: compact, left of center, clear of the HUD panels and the touch buttons. */
   .ctl-card {
-    left: auto;
-    right: max(18px, env(safe-area-inset-right));
+    left: max(14px, env(safe-area-inset-left));
     bottom: auto;
-    top: 30%;
-    font-size: 13px;
+    top: 34%;
+    padding: 8px 12px 10px;
+    font-size: 12px;
     min-width: 0;
+  }
+  .ctl-card__row kbd {
+    min-width: 54px;
+    font-size: 10px;
   }
 }

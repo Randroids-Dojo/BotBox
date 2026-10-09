@@ -1,5 +1,6 @@
 // Eight-robot bracket with the player's path highlighted and a scouting card for the next fight.
 
+import { key } from './hints';
 import { CLASS_LABEL } from '../data/parts';
 import type { BracketMatch, BracketSlot, BracketView, RivalSummary } from './types';
 import { el, exit } from './core';
@@ -51,7 +52,7 @@ export function bracket(ctx: UiCtx, view: BracketView, opponent: RivalSummary | 
       el('div.bk-main', [
         el('div.screen-head', [el('div', [el('div.kicker', `${CLASS_LABEL[view.cls]} bracket`), el('h1.screen-title.wide.chrome-text', 'The road to the Nut')])]),
         el('div.bk-scroll', tree),
-        el('div.bk-foot', [go, el('div.hint-row', [el('span', [el('b', 'Enter'), 'Continue'])])]),
+        el('div.bk-foot', [go, el('div.hint-row', [el('span', [...key('Enter', 'A'), 'Continue'])])]),
       ]),
       opponent ? el('div.bk-side', scoutCard(opponent, ctx.mine)) : null,
     ]);

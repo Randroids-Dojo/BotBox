@@ -193,7 +193,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   ui.bug(true);
   audio.music('intro', 1.5);
   g.crowd(0.55);
-  ui.skippable(true);
+  g.setSkippable(true);
   const roundLabel = ROUND_LABEL[setup.round];
   stage.shot({ kind: 'flyover', duration: 6 });
   void g.say([`vic.round.${setup.round}`, `vic.class.${cls}`]);
@@ -216,7 +216,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     ui.lowerThird(null);
     await g.wait(0.35);
   }
-  ui.skippable(false);
+  g.setSkippable(false);
   g.skipAll = false;
   stage.shot({ kind: 'faceoff', duration: 3 });
   void g.say(['vic.ready']);
@@ -225,7 +225,11 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   ui.hud(setup.entrants.map((e) => ({ id: e.id, name: e.card.name, corner: e.corner, spec: e.spec, player: e.id === setup.playerId })));
   match.startCountdown();
   simRunning = true;
-  if (player && !g.autopilot) showControls(document.getElementById('ui')!, player.spec, input.lastDevice, g.save.fights < 4 ? 7 : 4.5);
+  if (player && !g.autopilot) {
+    // On a phone the card sits over the arena, so it clears out as the fight goes live.
+    const secs = input.lastDevice === 'touch' ? 5 : g.save.fights < 4 ? 7 : 4.5;
+    showControls(document.getElementById('ui')!, player.spec, input.lastDevice, secs);
+  }
   g.crowd(0.75);
   // Wait for green.
   while (match.phase === 'countdown') await g.frame();
@@ -283,7 +287,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   // ---------------------------------------------------------------- bot replay
   const moments = rec.best(3);
   if (moments.length) {
-    ui.skippable(true);
+    g.setSkippable(true);
     audio.stinger('replay');
     ui.replayFrame(true);
     for (const [i, h] of moments.entries()) {
@@ -309,7 +313,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
       g.skipped = false;
     }
     ui.replayFrame(false);
-    ui.skippable(false);
+    g.setSkippable(false);
     g.skipAll = false;
     audio.setTimeScale(1);
     stage.clearTransient();
