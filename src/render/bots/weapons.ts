@@ -95,12 +95,12 @@ function polarRing(r0: number, r1: number, segs: number): THREE.BufferGeometry {
   return g;
 }
 
-function blurMaterial(c: RigCtx, color = '#7d838a'): THREE.MeshStandardMaterial {
+function blurMaterial(c: RigCtx, color = '#aab0b6'): THREE.MeshStandardMaterial {
   const t = blurAlphaTexture();
   return new THREE.MeshStandardMaterial({
     color,
-    metalness: 0.8,
-    roughness: 0.32,
+    metalness: 0.45,
+    roughness: 0.4,
     envMap: c.env,
     transparent: true,
     opacity: 0,
@@ -159,6 +159,7 @@ interface SpinnerParts {
   fast: THREE.Object3D[];
   blur: THREE.Mesh[];
   blurMats: THREE.MeshStandardMaterial[];
+  glintMats: THREE.MeshBasicMaterial[];
   maxOpacity: number;
 }
 
@@ -169,7 +170,59 @@ function spinnerShell(w: SpinnerSpec): SpinnerParts {
   const rotor = new THREE.Group();
   axis.add(rotor);
   group.add(axis);
-  return { group, axis, rotor, slow: [], fast: [], blur: [], blurMats: [], maxOpacity: 0.7 };
+  return { group, axis, rotor, slow: [], fast: [], blur: [], blurMats: [], glintMats: [], maxOpacity: 0.7 };
+}
+
+let glintTex: THREE.CanvasTexture | null = null;
+/** Bright arcs that streak around a spinning weapon: an additive companion to the blur. */
+function glintTexture(): THREE.CanvasTexture {
+  if (glintTex) return glintTex;
+  const W = 256;
+  const H = 32;
+  const cv = document.createElement('canvas');
+  cv.width = W;
+  cv.height = H;
+  const ctx = cv.getContext('2d')!;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+  for (let i = 0; i < 26; i++) {
+    const y = Math.floor(rnd() * H);
+    const x = rnd() * W;
+    const len = 20 + rnd() * 90;
+    const g = ctx.createLinearGradient(x, 0, x + len, 0);
+    const v = Math.floor(120 + rnd() * 135);
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(0.8, `rgb(${v},${v},${v})`);
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x, y, len, 1 + Math.floor(rnd() * 2));
+  }
+  glintTex = new THREE.CanvasTexture(cv);
+  glintTex.wrapS = THREE.RepeatWrapping;
+  glintTex.colorSpace = THREE.SRGBColorSpace;
+  return glintTex;
+}
+
+/** Add a blur surface plus its additive glint twin to a spinner. */
+function addBlur(c: RigCtx, p: SpinnerParts, geo: THREE.BufferGeometry, maxOpacity: number): THREE.MeshStandardMaterial {
+  const bm = blurMaterial(c);
+  const mesh = new THREE.Mesh(geo, bm);
+  mesh.visible = false;
+  mesh.renderOrder = 2;
+  p.axis.add(mesh);
+  p.blur.push(mesh);
+  p.blurMats.push(bm);
+  const gm = new THREE.MeshBasicMaterial({ map: glintTexture(), color: new THREE.Color(0.55, 0.55, 0.58), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+  const glint = new THREE.Mesh(geo, gm);
+  glint.visible = false;
+  glint.renderOrder = 3;
+  p.axis.add(glint);
+  p.blur.push(glint);
+  p.glintMats.push(gm);
+  p.maxOpacity = maxOpacity;
+  return bm;
 }
 
 function animateSpinner(p: SpinnerParts, w: SpinnerSpec, f: WeaponFrame, health: number, t: number): void {
@@ -185,6 +238,7 @@ function animateSpinner(p: SpinnerParts, w: SpinnerSpec, f: WeaponFrame, health:
     else b.rotation.y = -(f.angle * 0.013 + t * 0.7);
   }
   for (const m of p.blurMats) m.opacity = op;
+  for (const m of p.glintMats) m.opacity = op * 1.1;
   // A bent rotor wobbles once the weapon is hurt.
   const wob = health < 0.6 ? ((0.6 - health) / 0.6) * 0.075 : 0;
   const a = f.angle;
@@ -286,14 +340,8 @@ function buildVDisk(c: RigCtx, w: SpinnerSpec): WeaponRig {
   pul.castShadow = true;
   p.rotor.add(pul);
   // Blur: a translucent ring where the teeth sweep, on both faces of the disk.
-  const bm = blurMaterial(c);
-  const ring = new THREE.Mesh(polarRing(R * 0.94, R + w.toothHeight, 64).rotateY(Math.PI / 2), bm);
-  ring.visible = false;
-  ring.renderOrder = 2;
-  p.axis.add(ring);
-  p.blur.push(ring);
-  p.blurMats.push(bm);
-  p.maxOpacity = 0.45;
+  // Blur on both faces of the disk, from the hub out past the teeth.
+  for (const sx of [-1, 1]) addBlur(c, p, polarRing(R * 0.3, R + w.toothHeight, 64).rotateY(Math.PI / 2).translate(sx * (th / 2 + 0.0035 * s), 0, 0), 0.7);
 
   // Static mount: fork rails, axle, bearing blocks, motor, belt.
   const st = new GeoBucket();
@@ -356,7 +404,7 @@ function buildVDisk(c: RigCtx, w: SpinnerSpec): WeaponRig {
       animateSpinner(p, w, f, health, clock);
     },
     dispose() {
-      bm.dispose();
+      for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
     },
   };
 }
@@ -420,14 +468,7 @@ function buildDrum(c: RigCtx, w: SpinnerSpec): WeaponRig {
   tb.build(teeth);
   p.rotor.add(teeth);
   p.slow.push(teeth);
-  const bm = blurMaterial(c);
-  const band = new THREE.Mesh(new THREE.CylinderGeometry(R + w.toothHeight * 0.85, R + w.toothHeight * 0.85, wd * 0.8, 48, 1, true).rotateZ(Math.PI / 2), bm);
-  band.visible = false;
-  band.renderOrder = 2;
-  p.axis.add(band);
-  p.blur.push(band);
-  p.blurMats.push(bm);
-  p.maxOpacity = 0.5;
+  addBlur(c, p, new THREE.CylinderGeometry(R + w.toothHeight * 0.85, R + w.toothHeight * 0.85, wd * 0.8, 48, 1, true).rotateZ(Math.PI / 2), 0.6);
   // Side arms, bearings, pulley and belt into the hull.
   const st = new GeoBucket();
   const armT = 0.02 * s;
@@ -465,7 +506,7 @@ function buildDrum(c: RigCtx, w: SpinnerSpec): WeaponRig {
       animateSpinner(p, w, f, health, clock);
     },
     dispose() {
-      bm.dispose();
+      for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
     },
   };
 }
@@ -530,14 +571,7 @@ function buildHBar(c: RigCtx, w: SpinnerSpec): WeaponRig {
   const hubGroup = new THREE.Group();
   hub.build(hubGroup);
   p.rotor.add(hubGroup);
-  const bm = blurMaterial(c);
-  const disc = new THREE.Mesh(polarRing(hubR, R + w.toothHeight * 0.3, 72).rotateX(-Math.PI / 2), bm);
-  disc.visible = false;
-  disc.renderOrder = 2;
-  p.axis.add(disc);
-  p.blur.push(disc);
-  p.blurMats.push(bm);
-  p.maxOpacity = 0.28;
+  addBlur(c, p, polarRing(hubR, R + w.toothHeight * 0.3, 72).rotateX(-Math.PI / 2), 0.5);
   // Bearing tower on the deck.
   const st = new GeoBucket();
   const tower = new THREE.CylinderGeometry(0.03 * s, 0.03 * s, w.center.y - H, 16);
@@ -563,7 +597,7 @@ function buildHBar(c: RigCtx, w: SpinnerSpec): WeaponRig {
       animateSpinner(p, w, f, health, clock);
     },
     dispose() {
-      bm.dispose();
+      for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
     },
   };
 }
@@ -688,14 +722,7 @@ function buildShell(c: RigCtx, w: SpinnerSpec): WeaponRig {
   ribs.build(ribG);
   p.rotor.add(ribG);
   p.slow.push(ribG);
-  const bm = blurMaterial(c);
-  const band = new THREE.Mesh(new THREE.CylinderGeometry(R + w.toothHeight * 0.6, R + w.toothHeight * 0.6, w.width * 0.7, 64, 1, true), bm);
-  band.visible = false;
-  band.renderOrder = 2;
-  p.axis.add(band);
-  p.blur.push(band);
-  p.blurMats.push(bm);
-  p.maxOpacity = 0.45;
+  addBlur(c, p, new THREE.CylinderGeometry(R + w.toothHeight * 0.6, R + w.toothHeight * 0.6, w.width * 0.7, 64, 1, true), 0.5);
   return {
     group: p.group,
     cutters: [],
@@ -705,7 +732,7 @@ function buildShell(c: RigCtx, w: SpinnerSpec): WeaponRig {
       animateSpinner(p, w, f, health, clock);
     },
     dispose() {
-      bm.dispose();
+      for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
       pm.dispose();
       blurTex.dispose();
     },
