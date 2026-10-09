@@ -92,7 +92,7 @@ async function theFinal(g: Game): Promise<() => void> {
 
   let running = false;
   let control = false;
-  let takeover = false;
+  let downed = false;
   let clock = 0;
   let slowUntil = 0;
   let slowScale = 1;
@@ -121,14 +121,12 @@ async function theFinal(g: Game): Promise<() => void> {
       if (clock < slowUntil) match.timeScale = slowScale;
       else match.timeScale = Math.min(1, match.timeScale + dt * easeRate);
       audio.setTimeScale(match.timeScale);
-      // Nobody gets counted out by accident during the taste (robots shoving nose to nose
-      // read as stuck to the rules).
-      if (!takeover) {
-        for (const b of [me, tv]) {
-          b.koCount = null;
-          b.immobileTime = 0;
-          b.stuckTime = 0;
-        }
+      // Nobody gets counted out by accident (robots shoving nose to nose read as stuck to
+      // the rules). Terminal Velocity never is; Juggernaut only once it has been hit.
+      for (const b of downed ? [tv] : [me, tv]) {
+        b.koCount = null;
+        b.immobileTime = 0;
+        b.stuckTime = 0;
       }
       match.advance(dt * g.speed);
     }
@@ -196,7 +194,6 @@ async function theFinal(g: Game): Promise<() => void> {
 
   // ---- the turn: control is gone, Terminal Velocity winds all the way up
   control = false;
-  takeover = true;
   ui.coach(null);
   ui.touchControls(null);
   if (auto) match.setAiScript(PLAYER, 'passive');
@@ -215,6 +212,7 @@ async function theFinal(g: Game): Promise<() => void> {
 
   // ---- the hit
   match.finisher(NEMESIS.id, PLAYER, 'launch', { fire: true, kill: true });
+  downed = true;
   match.setAiScript(NEMESIS.id, 'passive');
   slowScale = 0.14;
   slowUntil = clock + 1.6;
@@ -241,10 +239,10 @@ async function theFinal(g: Game): Promise<() => void> {
   g.crowd(1);
   await atLeast(2.4, g.say(['vic.pro.ko.1'], 4));
   ui.hud(null);
-  stage.shot({ kind: 'winner', bot: NEMESIS.id, duration: 6 });
+  stage.shot({ kind: 'winner', bot: NEMESIS.id, duration: 8 });
+  await atLeast(3, g.say(['vic.pro.ko.2'], 6));
   ui.banner('winner', NEMESIS.card.name);
-  await atLeast(4.2, g.say(['vic.pro.ko.2'], 6));
-  await g.wait(0.8, false);
+  await g.wait(2.6, false);
   ui.bug(false);
   stage.shot({ kind: 'loser', bot: PLAYER, duration: 8 });
 
