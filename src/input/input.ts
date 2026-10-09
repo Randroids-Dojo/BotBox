@@ -261,7 +261,8 @@ export class Input {
     for (const fn of [...this.menuSubs]) fn(n);
   }
 
-  private emitAction(a: Action): void {
+  /** Fire an action from on-screen buttons. */
+  emitAction(a: Action): void {
     for (const fn of [...this.actionSubs]) fn(a);
   }
 
