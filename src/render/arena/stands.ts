@@ -12,16 +12,16 @@ import { personGeometry } from './people';
 export const ROWS = 13;
 const ROW_D = 0.82;
 const ROW_H = 0.44;
-const FRONT_H = 1.1;
+export const FRONT_H = 1.1;
 const SIDE_W = 10.2;
 
-interface Side {
+export interface Side {
   /** Unit normal pointing from the arena toward the stand. */
   n: THREE.Vector2;
   d0: number;
 }
 
-const SIDES: Side[] = [
+export const SIDES: Side[] = [
   { n: new THREE.Vector2(0, -1), d0: 10.2 }, // north
   { n: new THREE.Vector2(0, 1), d0: 12.2 }, // south, behind the driver stations
   { n: new THREE.Vector2(-1, 0), d0: 10.2 }, // west

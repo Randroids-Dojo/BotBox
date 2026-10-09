@@ -19,6 +19,8 @@ export interface Crowd {
   uniforms: { uTime: { value: number }; uExcite: { value: number }; uLight: { value: number } };
   /** Rebuild for a density (0..1 occupancy). */
   setDensity(d: number): void;
+  /** Show only part of the built crowd (0..1), front rows first. Cheap: no rebuild. */
+  setFill(f: number): void;
 }
 
 const CROWD_VERT = /* glsl */ `
@@ -229,6 +231,19 @@ export function buildCrowd(seats: Seat[], density: number): Crowd {
     blending: THREE.AdditiveBlending,
   });
   let meshes: THREE.Object3D[] = [];
+  let fill = 1;
+  // Seat index (in fill order) of every sign holder and flash, to keep them with their people.
+  let seated = 0;
+  let signAt: number[] = [];
+  let flashAt: number[] = [];
+  const applyFill = () => {
+    const [pm, sm, fm] = meshes as [THREE.Mesh, THREE.Mesh, THREE.Points];
+    if (!pm) return;
+    const n = Math.round(seated * fill);
+    (pm.geometry as THREE.InstancedBufferGeometry).instanceCount = n;
+    (sm.geometry as THREE.InstancedBufferGeometry).instanceCount = signAt.filter((i) => i < n).length;
+    fm.geometry.setDrawRange(0, flashAt.filter((i) => i < n).length);
+  };
 
   const build = (d: number) => {
     for (const m of meshes) {
@@ -243,6 +258,10 @@ export function buildCrowd(seats: Seat[], density: number): Crowd {
       const p = d * (1 - s.row * 0.025);
       if (rng.chance(p)) chosen.push(s);
     }
+    // Front rows first with some shuffle, so a partial fill reads as a thin crowd that came
+    // down to the rail rather than random holes everywhere.
+    const order = new Map(chosen.map((s) => [s, s.row * 0.045 + rng.next()]));
+    chosen.sort((a, b) => order.get(a)! - order.get(b)!);
     const n = chosen.length;
     const geo = new THREE.InstancedBufferGeometry();
     geo.index = personGeo.index;
@@ -319,7 +338,20 @@ export function buildCrowd(seats: Seat[], density: number): Crowd {
     flashes.renderOrder = 5;
     meshes.push(flashes);
     for (const m of meshes) root.add(m);
+    const index = new Map(chosen.map((c, i) => [c, i]));
+    seated = n;
+    signAt = signers.map((c) => index.get(c)!);
+    flashAt = flashers.map((c) => index.get(c)!);
+    applyFill();
   };
   build(density);
-  return { root, uniforms, setDensity: build };
+  return {
+    root,
+    uniforms,
+    setDensity: build,
+    setFill(f) {
+      fill = Math.max(0, Math.min(1, f));
+      applyFill();
+    },
+  };
 }

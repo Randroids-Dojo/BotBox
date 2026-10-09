@@ -16,7 +16,34 @@ export interface LightRig {
   setQuality(q: Quality): void;
   /** 0 dark (title), 1 full fight lighting. */
   setLevel(level: number): void;
+  /** Haze beam strength before the dressing's factor. */
+  setBeams(intensity: number): void;
+  /** Event dressing: a dim garage league, the normal show, or the finals. */
+  setDressing(d: Dressing): void;
+  /** Fixtures that currently draw a beam (the rest are dark in a qualifier). */
+  litFixtures(): Fixture[];
 }
+
+export type Dressing = 'normal' | 'championship' | 'qualifier';
+
+interface DressingLook {
+  key: number;
+  side: number;
+  pool: number;
+  /** Pools beyond this many are off. */
+  pools: number;
+  hemi: number;
+  beams: number;
+  beamCount: number;
+}
+
+const DRESS: Record<Dressing, DressingLook> = {
+  normal: { key: 1, side: 1, pool: 1, pools: 8, hemi: 1, beams: 1, beamCount: 1 },
+  // Tuesday night: work lights on the floor, most of the rig dark.
+  qualifier: { key: 0.85, side: 0.55, pool: 0.8, pools: 2, hemi: 0.55, beams: 0.75, beamCount: 0.35 },
+  // The finals: every can on, brighter and hotter.
+  championship: { key: 1.12, side: 1.25, pool: 1.4, pools: 8, hemi: 1.1, beams: 1.3, beamCount: 1.7 },
+};
 
 const BEAM_VERT = /* glsl */ `
 attribute float along;
@@ -37,7 +64,7 @@ void main() {
   gl_Position = projectionMatrix * mv;
 }`;
 
-const BEAM_FRAG = /* glsl */ `
+export const BEAM_FRAG = /* glsl */ `
 uniform float uTime;
 uniform float uIntensity;
 varying float vAlong;
@@ -114,6 +141,12 @@ export function buildLightRig(fixtures: Fixture[], quality: Quality): LightRig {
     blending: THREE.AdditiveBlending,
     side: THREE.DoubleSide,
   });
+  let dress: Dressing = 'normal';
+  let level = 1;
+  let beamBase = 0.11;
+  let q0: Quality = quality;
+  const beamFixtures = fixtures.filter((f) => f.beam).length;
+  const count = () => Math.max(2, Math.round(Math.min(beamCount(q0), beamFixtures) * DRESS[dress].beamCount));
   let beams = new THREE.Mesh(buildBeams(fixtures, beamCount(quality)), beamMat);
   beams.renderOrder = 4;
   beams.frustumCulled = false;
@@ -139,15 +172,34 @@ export function buildLightRig(fixtures: Fixture[], quality: Quality): LightRig {
       side.castShadow = q === 'high';
       const poolCount = q === 'high' ? 8 : q === 'medium' ? 4 : 2;
       pools.forEach((p, i) => (p.visible = i < poolCount));
+      q0 = q;
       beams.geometry.dispose();
-      beams.geometry = buildBeams(fixtures, beamCount(q));
+      beams.geometry = buildBeams(fixtures, count());
       rig.beams = beams;
     },
-    setLevel(level) {
-      key.intensity = 230 * (0.05 + level * 0.95);
-      side.intensity = 150 * (0.25 + level * 0.75);
-      for (const p of pools) p.intensity = 90 * (0.5 + level * 0.5);
-      hemi.intensity = 0.12 * (0.4 + level * 0.6);
+    setLevel(l) {
+      level = l;
+      const k = DRESS[dress];
+      key.intensity = 230 * (0.05 + level * 0.95) * k.key;
+      side.intensity = 150 * (0.25 + level * 0.75) * k.side;
+      // Pools past the dressing's count go dark by intensity, so no shader recompiles.
+      pools.forEach((p, i) => (p.intensity = i < k.pools ? 90 * (0.5 + level * 0.5) * k.pool : 0));
+      hemi.intensity = 0.12 * (0.4 + level * 0.6) * k.hemi;
+    },
+    setBeams(i) {
+      beamBase = i;
+      beamUniforms.uIntensity.value = beamBase * DRESS[dress].beams;
+    },
+    setDressing(d) {
+      if (d === dress) return;
+      dress = d;
+      beams.geometry.dispose();
+      beams.geometry = buildBeams(fixtures, count());
+      rig.setLevel(level);
+      rig.setBeams(beamBase);
+    },
+    litFixtures() {
+      return pickBeams(fixtures, count());
     },
   };
   rig.setQuality(quality);
@@ -156,6 +208,15 @@ export function buildLightRig(fixtures: Fixture[], quality: Quality): LightRig {
 
 function beamCount(q: Quality): number {
   return q === 'high' ? 99 : q === 'medium' ? 14 : 6;
+}
+
+/** Spread a selection of `max` beams evenly over the fixture list. */
+function pickBeams(fixtures: Fixture[], max: number): Fixture[] {
+  const list = fixtures.filter((f) => f.beam);
+  const stride = Math.max(1, list.length / Math.min(max, list.length));
+  const out: Fixture[] = [];
+  for (let s = 0; s < list.length; s += stride) out.push(list[Math.floor(s)]);
+  return out;
 }
 
 function buildBeams(fixtures: Fixture[], max: number): THREE.BufferGeometry {
@@ -169,11 +230,7 @@ function buildBeams(fixtures: Fixture[], max: number): THREE.BufferGeometry {
   const q = new THREE.Quaternion();
   const p = new THREE.Vector3();
   const n = new THREE.Vector3();
-  // Spread the selection evenly over the fixture list.
-  const list = fixtures.filter((f) => f.beam);
-  const stride = Math.max(1, list.length / Math.min(max, list.length));
-  for (let s = 0; s < list.length; s += stride) {
-    const f = list[Math.floor(s)];
+  for (const f of pickBeams(fixtures, max)) {
     const dir = new THREE.Vector3().subVectors(f.target, f.pos);
     const len = dir.length() * 1.02;
     dir.normalize();

@@ -40,6 +40,8 @@ export class GarageScene {
   private tier: WorkshopTierId = 2;
   private missing = new Set<MissingPart>();
   private teamName = 'YOUR ROBOT';
+  /** Wood blocks the bare frame sits on while it has no wheels. */
+  private blocks = new THREE.Group();
 
   constructor(private env: THREE.Texture, private quality: () => Quality) {
     const s = this.scene;
@@ -47,6 +49,14 @@ export class GarageScene {
     s.environment = env;
     s.fog = new THREE.Fog(0x0a0806, 9, 20);
     const kit = createKit(env);
+    const block = new THREE.BoxGeometry(1, 1, 1);
+    for (let i = 0; i < 2; i++) {
+      const b = new THREE.Mesh(block, kit.wood);
+      b.castShadow = b.receiveShadow = true;
+      this.blocks.add(b);
+    }
+    this.blocks.visible = false;
+    this.turntable.add(this.blocks);
 
     // One rig for every tier: the count never changes, only positions, colors and intensities.
     const key = new THREE.SpotLight(0xffffff, 1, 0, 0.9, 0.6, 2);
@@ -171,6 +181,12 @@ export class GarageScene {
       const minPart = Math.min(...Object.values(damage.parts));
       this.frame.smoke = minPart < 0.35 ? 1 - minPart / 0.35 : 0;
     }
+    // No drive yet: the frame sits on two blocks of 4x4.
+    this.blocks.visible = missing.includes('drive');
+    this.blocks.children.forEach((b, i) => {
+      b.scale.set(spec.width * 0.7, spec.groundClearance, 0.09);
+      b.position.set(0, 0.23 + spec.groundClearance / 2, (i ? 1 : -1) * spec.length * 0.27);
+    });
     this.size = Math.max(spec.length, spec.width, spec.height * 1.4);
     this.center.set(0, 0.23 + spec.height * 0.45, 0);
     this.teamName = spec.loadout.name || 'ROOKIE';
