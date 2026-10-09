@@ -66,6 +66,7 @@ class StageImpl implements Stage, StageExtras {
   private frameNo = 0;
   private crowdBase = 0.25;
   private crowdBurst = 0;
+  private dressing: 'normal' | 'championship' | 'qualifier' = 'normal';
   private lastStats = { calls: 0, triangles: 0 };
   private titleEvents: MatchEvent[] = [];
   private lastWorld: WorldFrame | null = null;
@@ -123,6 +124,7 @@ class StageImpl implements Stage, StageExtras {
     this.screenRT = new THREE.WebGLRenderTarget(384, 216, { type: THREE.HalfFloatType, samples: 0 });
     this.arena.stands.screenUniforms.uFeed.value = this.screenRT.texture;
 
+    this.arena.setDressing(this.dressing);
     this.post = new PostPipeline(r, s, this.camera);
     this.applyQuality();
     this.resize();
@@ -130,7 +132,9 @@ class StageImpl implements Stage, StageExtras {
     // Compile everything up front so the first fight frame does not hitch.
     this.titleScene.root.visible = true;
     this.trophyScene.root.visible = true;
+    for (const g of this.arena.dressing.root.children) g.visible = true;
     await r.compileAsync(s, this.camera);
+    this.arena.dressing.set(this.dressing);
     this.garageScene.showAll(true);
     await r.compileAsync(this.garageScene.scene, this.camera);
     this.garageScene.showAll(false);
@@ -151,7 +155,7 @@ class StageImpl implements Stage, StageExtras {
     this.post.setScene(inArena ? this.arenaScene : this.garageScene.scene);
     // Title is moodier: low key light, beams carry the frame.
     this.arena.lights.setLevel(scene === 'title' ? 0.35 : 1);
-    this.arena.lights.beamUniforms.uIntensity.value = scene === 'title' ? 0.2 : 0.11;
+    this.arena.lights.setBeams(scene === 'title' ? 0.2 : 0.11);
     if (scene === 'title') this.fx.clear();
   }
 
@@ -284,6 +288,9 @@ class StageImpl implements Stage, StageExtras {
   private crowdLevel(base: number, dt: number): void {
     this.crowdBurst = Math.max(0, this.crowdBurst - dt * 0.35);
     const u = this.arena.crowd.uniforms.uExcite;
+    // A finals house never sits down; a Tuesday crowd claps politely.
+    if (this.dressing === 'championship') base = Math.max(base, 0.45) + 0.1;
+    else if (this.dressing === 'qualifier') base *= 0.55;
     const target = Math.min(1, base + this.crowdBurst);
     u.value += (target - u.value) * (1 - Math.exp(-dt * 4));
   }
@@ -308,6 +315,8 @@ class StageImpl implements Stage, StageExtras {
       return;
     }
     if (this.frameNo % q.screenEvery !== 0) return;
+    // The screen is off at a garage league: skip its feed.
+    if (this.dressing === 'qualifier') return;
     const r = this.renderer;
     const screen = this.arena.stands.screen;
     const usesWorld = this.sceneId === 'arena' && world.bots.length > 0;
@@ -360,7 +369,10 @@ class StageImpl implements Stage, StageExtras {
     this.garageScene?.setRobot(spec, damage, opts);
   }
 
-  setDressing(_d: 'normal' | 'championship' | 'qualifier'): void {}
+  setDressing(d: 'normal' | 'championship' | 'qualifier'): void {
+    this.dressing = d;
+    this.arena?.setDressing(d);
+  }
 
   orbit(dx: number, dy: number): void {
     if (this.sceneId === 'garage') this.garageScene.orbit(dx, dy);
