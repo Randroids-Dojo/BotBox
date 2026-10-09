@@ -17,5 +17,25 @@ if (lab) {
     void load();
   }
 } else {
-  void import('./game/boot').then((m) => m.boot());
+  // A page opened while a release is going out can ask for chunks that are not there yet (or are
+  // gone). Reload once to pick up a consistent build instead of showing a dead screen.
+  const KEY = 'botbox:chunk-reload';
+  const retry = () => {
+    if (sessionStorage.getItem(KEY)) return;
+    sessionStorage.setItem(KEY, '1');
+    location.reload();
+  };
+  window.addEventListener('vite:preloadError', (e) => {
+    e.preventDefault();
+    retry();
+  });
+  import('./game/boot')
+    .then((m) => {
+      sessionStorage.removeItem(KEY);
+      return m.boot();
+    })
+    .catch((err) => {
+      console.error(err);
+      retry();
+    });
 }
