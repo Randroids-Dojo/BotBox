@@ -14,6 +14,8 @@ export interface PlateBuildOpts {
   seg: number;
   uv: UvFn;
   boltUV: [number, number];
+  /** Constant uv for the inner face (bare metal), or null to mirror the paint (clear plastic). */
+  backUV?: [number, number] | null;
 }
 
 class Builder {
@@ -144,7 +146,7 @@ function addQuad(B: Builder, pts: THREE.Vector2[], o: PlateBuildOpts): void {
   for (let j = 0; j <= nB; j++)
     for (let i = 0; i <= nA; i++) {
       bilerp(p, i / nA, j / nB, tmp);
-      back.push(B.vert(tmp.x, tmp.y, zb, tmp.x, tmp.y));
+      back.push(o.backUV ? B.rawVert(tmp.x, tmp.y, zb, o.backUV[0], o.backUV[1]) : B.vert(tmp.x, tmp.y, zb, tmp.x, tmp.y));
     }
   const K = (i: number, j: number) => back[j * (nA + 1) + i];
   for (let j = 0; j < nB; j++) for (let i = 0; i < nA; i++) B.quad(K(i, j), K(i, j + 1), K(i + 1, j + 1), K(i + 1, j));
@@ -159,7 +161,9 @@ function addDisc(B: Builder, d: { r: number; cx: number; cy: number }, o: PlateB
   const zc = o.t / 2 - b;
   const zb = -o.t / 2;
   const disc = (r: number, z: number, flip: boolean) => {
-    const c = B.vert(d.cx, d.cy, z, d.cx, d.cy);
+    const raw = flip && o.backUV;
+    const V = (x: number, y: number) => (raw ? B.rawVert(x, y, z, raw[0], raw[1]) : B.vert(x, y, z, x, y));
+    const c = V(d.cx, d.cy);
     const ringIdx: number[][] = [];
     for (let k = 1; k <= rings; k++) {
       const rr = (k / rings) * r;
@@ -168,7 +172,7 @@ function addDisc(B: Builder, d: { r: number; cx: number; cy: number }, o: PlateB
         const a = (s / segs) * Math.PI * 2;
         const x = d.cx + Math.cos(a) * rr;
         const y = d.cy + Math.sin(a) * rr;
-        row.push(B.vert(x, y, z, x, y));
+        row.push(V(x, y));
       }
       ringIdx.push(row);
     }

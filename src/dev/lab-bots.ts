@@ -246,6 +246,8 @@ function makeFrame(id: string, spec: BotSpec): BotFrame {
 const slots: Slot[] = [];
 let selected = 0;
 let turning = params.get('turn') !== '0';
+/** Hold arms at a fixed deployment (0..1) for screenshots, or null to cycle. */
+let armHold: number | null = null;
 const labelLayer = document.createElement('div');
 labelLayer.style.cssText = 'position:fixed;inset:0;pointer-events:none;font:600 12px/1.2 system-ui,sans-serif;';
 document.body.appendChild(labelLayer);
@@ -448,7 +450,7 @@ function hitSelected(opts: { facet?: Facet; energy?: number; kind?: HitKind } = 
   s.view.hit(e);
   pendingEvents.push(e);
   if (energy > 1500) pendingEvents.push({ type: 'shrapnel', t: simT, bot: s.entry.id, point: e.point, dir: e.dir, count: Math.round(3 + (energy / 12000) * 10), material: e.material });
-  s.frame.facets[facet] = Math.max(0, s.frame.facets[facet] - energy / 20000);
+  s.frame.facets[facet] = Math.max(0.05, s.frame.facets[facet] - energy / 80000);
 }
 
 function knockPanel(facet?: Facet): void {
@@ -779,7 +781,8 @@ function advance(dt: number): void {
         if (w.kind !== 'lifter') pendingEvents.push({ type: 'weapon_fire', t: simT, bot: s.entry.id, kind: w.kind });
       }
       f.weapon.arm = Math.max(0, f.weapon.arm - dt * (w.kind === 'lifter' ? 0.5 : 2.2));
-      const k = Math.min(1, f.weapon.arm * 1.4);
+      if (armHold !== null) f.weapon.arm = armHold;
+      const k = Math.min(1, f.weapon.arm * (armHold !== null ? 1 : 1.4));
       f.weapon.angle = w.restAngle + (w.maxAngle - w.restAngle) * k;
     }
     for (let i = 0; i < f.wheelSpin.length; i++) f.wheelSpin[i] += dt * 1.5;
@@ -809,16 +812,15 @@ function advance(dt: number): void {
       d.vel.x *= 0.6;
       d.vel.z *= 0.6;
       d.spin.multiplyScalar(0.5);
-      if (Math.abs(d.vel.y) < 0.4) {
-        // Settle flat.
-        d.rot.x += (Math.round(d.rot.x / Math.PI) * Math.PI - d.rot.x) * 0.3;
-        d.rot.z += (Math.round(d.rot.z / Math.PI) * Math.PI - d.rot.z) * 0.3;
-        if (Math.abs(d.rot.x % Math.PI) > 0.01) d.rot.x += 0; // keep
-      }
     }
-    d.rot.x += d.spin.x * dt;
-    d.rot.y += d.spin.y * dt;
-    d.rot.z += d.spin.z * dt;
+    if (p.y <= rest + 0.01 && Math.abs(d.vel.y) < 0.5) {
+      // Settle flat on the floor (a panel's thin axis is its local Z).
+      d.spin.set(0, 0, 0);
+      d.vel.multiplyScalar(0.9);
+      const target = Math.round((d.rot.x + Math.PI / 2) / Math.PI) * Math.PI - Math.PI / 2;
+      d.rot.x += (target - d.rot.x) * 0.2;
+      d.rot.z *= 0.8;
+    }
     // Panels lie flat: their thin axis is local Z, so rest with x rotated by +-pi/2.
     const q = new THREE.Quaternion().setFromEuler(d.rot);
     d.frame.quat = { x: q.x, y: q.y, z: q.z, w: q.w };
@@ -893,6 +895,7 @@ window.__lab = {
     if (s) s.yaw = yaw;
   },
   turn: (on: boolean) => (turning = on),
+  arm: (k: number | null) => (armHold = k),
   part: (c: Component, v: number) => {
     const s = sel();
     if (s) s.frame.parts[c] = v;
@@ -910,6 +913,16 @@ window.__lab = {
   },
   resetStats: () => (frameTimes.length = 0),
   timeScale: (k: number) => (timeScale = k),
+  /** Debug: show only parts whose name starts with a prefix (panel, wheel, frame...). */
+  only: (prefix: string | null) => {
+    const s = sel();
+    if (!s) return;
+    s.view.root.traverse((o) => {
+      if (o === s.view.root) return;
+      if (o.parent === s.view.root) o.visible = !prefix || o.name.startsWith(prefix);
+    });
+  },
+  names: () => sel()?.view.root.children.map((c) => c.name || c.type),
   texture: (name: 'scorch' | 'smoke' | 'flame') => ((name === 'scorch' ? scorchTexture() : name === 'smoke' ? smokeTexture() : flameTexture()).image as HTMLCanvasElement).toDataURL(),
   /** Advance the simulation by fixed steps (for deterministic screenshots). */
   step: (seconds: number, fps = 60) => {

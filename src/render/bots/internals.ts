@@ -4,6 +4,7 @@
 // only when an armor panel is missing or the armor is see-through.
 import * as THREE from 'three';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
+import { ConvexHull } from 'three/addons/math/ConvexHull.js';
 import type { BotSpec, InternalSpec } from '../../contract';
 import type { Quality } from '../types';
 import { type HardwareKey, hardware } from './materials';
@@ -54,14 +55,7 @@ export function buildFrame(c: Ctx): THREE.Group {
     // Box-tube frame along the hull edges, inset under the armor.
     const tube = Math.max(0.018, 0.025 * s);
     const d = t + tube / 2 + 0.003;
-    const inset = (p: THREE.Vector3) => {
-      const o = p.clone();
-      for (const k of ['x', 'y', 'z'] as const) {
-        const rel = p[k] - center[k];
-        if (Math.abs(rel) > d) o[k] = p[k] - Math.sign(rel) * d;
-      }
-      return o;
-    };
+    const inset = insetHull(pts, d, center);
     const edges = new THREE.EdgesGeometry(new ConvexGeometry(pts), 20);
     const ea = edges.attributes.position as THREE.BufferAttribute;
     const joints: THREE.Vector3[] = [];
@@ -80,12 +74,14 @@ export function buildFrame(c: Ctx): THREE.Group {
         const g = new THREE.IcosahedronGeometry(tube * 0.62, 1);
         b.place(g, hw(c, 'weld'), j, new THREE.Euler(), { x: 1, y: 0.85, z: 1 });
       }
-    // Cross members under the deck.
+    // Cross members under the deck, only where the deck is flat above them.
+    const hullPlanes = new ConvexHull().setFromPoints(pts).faces.map((f) => new THREE.Plane(f.normal.clone(), -f.normal.dot(f.midpoint)));
+    const inside = (q: THREE.Vector3) => hullPlanes.every((pl) => pl.distanceToPoint(q) < -d * 0.9);
     const yTop = H - d;
     for (const z of [-spec.length * 0.12, spec.length * 0.22]) {
-      if (z < box.min.z + 0.05 || z > box.max.z - 0.05) continue;
       const a = new THREE.Vector3(box.min.x + d, yTop, z);
       const e = new THREE.Vector3(box.max.x - d, yTop, z);
+      if (!inside(a.clone().setX(0))) continue;
       b.add(new THREE.BoxGeometry(1, 1, 1), hw(c, 'frame'), boxAlong(a, e, tube, tube));
     }
   }
@@ -189,6 +185,47 @@ function flipWinding(g: THREE.BufferGeometry): void {
     }
   }
   if (nrm) for (let i = 0; i < nrm.array.length; i++) nrm.array[i] = -nrm.array[i];
+}
+
+/** Move every hull vertex inward so it sits `d` inside each face that meets it. Returns a
+ *  lookup from a hull point to its inset position. */
+function insetHull(pts: THREE.Vector3[], d: number, center: THREE.Vector3): (p: THREE.Vector3) => THREE.Vector3 {
+  const hull = new ConvexHull().setFromPoints(pts);
+  const planes: THREE.Plane[] = [];
+  for (const f of hull.faces) {
+    const n = f.normal.clone();
+    const c = n.dot(f.midpoint);
+    if (!planes.some((q) => q.normal.dot(n) > 0.9999 && Math.abs(q.constant + c) < 1e-4)) planes.push(new THREE.Plane(n, -c));
+  }
+  const cache = new Map<string, THREE.Vector3>();
+  const m = new THREE.Matrix3();
+  return (p: THREE.Vector3) => {
+    const key = `${p.x.toFixed(4)},${p.y.toFixed(4)},${p.z.toFixed(4)}`;
+    const hit = cache.get(key);
+    if (hit) return hit.clone();
+    const touching = planes.filter((q) => Math.abs(q.distanceToPoint(p)) < 1e-3);
+    let best: THREE.Plane[] | null = null;
+    let bestDet = 1e-3;
+    for (let i = 0; i < touching.length; i++)
+      for (let j = i + 1; j < touching.length; j++)
+        for (let k = j + 1; k < touching.length; k++) {
+          const det = Math.abs(touching[i].normal.dot(touching[j].normal.clone().cross(touching[k].normal)));
+          if (det > bestDet) {
+            bestDet = det;
+            best = [touching[i], touching[j], touching[k]];
+          }
+        }
+    let out: THREE.Vector3;
+    if (best) {
+      const [a, b, c] = best;
+      m.set(a.normal.x, a.normal.y, a.normal.z, b.normal.x, b.normal.y, b.normal.z, c.normal.x, c.normal.y, c.normal.z).invert();
+      out = new THREE.Vector3(a.normal.dot(p) - d, b.normal.dot(p) - d, c.normal.dot(p) - d).applyMatrix3(m);
+    } else {
+      out = p.clone().lerp(center, 0.08);
+    }
+    cache.set(key, out);
+    return out.clone();
+  };
 }
 
 function boxAlong(a: THREE.Vector3, b: THREE.Vector3, w: number, h: number): THREE.Matrix4 {

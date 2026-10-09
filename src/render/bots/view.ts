@@ -248,9 +248,13 @@ class ProceduralBotView implements BotView {
 
     // ---- weapon first: it decides slots in the armor and may carry the front panel
     this.rig = buildWeapon({ spec, env, q: opts.quality, armor: this.armor, atlas: this.atlas });
-    if (this.rig) this.root.add(this.rig.group);
+    if (this.rig) {
+      this.rig.group.name = 'weapon';
+      this.root.add(this.rig.group);
+    }
     if (L.extras.includes('srimech') && chassis !== 'invertible') {
       this.srimech = buildSrimech({ spec, env, q: opts.quality, armor: this.armor, atlas: this.atlas });
+      this.srimech.group.name = 'srimech';
       this.root.add(this.srimech.group);
     }
 
@@ -427,6 +431,7 @@ class ProceduralBotView implements BotView {
       seg: this.q.seg * s,
       uv: (x, y, out) => atlas.uv(id, x, y, out),
       boltUV: atlas.swatchUV('bolt'),
+      backUV: spec.loadout.armor.material === 'polycarb' ? null : atlas.swatchUV('raw'),
     });
     const mesh = new THREE.Mesh(plate.geometry, this.armor);
     mesh.castShadow = true;

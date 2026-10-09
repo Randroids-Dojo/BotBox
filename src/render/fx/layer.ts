@@ -320,8 +320,8 @@ export class Fx implements FxLayer {
       this.glow.emit({ x: p.x, y: p.y, z: p.z, vx: 0, vy: 0, vz: 0, life: 0.09 + 0.06 * big, size0: 0.06 + 0.16 * e01, size1: 0.12 + 0.32 * e01, c0: [5 * g, 4.2 * g, 3.2 * g], c1: [2 * g, 0.8 * g, 0.2 * g], alpha: 1, cell: 3, rot: 0, spin: 0, fadeIn: 0.01 });
     }
     // Big hits kick dust off the floor and leave a mark.
-    if (e.energy > 2500 && p.y < 0.6) {
-      this.dustRing(p.x, p.z, big, 0.5);
+    if (e.energy > 5000 && p.y < 0.6) {
+      this.dustRing(p.x, p.z, big * 0.5, 0.45);
       if (factor > 0) this.decals.add(p.x + e.dir.x * 0.2, p.z + e.dir.z * 0.2, 0.25 + 0.4 * big, 0.5, this.rnd() * 6);
     }
   }
@@ -388,7 +388,7 @@ export class Fx implements FxLayer {
 
   private dustRing(x: number, z: number, strength: number, radius: number): void {
     const r = this.rnd;
-    const n = Math.round((6 + 12 * strength) * Math.max(0.45, this.tier.k));
+    const n = Math.round((4 + 10 * strength) * Math.max(0.45, this.tier.k));
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2 + r() * 0.3;
       const sp = (1.2 + r() * 1.8) * (0.6 + strength) * radius;
@@ -404,7 +404,7 @@ export class Fx implements FxLayer {
         size1: 0.6 + 0.6 * strength * radius,
         c0: [0.42, 0.4, 0.37],
         c1: [0.3, 0.29, 0.28],
-        alpha: 0.28 + 0.2 * strength,
+        alpha: 0.14 + 0.16 * strength,
         buoy: 0.05,
         drag: 2.5,
         shade: 0.3,
