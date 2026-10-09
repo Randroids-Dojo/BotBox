@@ -12,7 +12,7 @@ import { Listener } from './spatial';
 import type { Stinger } from './types';
 
 /** Simultaneous one-shot groups in the world before the oldest is stolen. */
-export const MAX_ONESHOTS = 12;
+export const MAX_ONESHOTS = 16;
 
 interface Layer {
   key: string;
@@ -348,7 +348,7 @@ export class World {
         break;
     }
     // Plastic armor swallows the crack and the shine.
-    this.play(layers, e.point, { gain: dbToGain(-21 + 17 * L), send, lp: plastic ? 2600 : undefined });
+    this.play(layers, e.point, { gain: dbToGain(-14 + 14 * L), send, lp: plastic ? 2600 : undefined });
   }
 
   private hazard(id: string, kind: HazardKind, action: 'warn' | 'strike' | 'retract'): void {
@@ -358,17 +358,17 @@ export class World {
       // Beacons: one chirp at a time, saws quieter than the big hazards.
       if (now - this.alarmAt < 0.35) return;
       this.alarmAt = now;
-      this.play([{ key: 'alarm', gain: kind === 'killsaw' ? 0.25 : 0.45 }], pos, { send: 0.35 });
+      this.play([{ key: 'alarm', gain: kind === 'killsaw' ? 0.16 : 0.3 }], pos, { send: 0.35 });
       return;
     }
     if (action === 'strike') {
-      if (kind === 'killsaw') this.play([{ key: 'saw.whir', gain: 0.55, rate: jitter(0.04) }], pos, { send: 0.2 });
-      else if (kind === 'pulverizer') this.play([{ key: 'pulv.hiss', gain: 0.7 }], pos, { send: 0.3 });
-      else if (kind === 'ramrod') this.play([{ key: 'ramrod', gain: 0.75, rate: jitter(0.04) }], pos, { send: 0.3 });
+      if (kind === 'killsaw') this.play([{ key: 'saw.whir', gain: 0.28, rate: jitter(0.04) }], pos, { send: 0.2 });
+      else if (kind === 'pulverizer') this.play([{ key: 'pulv.hiss', gain: 0.4 }], pos, { send: 0.3 });
+      else if (kind === 'ramrod') this.play([{ key: 'ramrod', gain: 0.4, rate: jitter(0.04) }], pos, { send: 0.3 });
       return;
     }
-    if (kind === 'pulverizer') this.play([{ key: 'pulv.retract', gain: 0.5 }], pos, { send: 0.25 });
-    else if (kind === 'ramrod') this.play([{ key: 'ramrod.retract', gain: 0.5 }], pos, { send: 0.2 });
+    if (kind === 'pulverizer') this.play([{ key: 'pulv.retract', gain: 0.35 }], pos, { send: 0.25 });
+    else if (kind === 'ramrod') this.play([{ key: 'ramrod.retract', gain: 0.35 }], pos, { send: 0.2 });
   }
 
   /** The pulverizer slam lands when the hammer reaches the floor. */
@@ -377,8 +377,8 @@ export class World {
       if (h.kind !== 'pulverizer') continue;
       const prev = this.lastHazard.get(h.id) ?? 0;
       if (prev < 0.9 && h.state >= 0.9) {
-        this.play([{ key: 'pulv.slam', gain: 1 }], HAZARD_POS.get(h.id) ?? null, { send: 0.45 });
-        this.crowd.bump(0.25, null);
+        this.play([{ key: 'pulv.slam', gain: 0.5 }], HAZARD_POS.get(h.id) ?? null, { send: 0.45 });
+        this.crowd.bump(0.1, null);
       }
       this.lastHazard.set(h.id, h.state);
     }
@@ -419,7 +419,7 @@ export class World {
     if (!g) return;
     const place = this.listener.place(this.grindPos);
     const plastic = this.grindMat === 'uhmw' || this.grindMat === 'polycarb';
-    g.gain.gain.setTargetAtTime(level * 0.7 * place.gain, t, 0.03);
+    g.gain.gain.setTargetAtTime(level * 0.35 * place.gain, t, 0.03);
     g.pan.pan.setTargetAtTime(place.pan, t, 0.03);
     g.bp.gain.setTargetAtTime(plastic ? -12 : this.grindMat === 'titanium' ? 4 : 0, t, 0.05);
     g.src.playbackRate.setTargetAtTime((plastic ? 0.7 : 1) * this.rate * (0.85 + 0.3 * level), t, 0.05);
@@ -518,9 +518,9 @@ export class Crowd {
 
   hit(e: HitEvent): void {
     const L = hitLevel(e);
-    if (L > 0.75 || e.severity > 0.6) this.bump(0.25 + 0.5 * L, 'cheer');
-    else if (L > 0.45) this.bump(0.15 + 0.3 * L, e.kind === 'spinner' || e.kind === 'axe' ? 'ooh' : null);
-    else this.bump(0.05 + 0.1 * L, null);
+    if (L > 0.75 || e.severity > 0.6) this.bump(0.2 + 0.4 * L, 'cheer');
+    else if (L > 0.45) this.bump(0.08 + 0.2 * L, e.kind === 'spinner' || e.kind === 'axe' ? 'ooh' : null);
+    else this.bump(0.03 + 0.05 * L, null);
   }
 
   whiff(): void {
@@ -574,7 +574,7 @@ export class Crowd {
     const fighting = world?.match.phase === 'fight';
     const floor = Math.max(this.scripted, fighting ? 0.22 : 0.12);
     // Excitement falls back toward the floor over a few seconds.
-    this.excitement = floor + (this.excitement - floor) * Math.exp(-dt / 3);
+    this.excitement = floor + (this.excitement - floor) * Math.exp(-dt / 2.2);
     const e = this.excitement;
     const [m1, m2, r1, r2] = this.loops;
     m1.g.gain.setTargetAtTime(0.4 + 0.25 * e, t, 0.3);

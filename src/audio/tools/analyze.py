@@ -112,6 +112,17 @@ def seam(path, at):
     print(f'    max sample step near seam {jump:.3f}, whole file {ref:.3f}')
 
 
+def dyn(path, win=0.1):
+    """Short-term RMS percentiles: the bed (p10, p50) against the events (p95, p99)."""
+    x, rate = read(path)
+    m = x.mean(axis=1)
+    n = int(rate * win)
+    v = np.array([20 * np.log10(np.sqrt((m[i:i + n] ** 2).mean()) + 1e-9) for i in range(0, len(m) - n + 1, n)])
+    v = v[v > -100]
+    p = np.percentile(v, [10, 50, 90, 95, 99])
+    print(f'{path.split("/")[-1]}: {int(win * 1000)} ms RMS p10 {p[0]:.1f}  p50 {p[1]:.1f}  p90 {p[2]:.1f}  p95 {p[3]:.1f}  p99 {p[4]:.1f}  (events over bed: {p[4] - p[1]:.1f} dB)')
+
+
 def levels(path, win=1.0):
     x, rate = read(path)
     m = x.mean(axis=1)
@@ -132,5 +143,8 @@ if __name__ == '__main__':
         onsets(sys.argv[2], float(sys.argv[3]), float(sys.argv[4]) if len(sys.argv) > 4 else 0.0)
     elif cmd == 'seam':
         seam(sys.argv[2], float(sys.argv[3]))
+    elif cmd == 'dyn':
+        for p in sys.argv[2:]:
+            dyn(p)
     elif cmd == 'levels':
         levels(sys.argv[2], float(sys.argv[3]) if len(sys.argv) > 3 else 1.0)

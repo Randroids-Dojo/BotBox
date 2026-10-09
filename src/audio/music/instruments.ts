@@ -476,5 +476,6 @@ export function defineNote(bank: Bank, key: string): void {
     }
   }
   if (!def) throw new Error(`unknown music sample ${key}`);
-  bank.define(key, { ...def, rate: def.rate ?? NOTE_RATE[inst] });
+  const align = inst !== 'riser' && inst !== 'boom' && inst !== 'pad';
+  bank.define(key, { ...def, rate: def.rate ?? NOTE_RATE[inst], align });
 }

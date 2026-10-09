@@ -42,8 +42,9 @@ export class Listener {
     const dist = Math.hypot(l.x, l.y, l.z);
     const flat = Math.max(1.5, Math.hypot(l.x, l.z));
     const pan = Math.max(-1, Math.min(1, l.x / flat)) * 0.85;
-    const ref = 4;
-    const gain = Math.pow(ref / Math.max(ref, dist), 0.75);
+    // Broadcast mix: the camera is often 10 to 20 m out, and hits still have to land.
+    const ref = 6;
+    const gain = Math.pow(ref / Math.max(ref, dist), 0.6);
     // Behind the camera sounds a little duller.
     const behind = l.z > 0 ? 0.6 : 1;
     const lp = Math.max(2500, 18000 / (1 + dist / 25)) * behind;

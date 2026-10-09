@@ -199,7 +199,7 @@ const intro: CueDef = {
 const fight: CueDef = {
   bpm: 140,
   loopFrom: 0,
-  level: 0.72,
+  level: 0.42,
   scoop: true,
   sections: [
     {

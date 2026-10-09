@@ -156,6 +156,7 @@ export function defineSfx(bank: Bank): void {
   });
   for (let v = 0; v < 2; v++)
     bank.define(`landing.${v}`, {
+      peak: 0.9,
       seconds: 1.6,
       render: (ctx, out) => {
         const sh = drive(ctx, 2, 0.15);
@@ -197,6 +198,7 @@ export function defineSfx(bank: Bank): void {
 
   // ---- weapons
   bank.define('pneu.bang', {
+    peak: 0.9,
     seconds: 1.2,
     render: (ctx, out) => {
       const sh = drive(ctx, 2.5, 0.1);
@@ -315,6 +317,7 @@ export function defineSfx(bank: Bank): void {
     },
   });
   bank.define('saw.shriek', {
+    peak: 0.8,
     seconds: 1.3,
     render: (ctx, out) => {
       const env = gain(ctx, 0);
@@ -344,6 +347,7 @@ export function defineSfx(bank: Bank): void {
     },
   });
   bank.define('pulv.slam', {
+    peak: 0.9,
     seconds: 2.6,
     render: (ctx, out) => {
       const sh = drive(ctx, 2.2, 0.15);

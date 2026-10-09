@@ -163,7 +163,7 @@ export interface RenderResult {
 }
 
 /** A music cue on its own, optionally switching to another cue partway (crossfade test). */
-export async function renderCue(cue: Exclude<MusicCue, 'none'>, seconds: number, o: { wav?: boolean; then?: { at: number; cue: MusicCue; fade: number } } = {}): Promise<RenderResult> {
+export async function renderCue(cue: Exclude<MusicCue, 'none'>, seconds: number, o: { wav?: boolean; then?: { at: number; cue: MusicCue; fade: number }; solo?: string[] } = {}): Promise<RenderResult> {
   const t0 = performance.now();
   const bank = await harnessBank();
   await bank.ensure(cueKeys(bank, cue));
@@ -172,6 +172,7 @@ export async function renderCue(cue: Exclude<MusicCue, 'none'>, seconds: number,
   const core = new Core(ctx, bank, manifest);
   core.world.setActive(false);
   core.mixer.crowdGate.gain.value = 0;
+  if (o.solo) core.music.solo = new Set(o.solo as never[]);
   core.musicCue(cue, 0);
   await core.music.idle();
   let switched = false;
@@ -218,14 +219,18 @@ export function grindEvents(world: WorldFrame, t: number): MatchEvent[] {
 }
 
 /** The full world mix: a mock fight with two roster robots, fight music, crowd, moving camera. */
-export async function renderFight(seconds: number, o: { wav?: boolean; bots?: string[]; music?: boolean; seed?: number; slowmo?: [number, number] } = {}): Promise<RenderResult> {
+export async function renderFight(
+  seconds: number,
+  o: { wav?: boolean; bots?: string[]; music?: boolean; seed?: number; slowmo?: [number, number]; crowd?: boolean; robots?: boolean; events?: boolean; only?: readonly string[]; hazards?: boolean; worldMute?: boolean } = {},
+): Promise<RenderResult> {
   const t0 = performance.now();
   const bank = await harnessBank();
   await bank.ensure(cueKeys(bank, 'fight'));
   const ctx = offline(seconds);
   const core = new Core(ctx, bank, manifest);
   const specs = rosterSpecs(o.bots ?? ['megahurtz', 'tax-audit']);
-  core.setEntrants(specs);
+  if (o.robots !== false) core.setEntrants(specs);
+  if (o.crowd === false) core.mixer.crowdGate.gain.value = 0;
   const mock = new MockWorld(specs, { seed: o.seed ?? 7, countdown: 4, clashEvery: 2.2 });
   if (o.music !== false) {
     core.musicCue('fight', 0);
@@ -233,6 +238,7 @@ export async function renderFight(seconds: number, o: { wav?: boolean; bots?: st
   }
   const counts: Record<string, number> = {};
   let peakShots = 0;
+  const excite: number[] = [];
   let frameMs = 0;
   let frames = 0;
   const out = await run({
@@ -242,7 +248,11 @@ export async function renderFight(seconds: number, o: { wav?: boolean; bots?: st
     step: 1 / 60,
     hook: (t, step) => {
       const { frame, events } = mock.step(step);
-      const ev = [...events, ...grindEvents(frame, t)];
+      let ev = o.events === false ? [] : [...events, ...grindEvents(frame, t)];
+      if (o.only) ev = ev.filter((e) => o.only!.includes(e.type));
+      if (o.hazards === false) frame.hazards = [];
+      if (o.crowd === false) core.mixer.crowdGate.gain.value = 0;
+      if (o.worldMute) core.mixer.worldGate.gain.value = 0;
       for (const e of ev) counts[e.type === 'hit' ? `hit.${e.kind}` : e.type] = (counts[e.type === 'hit' ? `hit.${e.kind}` : e.type] ?? 0) + 1;
       if (o.slowmo) core.world.setTimeScale(t >= o.slowmo[0] && t < o.slowmo[1] ? 0.25 : 1);
       const f0 = performance.now();
@@ -250,13 +260,14 @@ export async function renderFight(seconds: number, o: { wav?: boolean; bots?: st
       frameMs += performance.now() - f0;
       frames++;
       peakShots = Math.max(peakShots, core.world.oneshotCount());
+      if (Math.abs(t % 2) < step) excite.push(Math.round(core.world.crowd.excitement * 100) / 100);
     },
   });
   return {
     stats: stats(out),
     wav: o.wav ? wavBase64(out) : undefined,
     ms: performance.now() - t0,
-    info: { counts, peakShots, stolen: core.world.stats.stolen, frameMsAvg: frameMs / Math.max(1, frames), nodeEstimate: core.world.nodeCount() },
+    info: { excitement: excite, counts, peakShots, stolen: core.world.stats.stolen, frameMsAvg: frameMs / Math.max(1, frames), nodeEstimate: core.world.nodeCount() },
   };
 }
 

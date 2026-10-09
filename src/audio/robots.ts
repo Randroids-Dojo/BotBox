@@ -50,6 +50,9 @@ const SPINNERS: Record<SpinnerKind, SpinVoice> = {
   shell: { mult: 6, band: 260, level: 0.45, whoom: 0.95 },
 };
 
+/** Robot voices sit well under impacts: a motor is a bed, a hit is an event. */
+const ROBOT_TRIM = 0.27;
+
 const isSpinner = (k: string): k is SpinnerKind => k === 'vdisk' || k === 'drum' || k === 'hbar' || k === 'shell';
 
 export class RobotVoice {
@@ -192,7 +195,7 @@ export class RobotVoice {
     const set = (p: AudioParam, v: number, tc = k) => p.setTargetAtTime(v, t, tc);
 
     set(this.pan.pan, place.pan, 0.03);
-    set(this.out.gain, active ? place.gain : 0, 0.05);
+    set(this.out.gain, active ? place.gain * ROBOT_TRIM : 0, 0.05);
     set(this.air.frequency, place.lp, 0.1);
 
     // Wheel speed from the rolling angle (falls back to body speed).

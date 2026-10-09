@@ -17,6 +17,9 @@ export interface SoundDef {
   make?: (rate: number) => Float32Array[];
   /** Normalize the rendered peak to this linear level. */
   peak?: number;
+  /** Shift the sample so its onset lands 0.5 ms in. Oversampled waveshapers add a few ms of
+   *  latency each, which would put notes behind the beat. */
+  align?: boolean;
 }
 
 export class Bank {
@@ -117,6 +120,17 @@ export class Bank {
         const g = def.peak / m;
         for (const c of data) for (let i = 0; i < c.length; i++) c[i] *= g;
       }
+    }
+    if (def.align) {
+      let m = 0;
+      for (const c of data) for (let i = 0; i < c.length; i++) m = Math.max(m, Math.abs(c[i]));
+      let first = data[0].length;
+      for (const c of data) {
+        const i = c.findIndex((x) => Math.abs(x) > m * 0.003);
+        if (i >= 0) first = Math.min(first, i);
+      }
+      const shift = Math.max(0, first - Math.floor(rate * 0.0005));
+      if (shift > 0) data = data.map((c) => c.slice(shift));
     }
     const outLen = Math.ceil(def.seconds * rate);
     const res = new AudioBuffer({ length: outLen, numberOfChannels: data.length, sampleRate: rate });

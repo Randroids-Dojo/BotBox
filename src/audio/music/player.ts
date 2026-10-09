@@ -49,6 +49,7 @@ class CueVoice {
     private c: CompiledCue,
     dest: AudioNode,
     start: number,
+    solo: Set<Lane> | null,
   ) {
     const def = CUES[cue];
     this.out = ctx.createGain();
@@ -97,7 +98,7 @@ class CueVoice {
     this.out.connect(dest);
     for (const lane of Object.keys(LANE_PAN) as Lane[]) {
       const g = ctx.createGain();
-      g.gain.value = def.mix?.[lane] ?? LANE_LEVEL[lane];
+      g.gain.value = solo && !solo.has(lane) ? 0 : (def.mix?.[lane] ?? LANE_LEVEL[lane]);
       const p = ctx.createStereoPanner();
       p.pan.value = LANE_PAN[lane];
       g.connect(p).connect(head);
@@ -185,6 +186,8 @@ export class MusicPlayer {
   private fading: CueVoice[] = [];
   private want: { cue: MusicCue; fade: number; token: number } = { cue: 'none', fade: 0, token: 0 };
   private loading: Promise<void> | null = null;
+  /** Testing: only these lanes are audible in cues started from now on. */
+  solo: Set<Lane> | null = null;
 
   constructor(
     private ctx: BaseAudioContext,
@@ -229,7 +232,7 @@ export class MusicPlayer {
     const now = this.ctx.currentTime;
     const at = now + 0.06;
     this.stopCurrent(Math.max(0.05, fade));
-    const v = new CueVoice(this.ctx, this.bank, cue, compiledCue(cue), this.dest, at);
+    const v = new CueVoice(this.ctx, this.bank, cue, compiledCue(cue), this.dest, at, this.solo);
     const fadeIn = STINGS.includes(cue) ? 0 : fade;
     if (fadeIn > 0.05) {
       v.out.gain.setValueAtTime(0, at);

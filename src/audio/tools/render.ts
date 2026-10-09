@@ -56,6 +56,20 @@ if (what.has('cues')) {
   report.cues = r;
 }
 
+if (what.has('grid')) {
+  console.log('\ngrid (solo lanes)');
+  for (const [cue, lanes] of [
+    ['fight', ['kick']],
+    ['fight', ['gtrL']],
+    ['title', ['snare']],
+    ['pits', ['kick', 'snare']],
+  ] as const) {
+    const res = await page.evaluate(([c, l]) => window.__botboxAudio!.renderCue(c, 12, { wav: true, solo: [...l] }), [cue, lanes] as const);
+    save(`grid-${cue}-${lanes.join('+')}.wav`, res.wav);
+    line(`${cue} ${lanes.join('+')}`, res.stats, res.ms);
+  }
+}
+
 if (what.has('xfade')) {
   console.log('\ncrossfades');
   for (const [a, b, fade] of [
@@ -82,6 +96,26 @@ if (what.has('fight')) {
   const dry = await page.evaluate((w) => window.__botboxAudio!.renderFight(30, { wav: w, music: false, bots: ['megahurtz', 'tax-audit'] }), wav);
   save('mock-fight-no-music.wav', dry.wav);
   line('fight no music 30s', dry.stats, dry.ms);
+}
+
+if (what.has('layers')) {
+  console.log('\nfight layers (30 s, no music)');
+  for (const [name, o] of [
+    ['crowd only', { crowd: true, robots: false, events: false }],
+    ['robots only', { crowd: false, robots: true, events: false }],
+    ['events only', { crowd: false, robots: false, events: true }],
+    ['world, no crowd', { crowd: false, robots: true, events: true }],
+    ['crowd reacting', { crowd: true, robots: true, worldMute: true }],
+    ['hits only', { crowd: false, robots: false, only: ['hit', 'shrapnel', 'panel_off'], hazards: false }],
+    ['hazards only', { crowd: false, robots: false, only: ['hazard'] }],
+    ['grind only', { crowd: false, robots: false, only: ['grind'], hazards: false }],
+    ['weapons only', { crowd: false, robots: false, only: ['weapon_fire', 'weapon_arm'], hazards: false }],
+    ['countdown only', { crowd: false, robots: false, only: ['lights', 'fight_start'], hazards: false }],
+  ] as const) {
+    const res = await page.evaluate(([opts, w]) => window.__botboxAudio!.renderFight(30, { ...opts, music: false, wav: w }), [o, wav] as const);
+    save(`layer-${name.replace(/[ ,]+/g, '-')}.wav`, res.wav);
+    line(name, res.stats, res.ms);
+  }
 }
 
 if (what.has('tour')) {

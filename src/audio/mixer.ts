@@ -42,9 +42,9 @@ export class Mixer {
     };
     this.master = g(0.9);
     this.glue = ctx.createDynamicsCompressor();
-    this.glue.threshold.value = -16;
+    this.glue.threshold.value = -12;
     this.glue.knee.value = 8;
-    this.glue.ratio.value = 2.5;
+    this.glue.ratio.value = 2;
     this.glue.attack.value = 0.012;
     this.glue.release.value = 0.25;
     this.limiter = ctx.createDynamicsCompressor();
@@ -86,7 +86,7 @@ export class Mixer {
     this.worldLP.connect(this.worldGate).connect(this.sfxVol);
 
     // Crowd: its own gate so a scripted crowd can play over an inactive world.
-    this.crowdIn = g(1);
+    this.crowdIn = g(0.55);
     this.crowdLP = ctx.createBiquadFilter();
     this.crowdLP.type = 'lowpass';
     this.crowdLP.frequency.value = 3000;
@@ -101,7 +101,7 @@ export class Mixer {
 
     // Music.
     // Cue mixes are written hot; this sets the music bed about 18 dB under full scale.
-    this.musicIn = g(dbToGain(-11));
+    this.musicIn = g(dbToGain(-22.5));
     this.musicDuck = g(1);
     const mglue = ctx.createDynamicsCompressor();
     mglue.threshold.value = -24;
