@@ -14,6 +14,7 @@ import {
   type Loadout,
   type PaintFinish,
   type PaintPattern,
+  type PartKey,
   type PowerId,
   type WeaponId,
   type WeightClass,
@@ -39,8 +40,9 @@ import {
 } from '../data/parts';
 import { VOICED_NAMES } from '../data/roster';
 import { buildSpec, checkLoadout, extraAllowed, loadoutWeight, weightBreakdown } from '../sim/spec';
-import type { Damage, GarageContext, GarageResult } from './types';
+import type { Damage, GarageCategory, GarageContext, GarageResult } from './types';
 import { el, exit, healthColor, item, replay, type Scope } from './core';
+import { money } from './money';
 import { slamFx, type UiCtx } from './fx';
 import { scoutCard } from './scout';
 import { advice } from './stats';
@@ -139,27 +141,73 @@ interface Opt {
   /** Side effects of picking it ("Swaps weapon to ..."). */
   note?: string;
   cls?: string;
+  /** Career store: what the row costs, and what picking it would buy. */
+  shop?: { state: 'owned' | 'buy' | 'short' | 'locked' | 'free'; price: number; buy: PartKey[] };
 }
 
 type RepairKey = `f:${Facet}` | `c:${Component}`;
 
+/** Coach lines for the guided first rebuild. */
+const GUIDE_TEXT: Record<GarageCategory, string> = {
+  chassis: 'Pick a frame',
+  drive: 'Bolt on some wheels',
+  power: 'Wire in a battery',
+  weapon: 'Pick a weapon',
+  armor: 'Hang some armor',
+  extras: 'Add some extras',
+  paint: 'Give it some paint',
+  name: 'Keep the name or pick a new one',
+};
+
+/** Every store part a loadout uses. */
+function partsOf(l: Loadout): PartKey[] {
+  return [`chassis:${l.chassis}`, `drive:${l.drive}`, `power:${l.power}`, `weapon:${l.weapon}`, `armor:${l.armor.material}`, ...l.extras.map((e) => `extra:${e}` as PartKey)];
+}
+
+function partLabel(k: PartKey): string {
+  const [cat, id] = k.split(':') as [string, string];
+  if (cat === 'chassis') return CHASSIS[id as ChassisId].label;
+  if (cat === 'drive') return DRIVES[id as DriveId].label;
+  if (cat === 'power') return POWER[id as PowerId].label;
+  if (cat === 'weapon') return WEAPONS[id as WeaponId].label;
+  if (cat === 'armor') return ARMOR[id as ArmorMaterialId].label;
+  return EXTRAS[id as ExtraId].label;
+}
+
 export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | null> {
   return new Promise((resolve) => {
     const pits = g.mode === 'pits';
+    const careerMode = g.mode === 'career';
+    const shop = careerMode ? g.career ?? null : null;
     const orig = clone(g.loadout);
     let cur = clone(g.loadout);
     const origDamage = g.damage ? cloneDamage(g.damage) : healthy();
     const steps = new Map<RepairKey, number>();
-    const budget = pits ? g.repairPoints ?? 0 : Infinity;
-    const tabs: Tab[] = pits ? ['repair', 'scout', 'chassis', 'drive', 'power', 'weapon', 'armor', 'extras', 'paint', 'name'] : ['chassis', 'drive', 'power', 'weapon', 'armor', 'extras', 'paint', 'name'];
-    if (pits && !g.opponent) tabs.splice(tabs.indexOf('scout'), 1);
-    let tab: Tab = tabs[0];
+    // Career money: purchases are paid on the spot through shop.buy; repairs are paid on Done.
+    let funds = shop?.funds ?? 0;
+    const owned = new Set<PartKey>(shop?.owned ?? []);
+    const bought: PartKey[] = [];
+    const unit = careerMode ? shop?.repairPer10 ?? 0 : 1;
+    const budget = () => (pits ? g.repairPoints ?? 0 : careerMode ? funds : Infinity);
+    const anyDamage = FACETS.some((f) => origDamage.facets[f] < 1) || COMPONENTS.some((c) => origDamage.parts[c] < 1);
+    const tabs: Tab[] = ['chassis', 'drive', 'power', 'weapon', 'armor', 'extras', 'paint', 'name'];
+    if (pits || careerMode) {
+      if (g.opponent) tabs.unshift('scout');
+      if (pits || anyDamage) tabs.unshift('repair');
+    }
+    // Guided first rebuild: these slots read EMPTY until the player picks something in them.
+    const guided = (g.guided ?? []).filter((c) => tabs.includes(c));
+    const filled = new Set<GarageCategory>();
+    const missing = () => guided.filter((c) => !filled.has(c));
+    const isEmpty = (c: Tab) => guided.includes(c as GarageCategory) && !filled.has(c as GarageCategory);
+    let tab: Tab = guided[0] ?? tabs[0];
     let hover: Loadout | null = null;
     let backArmed = false;
     let done = false;
 
-    // ---- costs and damage (pits)
-    const armorChanged = (l: Loadout) => l.armor.material !== orig.armor.material || l.armor.grade !== orig.armor.grade;
+    // ---- costs and damage (pits and career)
+    // In a career, armor thickness is free, so only a new material brings fresh plates.
+    const armorChanged = (l: Loadout) => l.armor.material !== orig.armor.material || (!careerMode && l.armor.grade !== orig.armor.grade);
     const refitCost = (l: Loadout) => {
       if (!pits) return 0;
       let c = 0;
@@ -185,7 +233,8 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       for (const [k, n] of steps) if (!fresh(l, k)) c += n;
       return c;
     };
-    const spent = (l: Loadout) => refitCost(l) + repairCost(l);
+    /** Pits: repair points used. Career: dollars of repairs pending. */
+    const spent = (l: Loadout) => refitCost(l) + repairCost(l) * unit;
     const effectiveDamage = (l: Loadout): Damage => {
       const d = healthy();
       for (const f of FACETS) d.facets[f] = health(l, `f:${f}`);
@@ -199,7 +248,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       clearTimeout(previewTimer);
       previewTimer = window.setTimeout(() => {
         try {
-          g.preview(clone(cur), pits ? effectiveDamage(cur) : undefined);
+          g.preview(clone(cur), pits || careerMode ? effectiveDamage(cur) : g.damage, guided.length ? missing() : undefined);
         } catch (e) {
           console.warn('garage preview failed', e);
         }
@@ -210,8 +259,8 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
     // ---- DOM skeleton
     const nameBig = el('div.gl-name.wide.chrome-text');
     const classLine = el('div.gl-class.kicker');
-    const leftHead = el('div.gl-head', [el('span.tag' + (pits ? '.blue' : ''), pits ? 'The pits' : 'Garage'), nameBig, classLine]);
-    const nextChip = pits && g.opponent ? el('div.gl-next', [el('span.kicker', 'Next'), el('span.wide', g.opponent.card.name)]) : null;
+    const leftHead = el('div.gl-head', [el('span.tag' + (pits ? '.blue' : ''), pits ? 'The pits' : careerMode ? 'Workbench' : 'Garage'), nameBig, classLine]);
+    const nextChip = (pits || careerMode) && g.opponent ? el('div.gl-next', [el('span.kicker', 'Next'), el('span.wide', g.opponent.card.name)]) : null;
     const drag = el('div.gl-drag.live');
     const leftStats = el('div.gl-stats-slot');
     const left = el('div.gar-left', [drag, leftHead, nextChip, leftStats]);
@@ -224,6 +273,10 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
     const wLegend = el('div.wm-legend');
     const wState = el('span.wm-state.wide');
     const pts = pits ? el('div.pts', [el('span.kicker', 'Repair points'), el('span.pts-num.cond')]) : null;
+    const fundsNum = el('span.gf-num.cond');
+    const fundsNote = el('span.gf-note.cond');
+    const fundsBox = careerMode ? el('div.gfunds', [el('span.kicker', 'Funds'), fundsNum, fundsNote]) : null;
+    const coach = el('div.gp-coach');
     const meter = el('div.wmeter', [
       el('div.wm-top', [el('span.kicker', 'Weight'), wState, el('span.wm-figs', [wNum, wLimit, wDelta])]),
       el('div.wm-track', [wBar, wGhost, el('div.wm-ticks')]),
@@ -237,15 +290,17 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
     const backBtn = button('Back', { activate: () => onBack(), cls: 'small' });
     const toast = el('div.gp-toast');
     const panel = el('div.gar-panel.panel', [
+      fundsBox,
       el('div.gp-head', [meter, pts]),
       tabRow,
+      guided.length ? coach : null,
       body,
       statsBox,
       warn,
-      el('div.gp-foot', [doneBtn, backBtn, el('div.hint-row', [el('span', [...key('Q', 'LB'), ...key('E', 'RB'), 'Tabs'])])]),
+      el('div.gp-foot', [doneBtn, guided.length ? null : backBtn, el('div.hint-row', [el('span', [...key('Q', 'LB'), ...key('E', 'RB'), 'Tabs'])])]),
       toast,
     ]);
-    const node = el('div.screen.garage' + (pits ? '.pits' : ''), [left, panel]);
+    const node = el('div.screen.garage' + (pits ? '.pits' : '') + (careerMode ? '.career' : '') + (guided.length ? '.guided' : ''), [left, panel]);
     ctx.layers.screen.append(node);
 
     // The tale of the tape sits under the preview like a broadcast stat card.
@@ -282,8 +337,8 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
     const costWhy = (n: Loadout): string | null => {
       if (!pits) return null;
       const need = spent(n) - spent(cur);
-      const have = budget - spent(cur);
-      if (spent(n) > budget) return `Costs ${need} pts, you have ${have}`;
+      const have = budget() - spent(cur);
+      if (spent(n) > budget()) return `Costs ${need} pts, you have ${have}`;
       return null;
     };
     const costNote = (n: Loadout): string | undefined => {
@@ -401,9 +456,16 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       drawStats();
     };
 
-    const pick = (o: Opt) => {
+    const catOf = (k: string): GarageCategory => {
+      const c = k.split(':')[0];
+      return c === 'grade' ? 'armor' : c === 'extra' ? 'extras' : (c as GarageCategory);
+    };
+
+    const apply = (o: Opt) => {
       if (!o.next) return;
-      if (o.selected && !o.key.startsWith('extra:')) {
+      const cat = catOf(o.key);
+      const guidedPick = isEmpty(cat);
+      if (o.selected && !o.key.startsWith('extra:') && !guidedPick) {
         ctx.sfx.ui('select');
         return;
       }
@@ -411,17 +473,153 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       cur = o.next;
       ctx.mine = cur;
       // Swapped parts come back fresh: forget repairs on them.
-      if (pits) for (const k of [...steps.keys()]) if (fresh(cur, k) && !fresh(prev, k)) steps.delete(k);
+      if (pits || careerMode) for (const k of [...steps.keys()]) if (fresh(cur, k) && !fresh(prev, k)) steps.delete(k);
       ctx.sfx.ui(pits && spent(cur) > spent(prev) ? 'buy' : 'select');
       backArmed = false;
+      if (guidedPick) fill(cat);
       preview();
       renderAll(o.key);
+    };
+
+    /** Cash on hand after the repairs already dialed in. */
+    const available = () => funds - spent(cur);
+
+    const pick = (o: Opt) => {
+      const sh = o.shop;
+      if (!careerMode || !shop || !sh || !o.next || !sh.buy.length) return apply(o);
+      const total = sh.buy.reduce((a, k) => a + (shop.prices[k] ?? 0), 0);
+      if (total > available()) {
+        ctx.sfx.ui('error');
+        const row = byKey(o.key);
+        if (row) replay(row, 'shake');
+        showToast(`Need ${money(total - available())} more. Win a fight or take a side gig.`);
+        return;
+      }
+      confirmBuy(sh.buy, total, () => {
+        for (const k of sh.buy) {
+          const left = shop.buy(k);
+          if (left === null) {
+            ctx.sfx.ui('error');
+            showToast(`Couldn't buy the ${partLabel(k).toLowerCase()}`);
+            renderAll(o.key);
+            return;
+          }
+          funds = left;
+          owned.add(k);
+          bought.push(k);
+        }
+        ctx.sfx.ui('buy');
+        // Re-pick against the new store state so the row is no longer a purchase.
+        apply({ ...o, shop: undefined });
+        bump(fundsNum);
+      });
+    };
+
+    // One-tap purchase confirmation over the panel.
+    const confirmBuy = (keys: PartKey[], total: number, yes: () => void) => {
+      const what = keys.length === 1 ? partLabel(keys[0]) : keys.map(partLabel).join(' and ');
+      let closed = false;
+      const close = (ok: boolean) => {
+        if (closed) return;
+        closed = true;
+        ctx.nav.pop(sub);
+        box.remove();
+        scope.refresh();
+        if (ok) yes();
+        else ctx.sfx.ui('back');
+      };
+      const buyBtn = button(`Buy ${money(total)}`, { cls: 'small primary', activate: () => close(true) });
+      const noBtn = button('Cancel', { cls: 'small', activate: () => close(false) });
+      const box = el('div.gp-confirm.live', [
+        el('div.gc-card', [
+          el('div.kicker', 'Buy it?'),
+          el('div.gc-q', `${what} for ${money(total)}?`),
+          el('div.gc-after.cond', `${money(available())} now, ${money(available() - total)} after`),
+          el('div.gc-btns', [buyBtn, noBtn]),
+        ]),
+      ]);
+      box.addEventListener('click', (e) => {
+        if (e.target === box) close(false);
+      });
+      panel.append(box);
+      ctx.sfx.ui('tick');
+      const sub = ctx.nav.push({ root: box, back: () => close(false), initial: buyBtn });
+    };
+
+    // Store state and guided EMPTY state for a row.
+    const decorate = (o: Opt): Opt => {
+      const cat = catOf(o.key);
+      if (isEmpty(cat) && cat !== 'extras') o.selected = false;
+      if (!careerMode || !shop) return o;
+      if (o.key.startsWith('grade:')) return o;
+      const k = o.key as PartKey;
+      const price = shop.prices[k] ?? 0;
+      const lockedWhy = shop.locked[k];
+      if (!owned.has(k) && lockedWhy) {
+        o.shop = { state: 'locked', price, buy: [] };
+        o.why = lockedWhy;
+        o.next = null;
+        return o;
+      }
+      const need = o.next && !o.selected ? partsOf(o.next).filter((p) => !owned.has(p)) : [];
+      const blocked = need.find((p) => shop.locked[p]);
+      if (blocked) {
+        o.shop = { state: 'locked', price, buy: [] };
+        o.why = o.why ?? shop.locked[blocked]!;
+        o.next = null;
+        return o;
+      }
+      const total = need.reduce((a, p) => a + (shop.prices[p] ?? 0), 0);
+      const state = owned.has(k) ? 'owned' : total > available() ? 'short' : 'buy';
+      o.shop = { state, price, buy: need };
+      if (need.length > 1 || (need.length === 1 && need[0] !== k)) o.note = [o.note, `Also buys ${need.filter((p) => p !== k).map(partLabel).join(', ').toLowerCase()}`].filter(Boolean).join('. ');
+      return o;
+    };
+
+    // ---- guided rebuild
+    const fill = (c: GarageCategory) => {
+      if (!isEmpty(c)) return;
+      filled.add(c);
+      const next = missing()[0];
+      // Walk straight on to the next empty slot, or to Done.
+      window.setTimeout(() => {
+        if (done) return;
+        if (next) switchTab(next, true);
+        else {
+          renderAll(null);
+          scope.refresh(doneBtn);
+          replay(doneBtn, 'ready');
+        }
+      }, 380);
+    };
+
+    const drawCoach = () => {
+      if (!guided.length) return;
+      const left = missing();
+      const step = guided.length - left.length;
+      const dots = el('span.gc-dots', guided.map((c) => el(`span.gc-dot${filled.has(c) ? '.on' : ''}${c === left[0] ? '.cur' : ''}`)));
+      if (!left.length) {
+        coach.replaceChildren(el('div.gc-step', [dots, el('span.kicker', 'Ready')]), el('div.gc-text', 'All bolted together. Hit Done.'));
+        coach.classList.add('all');
+        return;
+      }
+      coach.classList.remove('all');
+      coach.replaceChildren(
+        el('div.gc-step', [dots, el('span.kicker', `Step ${step + 1} of ${guided.length}`)]),
+        el('div.gc-text', GUIDE_TEXT[left[0]]),
+      );
+      if (tab !== left[0]) {
+        const target = left[0];
+        coach.append(item(el('div.gc-sub', { 'data-key': 'coachgo' }, `Back to ${TAB_LABEL[target]}`), { activate: () => switchTab(target, true) }));
+      }
     };
 
     const renderTabs = () => {
       tabRow.replaceChildren();
       for (const t of tabs) {
-        const b = item(el(`div.gtab${t === tab ? '.on' : ''}`, { 'data-key': `tab:${t}` }, TAB_LABEL[t]), {
+        const empty = isEmpty(t);
+        const step = empty && missing()[0] === t;
+        const b = item(el(`div.gtab${t === tab ? '.on' : ''}${empty ? '.empty' : ''}${step ? '.step' : ''}`, { 'data-key': `tab:${t}` }, [el('span', TAB_LABEL[t]), empty ? el('span.gtab-empty', 'Empty') : null]), {
           activate: () => switchTab(t),
           focus: () => setHover(null),
         });
@@ -451,7 +649,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       }
       if (tab === 'paint') return renderPaint();
       if (tab === 'name') return renderName();
-      const opts = optsFor(tab);
+      const opts = optsFor(tab).map(decorate);
       if (tab === 'chassis' && !g.classLocked && !pits) body.append(classRow());
       const list = el('div.opt-list' + (tab === 'armor' ? '.armor' : ''));
       if (tab === 'armor') {
@@ -471,7 +669,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       const w = o.lb === null ? '' : `${o.lb.toFixed(1)} lb`;
       const delta = o.next && !o.selected ? loadoutWeight(o.next) - loadoutWeight(cur) : 0;
       const isChip = o.cls?.includes('chip');
-      const row = el(`div.opt${o.selected ? '.sel' : ''}${o.why ? '.is-disabled' : ''}${o.cls ? '.' + o.cls.split(' ').join('.') : ''}`, { 'data-key': o.key }, [
+      const row = el(`div.opt${o.selected ? '.sel' : ''}${o.why ? '.is-disabled' : ''}${o.shop ? '.s-' + o.shop.state : ''}${o.cls ? '.' + o.cls.split(' ').join('.') : ''}`, { 'data-key': o.key }, [
         el('div.opt-main', [
           o.key.startsWith('extra:') ? el('span.opt-box', o.selected ? '✓' : '') : null,
           el('span.opt-label.wide', o.label),
@@ -479,15 +677,21 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
           o.selected && !isChip ? el('span.opt-fitted', o.key.startsWith('extra:') ? 'Fitted' : 'Fitted') : null,
           el('span.opt-w.cond', w),
           !isChip && Math.abs(delta) > 0.05 ? el(`span.opt-d.cond.${delta > 0 ? 'heavier' : 'lighter'}`, `${delta > 0 ? '+' : ''}${delta.toFixed(1)}`) : null,
+          o.shop ? priceTag(o.shop) : null,
         ]),
         !isChip && o.blurb ? el('div.opt-blurb', o.blurb) : null,
-        o.why ? el('div.opt-why', o.why) : null,
+        o.why ? el(`div.opt-why${o.shop?.state === 'locked' ? '.lock' : ''}`, o.why) : null,
         !o.why && o.note ? el('div.opt-note', o.note) : null,
       ]);
       return item(row, {
         activate: () => pick(o),
         focus: () => setHover(o.next && !o.selected ? o.next : null),
       });
+    };
+
+    const priceTag = (sh: NonNullable<Opt['shop']>): HTMLElement => {
+      if (sh.state === 'owned' || sh.state === 'free') return el('span.opt-price.owned', 'Owned');
+      return el(`span.opt-price.cond.${sh.state}`, money(sh.price));
     };
 
     const classRow = (): HTMLElement => {
@@ -524,6 +728,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
         cur = n;
         ctx.mine = cur;
         ctx.sfx.ui('tick');
+        fill('paint');
         preview();
         renderAll(key);
       };
@@ -591,6 +796,9 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
         drawNote();
         drawWarn();
       });
+      input.addEventListener('change', () => {
+        if (cur.name.trim()) fill('name');
+      });
       const grid = el('div.vname-grid');
       for (const v of VOICED_NAMES) {
         const chip = item(el(`div.vname${cur.name === v.name ? '.sel' : ''}`, { 'data-key': `vname:${v.slug}`, 'data-name': v.name }, [el('span.spk'), el('span.wide', v.name)]), {
@@ -602,6 +810,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
             ctx.sfx.ui('select');
             drawNote();
             drawWarn();
+            fill('name');
             preview();
           },
           focus: () => setHover(null),
@@ -609,27 +818,50 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
         (chip.firstChild as HTMLElement).innerHTML = SPEAKER_SVG;
         grid.append(chip);
       }
-      body.append(el('div.paint-group', [el('div.opt-sub.kicker', 'Robot name'), input, note]), el('div.paint-group', [el('div.opt-sub.kicker', 'Names the announcer knows'), grid]));
+      const keep = isEmpty('name')
+        ? button('Keep this name', {
+            cls: 'small primary keep-name',
+            activate: () => {
+              if (!cur.name.trim()) {
+                ctx.sfx.ui('error');
+                showToast('Give it a name first');
+                return;
+              }
+              ctx.sfx.ui('select');
+              fill('name');
+            },
+          })
+        : null;
+      if (keep) keep.dataset.key = 'keepname';
+      body.append(el('div.paint-group', [el('div.opt-sub.kicker', 'Robot name'), input, keep, note]), el('div.paint-group', [el('div.opt-sub.kicker', 'Names the announcer knows'), grid]));
       drawNote();
     };
 
     const renderRepair = () => {
-      const left = budget - spent(cur);
-      body.append(el('div.rep-intro', `1 point fixes 10 percent. Swapped parts come back new. ${left} of ${budget} points left.`));
+      const left = budget() - spent(cur);
+      body.append(
+        el(
+          'div.rep-intro',
+          careerMode
+            ? `${money(unit)} fixes 10 percent. Anything under ${Math.round((shop?.freePatch ?? 0) * 100)} percent was patched for free. New parts come fresh.`
+            : `1 point fixes 10 percent. Swapped parts come back new. ${left} of ${budget()} points left.`,
+        ),
+      );
       const mk = (k: RepairKey, label: string) => {
         const b = base(k);
         const h = health(cur, k);
         const isFresh = fresh(cur, k);
         const n = steps.get(k) ?? 0;
         const bar = el('div.rep-bar', [el('div.rep-base', { style: `width:${(b * 100).toFixed(1)}%;background:${healthColor(b)}` }), el('div.rep-fix', { style: `left:${(b * 100).toFixed(1)}%;width:${(Math.max(0, h - b) * 100).toFixed(1)}%` })]);
-        const can = !isFresh && h < 1 && left >= 1;
+        const can = !isFresh && h < 1 && left >= unit;
         const minus = el('span.rep-btn.minus', '−');
-        const plus = el('span.rep-btn.plus', '+');
+        const plus = el('span.rep-btn.plus' + (careerMode ? '.cash' : ''), careerMode ? `+${money(unit)}` : '+');
         const add = (d: -1 | 1) => {
           if (d > 0) {
             if (!can) {
               ctx.sfx.ui('error');
               replay(row, 'shake');
+              if (careerMode && !isFresh && h < 1) showToast('Not enough cash for repairs');
               return;
             }
             steps.set(k, n + 1);
@@ -650,7 +882,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
             el('span.rep-label.wide', label),
             bar,
             el('span.rep-pct.cond', isFresh ? 'NEW' : `${Math.round(h * 100)}%`),
-            el('span.rep-ctl', [minus, el('span.rep-n.cond', n ? `${n}` : '0'), plus]),
+            el('span.rep-ctl', [minus, el('span.rep-n.cond', careerMode ? (n ? money(n * unit) : '') : n ? `${n}` : '0'), plus]),
           ]),
           { activate: () => void add(1), adjust: (d) => (add(d), true), focus: () => setHover(null) },
         );
@@ -665,7 +897,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
         activate: () => {
           let used = 0;
           for (;;) {
-            if (budget - spent(cur) < 1) break;
+            if (budget() - spent(cur) < unit) break;
             const keys: RepairKey[] = [...COMPONENTS.map((c) => `c:${c}` as RepairKey), ...FACETS.map((f) => `f:${f}` as RepairKey)];
             const worst = keys.filter((k) => !fresh(cur, k) && health(cur, k) < 1).sort((a, b) => health(cur, a) - health(cur, b))[0];
             if (!worst) break;
@@ -678,7 +910,25 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
         },
       });
       fixAll.dataset.key = 'fixall';
-      body.append(el('div.rep-foot', fixAll));
+      const clear = careerMode && steps.size
+        ? button('Undo', {
+            cls: 'small',
+            activate: () => {
+              steps.clear();
+              ctx.sfx.ui('back');
+              preview();
+              renderAll('fixall');
+            },
+          })
+        : null;
+      if (clear) clear.dataset.key = 'repclear';
+      body.append(
+        el('div.rep-foot', [
+          fixAll,
+          clear,
+          careerMode ? el('div.rep-total', [el('span.kicker', 'Repairs'), el('span.cond', money(repairCost(cur) * unit))]) : null,
+        ]),
+      );
     };
 
     // ---- meter, stats, warnings
@@ -716,10 +966,16 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
         wGhost.style.display = 'none';
       }
       if (pts) {
-        const left = budget - spent(cur);
-        const hl = hover ? budget - spent(hover) : left;
+        const left = budget() - spent(cur);
+        const hl = hover ? budget() - spent(hover) : left;
         (pts.lastChild as HTMLElement).textContent = hl !== left ? `${left} → ${hl}` : `${left}`;
         pts.classList.toggle('low', left <= 0);
+      }
+      if (fundsBox) {
+        const pending = spent(cur);
+        fundsNum.textContent = money(funds - pending);
+        fundsNote.textContent = pending > 0 ? `${money(pending)} of repairs` : '';
+        fundsBox.classList.toggle('broke', funds - pending <= 0);
       }
     };
 
@@ -760,8 +1016,11 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       drawStats();
       drawWarn();
       drawLeft();
+      drawCoach();
+      if (guided.length) doneBtn.classList.toggle('is-disabled', missing().length > 0);
       if (scope) scope.refresh(byKey(k));
     };
+    const bump = (e: HTMLElement) => replay(e, 'bump');
 
     // ---- exit
     const showToast = (t: string) => {
@@ -779,9 +1038,14 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
           showToast(check.problems[0]);
           return;
         }
-        if (pits && spent(cur) > budget) {
+        if ((pits || careerMode) && spent(cur) > budget()) {
           ctx.sfx.ui('error');
-          showToast('Not enough repair points');
+          showToast(pits ? 'Not enough repair points' : 'Not enough cash for those repairs');
+          return;
+        }
+        if (missing().length) {
+          ctx.sfx.ui('error');
+          showToast(GUIDE_TEXT[missing()[0]] + ' first');
           return;
         }
         ctx.sfx.ui('select');
@@ -792,7 +1056,11 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       ctx.nav.pop(scope);
       if (ok) ctx.mine = cur;
       else ctx.mine = orig;
-      void exit(node, 260).then(() => resolve(ok ? { loadout: clone(cur), damage: pits ? effectiveDamage(cur) : g.damage } : null));
+      const result = (): GarageResult => {
+        if (careerMode) return { loadout: clone(cur), damage: effectiveDamage(cur), funds: funds - spent(cur), bought: [...bought] };
+        return { loadout: clone(cur), damage: pits ? effectiveDamage(cur) : g.damage };
+      };
+      void exit(node, 260).then(() => resolve(ok ? result() : null));
     };
     const changed = () => JSON.stringify(cur) !== JSON.stringify(orig) || steps.size > 0;
     const onBack = () => {
@@ -801,6 +1069,12 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       if (scope.focused && body.contains(scope.focused)) {
         // First back leaves the list for the tabs.
         scope.focus(byKey(`tab:${tab}`));
+        return;
+      }
+      if (guided.length) {
+        // The first rebuild has no way out but Done.
+        ctx.sfx.ui('error');
+        showToast(missing().length ? GUIDE_TEXT[missing()[0]] : 'Hit Done to roll it out');
         return;
       }
       if (changed() && !backArmed) {
