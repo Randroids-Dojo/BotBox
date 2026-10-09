@@ -233,7 +233,7 @@ export function buildFloorTextures(res: number): FloorTextures {
   const OR = S / 2;
   const ok = OR / SIZE_M;
   const { c: orm, g: og } = canvas(OR);
-  og.fillStyle = 'rgb(255,128,170)';
+  og.fillStyle = 'rgb(255,120,125)';
   og.fillRect(0, 0, OR, OR);
   og.globalCompositeOperation = 'overlay';
   og.globalAlpha = 0.5;
@@ -242,7 +242,7 @@ export function buildFloorTextures(res: number): FloorTextures {
   og.globalAlpha = 1;
   // Polished drive paths are smoother.
   for (let i = 0; i < 70; i++) {
-    og.strokeStyle = `rgba(255,70,200,${rng.range(0.1, 0.3)})`;
+    og.strokeStyle = `rgba(255,75,160,${rng.range(0.1, 0.3)})`;
     og.lineWidth = rng.range(0.15, 0.5) * ok;
     og.beginPath();
     og.arc(rng.next() * OR, rng.next() * OR, rng.range(0.6, 4) * ok, rng.next() * 6, rng.next() * 6 + 1.4);

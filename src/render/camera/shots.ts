@@ -4,13 +4,45 @@
 import * as THREE from 'three';
 import { ARENA_HALF, BOOTH, LIGHT_TREE, START_SQUARES } from '../../data/arena';
 import type { ShotRequest } from '../types';
-import { clampCamera } from './gameplay';
+import { blocked } from './director';
+import { clampInside } from './gameplay';
 import { actionOf, clamp, fovForWidth, Pose, smooth, type CamBot, type CamCtx } from './types';
 
 const _a = new THREE.Vector3();
 const _b = new THREE.Vector3();
 const _c = new THREE.Vector3();
 const UP = new THREE.Vector3(0, 1, 0);
+
+/** Push a camera out of any robot it would sit inside. */
+function avoidBots(pos: THREE.Vector3, ctx: CamCtx, min = 0.9): void {
+  for (const b of ctx.bots) {
+    const dx = pos.x - b.pos.x;
+    const dz = pos.z - b.pos.z;
+    const d = Math.hypot(dx, dz);
+    const r = min * (0.6 + b.length * 0.5);
+    if (d < r && pos.y < b.pos.y + 0.8) {
+      const k = d > 1e-3 ? r / d : 0;
+      if (k) {
+        pos.x = b.pos.x + dx * k;
+        pos.z = b.pos.z + dz * k;
+      } else pos.y = b.pos.y + 0.9;
+    }
+  }
+}
+
+/** Keep an in-Box shot camera inside the walls and out of robots. */
+function settle(pos: THREE.Vector3, ctx: CamCtx): void {
+  clampInside(pos, 0.5);
+  avoidBots(pos, ctx);
+  clampInside(pos, 0.5);
+}
+
+const LONG_LENS: THREE.Vector3[] = [];
+for (const a of [-5.7, -1.9, 1.9, 5.7]) {
+  for (const s of [-1, 1]) {
+    LONG_LENS.push(new THREE.Vector3(a, 2.1, s * (ARENA_HALF + 3.0)), new THREE.Vector3(s * (ARENA_HALF + 3.0), 2.1, a));
+  }
+}
 
 export interface ActiveShot {
   req: Exclude<ShotRequest, { kind: 'live' }>;
@@ -86,28 +118,35 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       _b.crossVectors(_a, UP).normalize();
       out.target.addScaledVector(_b, -dist * 0.22).addScaledVector(UP, -dist * 0.09);
       out.fov = 40;
-      clampCamera(out.pos);
+      settle(out.pos, ctx);
       break;
     }
     case 'faceoff': {
-      const red = START_SQUARES[0].center;
-      const blue = START_SQUARES[1].center;
-      const mid = _a.set((red.x + blue.x) / 2, 0, (red.z + blue.z) / 2);
-      const perp = _b.set(1, 0, 1).normalize();
-      const dist = THREE.MathUtils.lerp(13.6, 12.6, e);
-      out.pos.copy(mid).addScaledVector(perp, dist).setY(THREE.MathUtils.lerp(0.95, 1.05, e));
-      out.pos.x += THREE.MathUtils.lerp(-0.6, 0.6, e);
-      out.pos.z -= THREE.MathUtils.lerp(-0.6, 0.6, e);
-      out.target.copy(mid).setY(0.3);
-      out.fov = fovForWidth(7.4, dist, aspect);
+      // Low over the shoulder of the red robot, looking across the Box at blue.
+      const redBot = ctx.bots.find((b) => b.corner === 'red') ?? ctx.bots[0];
+      const blueBot = ctx.bots.find((b) => b.corner === 'blue') ?? ctx.bots[1];
+      const r = redBot ? redBot.pos : _a.set(START_SQUARES[0].center.x, 0, START_SQUARES[0].center.z);
+      const bl = blueBot ? _b.copy(blueBot.pos) : _b.set(START_SQUARES[1].center.x, 0, START_SQUARES[1].center.z);
+      _c.subVectors(r, bl).setY(0).normalize();
+      const back = THREE.MathUtils.lerp(2.3, 1.7, e) * (0.7 + (redBot?.length ?? 0.9) * 0.4);
+      out.pos.copy(r).addScaledVector(_c, back);
+      out.pos.x += -_c.z * 0.75;
+      out.pos.z += _c.x * 0.75;
+      out.pos.y = 0.5;
+      clampInside(out.pos, 0.35);
+      out.target.copy(bl).setY(0.35);
+      // Nudge the aim toward red so both sit in frame.
+      out.target.lerp(r, 0.18);
+      out.target.y = 0.3;
+      out.fov = 50;
       break;
     }
     case 'lights': {
       const p = LIGHT_TREE.pos;
-      const k = THREE.MathUtils.lerp(1, 0.82, e);
-      out.pos.set(p.x + 0.9 * k, p.y - 0.55 * k, p.z + 2.6 * k);
-      out.target.set(p.x, p.y, p.z);
-      out.fov = 30;
+      const k = THREE.MathUtils.lerp(1, 0.85, e);
+      out.pos.set(p.x + 1.3 * k, p.y - 0.9 * k, p.z + 4.4 * k);
+      out.target.set(p.x, p.y - 0.15, p.z);
+      out.fov = 24;
       break;
     }
     case 'impact': {
@@ -115,7 +154,7 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       out.pos.copy(s.base).addScaledVector(s.dir, dist).setY(0.3);
       _a.crossVectors(s.dir, UP);
       out.pos.addScaledVector(_a, 0.5);
-      clampCamera(out.pos);
+      settle(out.pos, ctx);
       out.target.copy(s.base).setY(0.22);
       out.fov = THREE.MathUtils.lerp(54, 48, e);
       out.roll = 0.06;
@@ -124,28 +163,41 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
     case 'replay': {
       // Track the robots involved as the recorded frames play back.
       const bots = req.bots.map((id) => ctx.get(id)).filter((b): b is CamBot => !!b);
-      const spread = bots.length ? actionOf(bots, _c) : 1;
+      let spread = bots.length ? actionOf(bots, _c) : 1;
+      // Robots far apart: stay on the first one (the victim) instead of an empty midpoint.
+      if (spread > 2.5 && bots.length) {
+        _c.copy(bots[0].pos);
+        spread = 1.2;
+      }
       if (bots.length) s.base.lerp(_c, 1 - Math.exp(-4 * dt));
       const v = ((req.seed % 4) + 4) % 4;
       const elapsed = ctx.time - s.start;
       if (v === 0) {
         // Low ground level, across the line.
-        out.pos.copy(s.base).addScaledVector(s.dir, 2.4 + spread * 0.6).setY(0.16);
-        clampCamera(out.pos);
+        out.pos.copy(s.base).addScaledVector(s.dir, 2.0 + spread * 1.3).setY(0.16);
+        settle(out.pos, ctx);
         out.target.copy(s.base).setY(0.25);
         out.fov = clamp(fovForWidth(spread + 0.9, out.pos.distanceTo(out.target), aspect), 42, 70);
       } else if (v === 1) {
         const a = s.angle + elapsed * 0.4;
-        const r = 2.8 + spread * 0.6;
+        const r = 2.4 + spread * 1.1;
         out.pos.set(s.base.x + Math.sin(a) * r, 1.1, s.base.z + Math.cos(a) * r);
-        clampCamera(out.pos);
+        settle(out.pos, ctx);
         out.target.copy(s.base).setY(0.25);
         out.fov = 50;
       } else if (v === 2) {
         // Long lens from outside the Lexan, the corner nearest the action.
-        const sx = s.base.x >= 0 ? 1 : -1;
-        const sz = s.base.z >= 0 ? 1 : -1;
-        out.pos.set(sx * (ARENA_HALF + 3.2), 2.0, sz * (ARENA_HALF + 3.2));
+        // Nearest clear spot between the posts.
+        let best = LONG_LENS[0];
+        let bd = Infinity;
+        for (const c of LONG_LENS) {
+          const d = c.distanceTo(s.base) + (blocked(c, s.base) ? 100 : 0);
+          if (d < bd) {
+            bd = d;
+            best = c;
+          }
+        }
+        out.pos.copy(best);
         out.target.copy(s.base).setY(0.25);
         out.fov = clamp(fovForWidth(spread + 0.9, out.pos.distanceTo(out.target), aspect), 8, 24);
       } else {
@@ -164,7 +216,7 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       const a = s.angle + elapsed * 0.28;
       const r = 1.6 + L * 1.6;
       out.pos.set(s.base.x + Math.sin(a) * r, 0.7 + L * 0.5, s.base.z + Math.cos(a) * r);
-      clampCamera(out.pos);
+      settle(out.pos, ctx);
       out.target.copy(s.base).setY(0.2 + L * 0.1);
       out.fov = 46;
       break;
@@ -175,7 +227,7 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       const L = b?.length ?? 0.9;
       const drift = (ctx.time - s.start) * 0.03;
       out.pos.set(s.base.x + Math.sin(s.angle) * (1.4 + L), 0.45 + drift, s.base.z + Math.cos(s.angle) * (1.4 + L));
-      clampCamera(out.pos);
+      settle(out.pos, ctx);
       out.target.copy(s.base).setY(0.25 + drift * 0.5);
       out.fov = 42;
       break;

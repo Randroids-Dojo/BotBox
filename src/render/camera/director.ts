@@ -4,7 +4,9 @@
 
 import * as THREE from 'three';
 import type { HitEvent } from '../../contract';
-import { ARENA_HALF, BOOTH } from '../../data/arena';
+import { ARENA_HALF, BOOTH, PULVERIZERS, WALL_T } from '../../data/arena';
+import { PULVERIZER_RAISED } from '../arena/hazards';
+import { TRUSS_Y } from '../arena/structure';
 import { Rng } from '../util/rng';
 import { clampCamera } from './gameplay';
 import { actionOf, clamp, fovForWidth, noise1, Pose, type CamCtx } from './types';
@@ -41,18 +43,21 @@ export class BroadcastDirector {
   private handheldAlong = 0;
   private cutFlag = true;
   private zoomBias = 1;
+  private blockedFor = 0;
 
   constructor(seed = 1, private exclude: RigKind[] = []) {
     this.rng = new Rng(seed);
     const H = ARENA_HALF;
     this.rigs.push({ id: 'booth', kind: 'wide', pos: new THREE.Vector3(BOOTH.pos.x, BOOTH.pos.y, BOOTH.pos.z), tight: false, lastUsed: -99 });
-    for (const [x, z] of [
-      [-1, -1],
-      [1, -1],
-      [-1, 1],
-      [1, 1],
-    ]) {
-      this.rigs.push({ id: `corner${x}${z}`, kind: 'corner', pos: new THREE.Vector3(x * (H + 2.2), 5.6, z * (H + 2.2)), tight: false, lastUsed: -99 });
+    // High corner cams outside the Lexan, set between posts so a post never splits the frame.
+    for (const [x, z, alongX] of [
+      [-1, -1, true],
+      [1, -1, false],
+      [-1, 1, false],
+      [1, 1, true],
+    ] as const) {
+      const pos = alongX ? new THREE.Vector3(x * 5.7, 4.3, z * (H + 2.0)) : new THREE.Vector3(x * (H + 2.0), 4.3, z * 5.7);
+      this.rigs.push({ id: `corner${x}${z}`, kind: 'corner', pos, tight: false, lastUsed: -99 });
     }
     this.rigs.push({ id: 'handheld', kind: 'handheld', pos: new THREE.Vector3(0, 1.85, H + 1.0), tight: true, lastUsed: -99 });
     this.rigs.push({ id: 'jib', kind: 'jib', pos: new THREE.Vector3(0, 8.6, 0), tight: false, lastUsed: -99 });
@@ -63,8 +68,8 @@ export class BroadcastDirector {
     ]) {
       this.rigs.push({ id: `floor${x}${z}`, kind: 'floor', pos: new THREE.Vector3(x * (H - 0.35), 0.32, z * (H - 0.35)), tight: true, lastUsed: -99 });
     }
-    this.rigs.push({ id: 'floorN', kind: 'floor', pos: new THREE.Vector3(1.6, 0.32, -H + 0.3), tight: true, lastUsed: -99 });
-    this.rigs.push({ id: 'floorS', kind: 'floor', pos: new THREE.Vector3(-1.6, 0.32, H - 0.3), tight: true, lastUsed: -99 });
+    this.rigs.push({ id: 'floorN', kind: 'floor', pos: new THREE.Vector3(-2.4, 0.32, -H + 0.3), tight: true, lastUsed: -99 });
+    this.rigs.push({ id: 'floorS', kind: 'floor', pos: new THREE.Vector3(2.4, 0.32, H - 0.3), tight: true, lastUsed: -99 });
     this.rigs = this.rigs.filter((r) => !this.exclude.includes(r.kind));
     this.cur = this.rigs[0];
   }
@@ -108,6 +113,10 @@ export class BroadcastDirector {
       if (cut) this.pendingHit = 0;
     }
     if (age >= this.shotLen) cut = true;
+    // A hammer or a post drifted into the line of sight: cut away soon.
+    if (blocked(this.pose.pos, this.action)) this.blockedFor += dt;
+    else this.blockedFor = 0;
+    if (this.blockedFor > 0.7 && age > 1.5) cut = true;
     this.cutFlag = false;
     if (cut) this.cutTo(this.choose(t, wantTight), t, wantTight);
 
@@ -135,6 +144,7 @@ export class BroadcastDirector {
       const ang = 2 * Math.atan((this.spread + 0.6) / Math.max(0.5, d));
       if (r.tight && ang > 1.3) s -= 4;
       if (r.kind === 'floor') s += d < 6 ? 1.5 : -3;
+      if (blocked(rp, this.action)) s -= 6;
       if (r.kind === 'handheld') s += 0.8;
       if (r.kind === 'wide') s += 0.6;
       if (tight) s += r.tight ? 3 + (r.kind === 'floor' ? 1 : 0) : -2;
@@ -249,4 +259,52 @@ export class BroadcastDirector {
   get rigName(): string {
     return this.cur.id;
   }
+}
+
+// ------------------------------------------------------------------ line of sight
+
+const POSTS: THREE.Vector2[] = [];
+{
+  const span = ARENA_HALF * 2 + WALL_T * 2;
+  const px = ARENA_HALF + WALL_T / 2 + 0.12;
+  for (const s of [-1, 1]) {
+    for (let i = 0; i <= 4; i++) {
+      const a = -ARENA_HALF - WALL_T + (i / 4) * span;
+      POSTS.push(new THREE.Vector2(a, s * px), new THREE.Vector2(s * px, a));
+    }
+  }
+}
+/** Raised hammer heads, where they hang most of the fight. */
+const HEADS = PULVERIZERS.map((p) => {
+  const d = new THREE.Vector3(p.center.x - p.pivot.x, 0, p.center.z - p.pivot.z).normalize();
+  return new THREE.Vector3(p.pivot.x, p.pivot.y, p.pivot.z)
+    .addScaledVector(d, Math.cos(PULVERIZER_RAISED) * p.arm)
+    .add(new THREE.Vector3(0, Math.sin(PULVERIZER_RAISED) * p.arm, 0));
+});
+const _s = new THREE.Vector3();
+const _ab = new THREE.Vector3();
+
+/** True when a post or a raised hammer sits between the camera and the action. */
+export function blocked(cam: THREE.Vector3, target: THREE.Vector3): boolean {
+  _ab.subVectors(target, cam);
+  const len2 = _ab.lengthSq();
+  if (len2 < 1e-4) return false;
+  for (const h of HEADS) {
+    const t = clamp(_s.subVectors(h, cam).dot(_ab) / len2, 0, 1);
+    _s.copy(cam).addScaledVector(_ab, t);
+    if (t > 0.05 && t < 0.95 && _s.distanceTo(h) < 0.75) return true;
+  }
+  const outside = Math.abs(cam.x) > ARENA_HALF + 0.3 || Math.abs(cam.z) > ARENA_HALF + 0.3;
+  if (!outside) return false;
+  const lx = _ab.x;
+  const lz = _ab.z;
+  const l2 = lx * lx + lz * lz;
+  for (const p of POSTS) {
+    const t = clamp(((p.x - cam.x) * lx + (p.y - cam.z) * lz) / l2, 0, 1);
+    const x = cam.x + lx * t;
+    const z = cam.z + lz * t;
+    const y = cam.y + _ab.y * t;
+    if (y < TRUSS_Y && (x - p.x) * (x - p.x) + (z - p.y) * (z - p.y) < 0.45 * 0.45) return true;
+  }
+  return false;
 }

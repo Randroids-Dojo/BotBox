@@ -37,13 +37,14 @@ export class TitleScene {
 
   /** Advance the camera path, logo and ambient hazards. Returns fx events to emit. */
   update(time: number, dt: number, _aspect: number, out: MatchEvent[]): void {
-    // Camera: a slow orbit that rises and dips over the Box.
-    const a = time * 0.06 + 0.6;
-    const r = 12.5 + Math.sin(time * 0.05) * 1.5;
-    const y = 4.6 + Math.sin(time * 0.09) * 1.4;
+    // Camera: a slow drift inside the dark Box, looking across the floor at the far wall and
+    // the crowd, rising and dipping under the beams.
+    const a = time * 0.045 + 0.5;
+    const r = 4.9 + Math.sin(time * 0.07) * 0.5;
+    const y = 2.3 + Math.sin(time * 0.09) * 0.6;
     this.pose.pos.set(Math.sin(a) * r, y, Math.cos(a) * r);
-    this.pose.target.set(Math.sin(a + 2.6) * 1.2, 1.2, Math.cos(a + 2.6) * 1.2);
-    this.pose.fov = 48;
+    this.pose.target.set(-Math.sin(a + 0.45) * 4.5, 1.9, -Math.cos(a + 0.45) * 4.5);
+    this.pose.fov = 52;
     this.pose.roll = Math.sin(time * 0.11) * 0.02;
     this.world.t = time;
 
@@ -72,7 +73,7 @@ export class TitleScene {
   /** Hang the logo in the upper part of the frame, facing the camera with a gentle sway. */
   placeLogo(cam: THREE.PerspectiveCamera, time: number): void {
     this.logo.update(time);
-    const d = 6;
+    const d = 3.4;
     cam.getWorldDirection(_f);
     _u.copy(cam.up).applyQuaternion(cam.quaternion);
     _r.crossVectors(_f, _u).normalize();

@@ -71,7 +71,7 @@ export function buildLightRig(fixtures: Fixture[], quality: Quality): LightRig {
   root.add(hemi);
 
   // Overhead key: cool white, high above the center, hard shadows.
-  const key = new THREE.SpotLight(0xe6efff, 300, 40, 0.62, 0.35, 1.2);
+  const key = new THREE.SpotLight(0xe6efff, 230, 40, 0.62, 0.35, 1.2);
   key.position.set(0.6, 17, 1.2);
   key.target.position.set(0, 0, 0);
   key.castShadow = true;
@@ -82,7 +82,7 @@ export function buildLightRig(fixtures: Fixture[], quality: Quality): LightRig {
   root.add(key, key.target);
 
   // Side key from the booth corner: steel blue, raking, long shadows.
-  const side = new THREE.SpotLight(0x9bb8ff, 200, 45, 0.42, 0.5, 1.2);
+  const side = new THREE.SpotLight(0x9bb8ff, 150, 45, 0.42, 0.5, 1.2);
   side.position.set(12, 12.5, 13);
   side.target.position.set(-1, 0, -1);
   side.shadow.bias = -0.0003;
@@ -144,8 +144,8 @@ export function buildLightRig(fixtures: Fixture[], quality: Quality): LightRig {
       rig.beams = beams;
     },
     setLevel(level) {
-      key.intensity = 300 * (0.05 + level * 0.95);
-      side.intensity = 200 * (0.25 + level * 0.75);
+      key.intensity = 230 * (0.05 + level * 0.95);
+      side.intensity = 150 * (0.25 + level * 0.75);
       for (const p of pools) p.intensity = 90 * (0.5 + level * 0.5);
       hemi.intensity = 0.12 * (0.4 + level * 0.6);
     },

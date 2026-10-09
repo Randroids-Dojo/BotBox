@@ -371,8 +371,8 @@ class LightTree {
       lens.position.set(0, y, 0.08);
       this.root.add(lens);
       this.lamps.push(mat);
-      const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: this.colors[i], blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
-      glow.scale.set(1.3, 1.3, 1);
+      const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: this.colors[i], blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.6 }));
+      glow.scale.set(0.75, 0.75, 1);
       glow.position.set(0, y, 0.2);
       glow.visible = false;
       this.root.add(glow);
@@ -386,7 +386,7 @@ class LightTree {
     this.shown = lights;
     for (let i = 0; i < 4; i++) {
       const on = i < 3 ? lights >= i + 1 && lights < 4 : lights === 4;
-      this.lamps[i].color.copy(this.colors[i]).multiplyScalar(on ? 24 : 0.05);
+      this.lamps[i].color.copy(this.colors[i]).multiplyScalar(on ? 12 : 0.05);
       this.glows[i].visible = on;
     }
   }

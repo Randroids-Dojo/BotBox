@@ -23,7 +23,7 @@ export class GarageScene {
   private turntable = new THREE.Group();
   private spin = 0;
   private yaw = 0.6;
-  private pitch = 0.32;
+  private pitch = 0.14;
   private size = 1;
   private center = new THREE.Vector3(0, 0.3, 0);
   private bannerCanvas: HTMLCanvasElement;
@@ -132,7 +132,7 @@ export class GarageScene {
     this.bannerCanvas = bc.c;
     this.bannerTex = canvasTexture(bc.c);
     const banner = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 0.8), new THREE.MeshStandardMaterial({ map: this.bannerTex, roughness: 0.8, side: THREE.DoubleSide }));
-    banner.position.set(1.7, 3.15, -3.12);
+    banner.position.set(-1.3, 3.15, -3.12);
     s.add(banner);
     // Safety sign.
     const sign = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.5), new THREE.MeshStandardMaterial({ map: safetySign(), roughness: 0.6 }));
@@ -292,14 +292,14 @@ export class GarageScene {
     if (this.view && this.frame) this.view.update(this.frame, dt);
     this.lamp.rotation.z = Math.sin(time * 0.6) * 0.02;
     // Distance so the robot spans about 38 percent of the frame width.
-    const fov = 36;
+    const fov = 30;
     const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov) / 2) * cam.aspect);
     const r = this.size * 0.62 + 0.15;
-    const dist = Math.max(1.8, r / (0.38 * Math.tan(hfov / 2)));
+    const dist = Math.max(2.0, r / (0.5 * Math.tan(hfov / 2)));
     const p = this.pose;
     p.pos.set(Math.sin(this.yaw) * Math.cos(this.pitch) * dist, this.center.y + Math.sin(this.pitch) * dist, Math.cos(this.yaw) * Math.cos(this.pitch) * dist);
     p.pos.add(this.center);
-    p.target.copy(this.center);
+    p.target.copy(this.center).setY(this.center.y + dist * 0.07);
     // Shift the robot into the left 60 percent: aim right of it.
     _d.subVectors(p.target, p.pos).normalize();
     _r.crossVectors(_d, new THREE.Vector3(0, 1, 0)).normalize();
@@ -313,7 +313,7 @@ export class GarageScene {
 function concreteTexture(rng: Rng): THREE.Texture {
   const S = 1024;
   const { c, g } = canvas(S);
-  g.fillStyle = '#6a655e';
+  g.fillStyle = '#4e4b47';
   g.fillRect(0, 0, S, S);
   g.globalCompositeOperation = 'multiply';
   g.globalAlpha = 0.6;
@@ -372,7 +372,7 @@ function blockTexture(): THREE.Texture {
       g.stroke();
     }
   }
-  return canvasTexture(c, { repeat: [6, 2.5] });
+  return canvasTexture(c, { repeat: [9, 3.6] });
 }
 
 function pegboardTexture(): THREE.Texture {

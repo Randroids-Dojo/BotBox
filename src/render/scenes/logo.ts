@@ -177,7 +177,7 @@ export function buildLogo(env: THREE.Texture): Logo {
   );
   const rimGeo = new THREE.ExtrudeGeometry(rimShape, { depth: 0.06, bevelEnabled: false });
   rimGeo.translate(0, 0, -0.2);
-  const rim = new THREE.Mesh(rimGeo, new THREE.MeshBasicMaterial({ color: new THREE.Color(4.5, 1.25, 0.05) }));
+  const rim = new THREE.Mesh(rimGeo, new THREE.MeshBasicMaterial({ color: new THREE.Color(3.2, 0.55, 0.0) }));
   root.add(rim);
   // Bolt heads in the plate corners.
   const boltGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.05, 6);

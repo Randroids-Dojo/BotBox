@@ -132,13 +132,13 @@ export function buildChromeEnv(renderer: THREE.WebGLRenderer): THREE.Texture {
         void main() {
           vec3 d = normalize(vP);
           float y = d.y;
-          vec3 top = vec3(0.55, 0.7, 1.1) * 2.2;
-          vec3 hor = vec3(2.6, 1.3, 0.45);
-          vec3 c = mix(hor, top, smoothstep(0.0, 0.5, y));
-          vec3 ground = mix(vec3(0.02), vec3(0.12, 0.08, 0.06), smoothstep(-0.25, 0.0, y));
+          // Deep blue just above the horizon, brightening to a pale sky overhead.
+          vec3 c = mix(vec3(0.05, 0.12, 0.42), vec3(1.6, 1.8, 2.2), smoothstep(0.05, 0.7, y));
+          // Warm earth just below, then black.
+          vec3 ground = mix(vec3(0.01), vec3(0.45, 0.2, 0.06), smoothstep(-0.35, 0.0, y));
           c = y > 0.0 ? c : ground;
-          // A thin bright line right at the horizon.
-          c += vec3(4.0, 3.2, 2.4) * exp(-abs(y) * 120.0);
+          // The hot horizon line that makes chrome read as chrome.
+          c += vec3(5.0, 4.2, 3.2) * exp(-abs(y - 0.02) * 90.0);
           gl_FragColor = vec4(c, 1.0);
         }`,
     }),
