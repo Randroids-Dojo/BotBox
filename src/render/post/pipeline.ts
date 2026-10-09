@@ -6,6 +6,7 @@ import {
   BloomEffect,
   EffectComposer,
   EffectPass,
+  KernelSize,
   RenderPass,
   SMAAEffect,
   SMAAPreset,
@@ -16,6 +17,7 @@ import {
 import * as THREE from 'three';
 import type { Quality } from '../types';
 import { BroadcastEffect } from './broadcast';
+import { SanitizeEffect } from './sanitize';
 
 export class PostPipeline {
   readonly composer: EffectComposer;
@@ -48,13 +50,16 @@ export class PostPipeline {
     this.ao.autoDetectTransparency = false;
     this.ao.configuration.transparencyAware = false;
     this.composer.addPass(this.ao);
+    this.composer.addPass(new EffectPass(camera, new SanitizeEffect()));
+    // Kawase blur, not the mipmap blur: the mipmap chain sometimes resolved to an all-black
+    // frame for one frame every few seconds (seen as flicker, on desktop and phones).
     this.bloom = new BloomEffect({
-      mipmapBlur: true,
+      mipmapBlur: false,
+      kernelSize: KernelSize.HUGE,
       luminanceThreshold: 1.7,
       luminanceSmoothing: 0.35,
-      intensity: 1.0,
-      radius: 0.72,
-      levels: 8,
+      intensity: 1.35,
+      resolutionScale: 0.5,
     });
     this.vignette = new VignetteEffect({ offset: 0.3, darkness: 0.62 });
     this.tone = new ToneMappingEffect({ mode: ToneMappingMode.ACES_FILMIC });
@@ -77,8 +82,8 @@ export class PostPipeline {
   setQuality(q: Quality): void {
     this.quality = q;
     this.ao.enabled = q === 'high';
-    this.bloom.mipmapBlurPass.levels = q === 'low' ? 5 : 8;
-    this.bloom.resolution.preferredHeight = q === 'low' ? 360 : 720;
+    this.bloom.blurPass.kernelSize = q === 'low' ? KernelSize.LARGE : KernelSize.HUGE;
+    this.bloom.resolution.scale = q === 'low' ? 0.35 : 0.5;
     this.smaa.applyPreset(q === 'low' ? SMAAPreset.LOW : q === 'medium' ? SMAAPreset.MEDIUM : SMAAPreset.HIGH);
   }
 
