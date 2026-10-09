@@ -4,7 +4,7 @@ import type { DriveCommand, MenuNav } from '../contract';
 import type { DriveMode } from '../ui/types';
 
 export type Device = 'keyboard' | 'gamepad' | 'touch' | 'mouse';
-export type Action = 'camera' | 'pause' | 'skip';
+export type Action = 'camera' | 'pause' | 'skip' | 'refresh';
 
 const NAV_KEYS: Record<string, MenuNav> = {
   ArrowUp: 'up',
@@ -159,6 +159,7 @@ export class Input {
     if (pressed(3)) this.emitAction('camera');
     if (pressed(9)) this.emitAction('pause');
     if (pressed(0) || pressed(9)) this.emitAction('skip');
+    if (pressed(8)) this.emitAction('refresh');
 
     this.padStick = stick;
     this.padButtons = { weapon: buttons[7] || buttons[0], selfRight: buttons[1] };
@@ -247,6 +248,7 @@ export class Input {
         if (e.code === 'KeyC') this.emitAction('camera');
         if (e.code === 'Escape' || e.code === 'KeyP') this.emitAction('pause');
         if (e.code === 'Enter' || e.code === 'Space' || e.code === 'Escape') this.emitAction('skip');
+        if (e.code === 'KeyR') this.emitAction('refresh');
       }
       const nav = NAV_KEYS[e.code];
       if (nav) this.emitMenu(nav);

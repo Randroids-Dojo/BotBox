@@ -48,6 +48,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   const player = setup.playerId ? match.bot(setup.playerId) ?? null : null;
   const cls = setup.entrants[0].spec.loadout.cls;
 
+  g.onCalm(false);
   stage.setScene('arena');
   stage.clearTransient();
   stage.setEntrants(setup.entrants.map((e) => ({ id: e.id, spec: e.spec, corner: e.corner, player: e.id === setup.playerId })));
@@ -228,6 +229,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     ui.hud(null);
     ui.bug(false);
     match.dispose();
+    g.onCalm(true);
     return { result: match.result ?? fallbackResult(match), playerWon: false, carried: player?.carried(), quit: true };
   }
 
@@ -353,6 +355,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   match.dispose();
   g.save.fights++;
   g.persist();
+  g.onCalm(true);
   return { result, playerWon, carried, quit: false };
 
   function introLines(e: Entrant): string[] {

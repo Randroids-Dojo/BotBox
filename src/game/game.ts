@@ -44,6 +44,8 @@ export class Game {
   readonly speed = Math.max(1, Number(params.get('speed') ?? 1));
   skipped = false;
   skipAll = false;
+  /** Told when it is (or stops being) a good moment to offer a refresh. */
+  onCalm: (calm: boolean) => void = () => {};
   private tick: Tick | null = null;
   private frameWaiters: (() => void)[] = [];
   private last = performance.now();

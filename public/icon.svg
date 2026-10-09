@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1e24"/>
+      <stop offset="1" stop-color="#050608"/>
+    </linearGradient>
+    <linearGradient id="chrome" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.38" stop-color="#b9c0c9"/>
+      <stop offset="0.5" stop-color="#5d646d"/>
+      <stop offset="0.62" stop-color="#d7dce2"/>
+      <stop offset="1" stop-color="#7d848d"/>
+    </linearGradient>
+    <linearGradient id="hole" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#050608"/>
+      <stop offset="1" stop-color="#2b2f36"/>
+    </linearGradient>
+    <pattern id="haz" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="20" height="40" fill="#ff6a00"/>
+      <rect x="20" width="20" height="40" fill="#111"/>
+    </pattern>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect x="0" y="404" width="512" height="44" fill="url(#haz)"/>
+  <polygon points="256,62 424,159 424,353 256,450 88,353 88,159" fill="url(#chrome)" stroke="#2b2f36" stroke-width="10"/>
+  <polygon points="256,96 394,176 394,336 256,416 118,336 118,176" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="4"/>
+  <circle cx="256" cy="256" r="92" fill="url(#hole)" stroke="#1a1d22" stroke-width="10"/>
+  <path d="M190 222 A92 92 0 0 1 322 222" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="10"/>
+  <circle cx="256" cy="256" r="44" fill="#ff6a00"/>
+  <circle cx="256" cy="256" r="44" fill="none" stroke="#ffd29a" stroke-width="6" stroke-opacity="0.8"/>
+</svg>
