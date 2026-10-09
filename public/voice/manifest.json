@@ -1,0 +1,2807 @@
+{
+  "version": 1,
+  "lines": {
+    "chuck.airborne.1": {
+      "file": "chuck/airborne-1.mp3",
+      "text": "LOOK AT THAT HANG TIME!",
+      "speaker": "Chuck",
+      "dur": 1.74
+    },
+    "chuck.airborne.2": {
+      "file": "chuck/airborne-2.mp3",
+      "text": "It's up! And it's GOOD!",
+      "speaker": "Chuck",
+      "dur": 2.73
+    },
+    "chuck.airborne.3": {
+      "file": "chuck/airborne-3.mp3",
+      "text": "He punted him! He punted him!",
+      "speaker": "Chuck",
+      "dur": 2.24
+    },
+    "chuck.airborne.4": {
+      "file": "chuck/airborne-4.mp3",
+      "text": "Up, up, and OUT of here!",
+      "speaker": "Chuck",
+      "dur": 2.0
+    },
+    "chuck.chase.1": {
+      "file": "chuck/chase-1.mp3",
+      "text": "He's on the run! Go get him!",
+      "speaker": "Chuck",
+      "dur": 1.85
+    },
+    "chuck.chase.2": {
+      "file": "chuck/chase-2.mp3",
+      "text": "Chase him down! Don't let him escape!",
+      "speaker": "Chuck",
+      "dur": 2.54
+    },
+    "chuck.chase.3": {
+      "file": "chuck/chase-3.mp3",
+      "text": "Breakaway! Somebody tackle him!",
+      "speaker": "Chuck",
+      "dur": 2.19
+    },
+    "chuck.chase.4": {
+      "file": "chuck/chase-4.mp3",
+      "text": "Run, baby, run! He's right behind you!",
+      "speaker": "Chuck",
+      "dur": 2.37
+    },
+    "chuck.count.1": {
+      "file": "chuck/count-1.mp3",
+      "text": "The count's on! Get up! Get up!",
+      "speaker": "Chuck",
+      "dur": 2.3
+    },
+    "chuck.count.2": {
+      "file": "chuck/count-2.mp3",
+      "text": "Move it! You gotta move!",
+      "speaker": "Chuck",
+      "dur": 1.67
+    },
+    "chuck.count.3": {
+      "file": "chuck/count-3.mp3",
+      "text": "Count's going! Show me something!",
+      "speaker": "Chuck",
+      "dur": 2.27
+    },
+    "chuck.count.4": {
+      "file": "chuck/count-4.mp3",
+      "text": "Get off the mat! Move!",
+      "speaker": "Chuck",
+      "dur": 1.95
+    },
+    "chuck.decision.1": {
+      "file": "chuck/decision-1.mp3",
+      "text": "Going to the judges! It's in their hands now!",
+      "speaker": "Chuck",
+      "dur": 2.84
+    },
+    "chuck.decision.2": {
+      "file": "chuck/decision-2.mp3",
+      "text": "Both still standing! Judges, your call!",
+      "speaker": "Chuck",
+      "dur": 2.98
+    },
+    "chuck.decision.3": {
+      "file": "chuck/decision-3.mp3",
+      "text": "Close one, Dale! Could go either way!",
+      "speaker": "Chuck",
+      "dur": 2.7
+    },
+    "chuck.decision.4": {
+      "file": "chuck/decision-4.mp3",
+      "text": "That's a full sixty minutes of football! Er, three. Three minutes.",
+      "speaker": "Chuck",
+      "dur": 6.05
+    },
+    "chuck.desk.1": {
+      "file": "chuck/desk-1.mp3",
+      "text": "Dale, I have been waiting all week for this!",
+      "speaker": "Chuck",
+      "dur": 2.77
+    },
+    "chuck.desk.2": {
+      "file": "chuck/desk-2.mp3",
+      "text": "Chuck Kowalski here, and Dale, I am fired up!",
+      "speaker": "Chuck",
+      "dur": 3.15
+    },
+    "chuck.desk.3": {
+      "file": "chuck/desk-3.mp3",
+      "text": "These robots came to play tonight, Dale. I can feel it.",
+      "speaker": "Chuck",
+      "dur": 3.5
+    },
+    "chuck.desk.4": {
+      "file": "chuck/desk-4.mp3",
+      "text": "Big night, Dale. Big night. I barely slept.",
+      "speaker": "Chuck",
+      "dur": 3.6
+    },
+    "chuck.desk.5": {
+      "file": "chuck/desk-5.mp3",
+      "text": "I watched film on every one of these robots. Twice.",
+      "speaker": "Chuck",
+      "dur": 3.33
+    },
+    "chuck.drivedown.1": {
+      "file": "chuck/drivedown-1.mp3",
+      "text": "He's running in circles! Lost a drive!",
+      "speaker": "Chuck",
+      "dur": 2.68
+    },
+    "chuck.drivedown.2": {
+      "file": "chuck/drivedown-2.mp3",
+      "text": "One side's dead! He can't go straight!",
+      "speaker": "Chuck",
+      "dur": 2.85
+    },
+    "chuck.drivedown.3": {
+      "file": "chuck/drivedown-3.mp3",
+      "text": "He's limping! Only one side pushing!",
+      "speaker": "Chuck",
+      "dur": 2.48
+    },
+    "chuck.drivedown.4": {
+      "file": "chuck/drivedown-4.mp3",
+      "text": "Spinning in place! That's a bad ankle!",
+      "speaker": "Chuck",
+      "dur": 2.69
+    },
+    "chuck.fire.1": {
+      "file": "chuck/fire-1.mp3",
+      "text": "IT'S ON FIRE! IT'S ON FIRE!",
+      "speaker": "Chuck",
+      "dur": 2.5
+    },
+    "chuck.fire.2": {
+      "file": "chuck/fire-2.mp3",
+      "text": "Flames! Get the extinguisher!",
+      "speaker": "Chuck",
+      "dur": 2.29
+    },
+    "chuck.fire.3": {
+      "file": "chuck/fire-3.mp3",
+      "text": "He's burning up out there!",
+      "speaker": "Chuck",
+      "dur": 1.68
+    },
+    "chuck.fire.4": {
+      "file": "chuck/fire-4.mp3",
+      "text": "Fire! That battery is cooked!",
+      "speaker": "Chuck",
+      "dur": 2.23
+    },
+    "chuck.flip.1": {
+      "file": "chuck/flip-1.mp3",
+      "text": "FLIPPED! Right on its back!",
+      "speaker": "Chuck",
+      "dur": 2.1
+    },
+    "chuck.flip.2": {
+      "file": "chuck/flip-2.mp3",
+      "text": "Turned him over like a fumble!",
+      "speaker": "Chuck",
+      "dur": 1.74
+    },
+    "chuck.flip.3": {
+      "file": "chuck/flip-3.mp3",
+      "text": "Upside down! That's a turnover!",
+      "speaker": "Chuck",
+      "dur": 2.7
+    },
+    "chuck.flip.4": {
+      "file": "chuck/flip-4.mp3",
+      "text": "He's on his back! Get up!",
+      "speaker": "Chuck",
+      "dur": 2.32
+    },
+    "chuck.hit.1": {
+      "file": "chuck/hit-1.mp3",
+      "text": "Big hit! Big hit!",
+      "speaker": "Chuck",
+      "dur": 2.08
+    },
+    "chuck.hit.2": {
+      "file": "chuck/hit-2.mp3",
+      "text": "Oh, he got popped!",
+      "speaker": "Chuck",
+      "dur": 1.72
+    },
+    "chuck.hit.3": {
+      "file": "chuck/hit-3.mp3",
+      "text": "That's a clean shot right there!",
+      "speaker": "Chuck",
+      "dur": 1.99
+    },
+    "chuck.hit.4": {
+      "file": "chuck/hit-4.mp3",
+      "text": "Ooh, right in the numbers!",
+      "speaker": "Chuck",
+      "dur": 1.64
+    },
+    "chuck.hit.5": {
+      "file": "chuck/hit-5.mp3",
+      "text": "Somebody get that robot a helmet!",
+      "speaker": "Chuck",
+      "dur": 1.98
+    },
+    "chuck.huge.1": {
+      "file": "chuck/huge-1.mp3",
+      "text": "OH! He got DESTROYED!",
+      "speaker": "Chuck",
+      "dur": 2.21
+    },
+    "chuck.huge.2": {
+      "file": "chuck/huge-2.mp3",
+      "text": "That is a hall of fame hit, Dale!",
+      "speaker": "Chuck",
+      "dur": 2.26
+    },
+    "chuck.huge.3": {
+      "file": "chuck/huge-3.mp3",
+      "text": "Call the trainer! Call the trainer!",
+      "speaker": "Chuck",
+      "dur": 2.11
+    },
+    "chuck.huge.4": {
+      "file": "chuck/huge-4.mp3",
+      "text": "I felt that one in my knees!",
+      "speaker": "Chuck",
+      "dur": 1.86
+    },
+    "chuck.huge.5": {
+      "file": "chuck/huge-5.mp3",
+      "text": "That's a SACK! That is a sack!",
+      "speaker": "Chuck",
+      "dur": 3.11
+    },
+    "chuck.idle.1": {
+      "file": "chuck/idle-1.mp3",
+      "text": "You know, Dale, a robot is a lot like a lineman. Low center of gravity wins.",
+      "speaker": "Chuck",
+      "dur": 4.95
+    },
+    "chuck.idle.2": {
+      "file": "chuck/idle-2.mp3",
+      "text": "These builders practice all year. That's dedication. That's heart.",
+      "speaker": "Chuck",
+      "dur": 4.28
+    },
+    "chuck.idle.3": {
+      "file": "chuck/idle-3.mp3",
+      "text": "In my playing days, I would have loved a hammer like that Pulverizer.",
+      "speaker": "Chuck",
+      "dur": 3.96
+    },
+    "chuck.idle.4": {
+      "file": "chuck/idle-4.mp3",
+      "text": "Driving a robot is all about vision. You gotta read the field.",
+      "speaker": "Chuck",
+      "dur": 3.94
+    },
+    "chuck.idle.5": {
+      "file": "chuck/idle-5.mp3",
+      "text": "I talked to the teams in the pits. These folks are tough, Dale.",
+      "speaker": "Chuck",
+      "dur": 3.74
+    },
+    "chuck.idle.6": {
+      "file": "chuck/idle-6.mp3",
+      "text": "Defense wins championships. Armor is defense. It's that simple.",
+      "speaker": "Chuck",
+      "dur": 5.06
+    },
+    "chuck.idle.7": {
+      "file": "chuck/idle-7.mp3",
+      "text": "I've been hit hard, Dale. Real hard. Nothing like these robots, though.",
+      "speaker": "Chuck",
+      "dur": 4.3
+    },
+    "chuck.idle.8": {
+      "file": "chuck/idle-8.mp3",
+      "text": "You gotta respect the hustle. Every robot out here earned its spot.",
+      "speaker": "Chuck",
+      "dur": 3.92
+    },
+    "chuck.intro.1": {
+      "file": "chuck/intro-1.mp3",
+      "text": "This is a great matchup, Dale. Strength on strength.",
+      "speaker": "Chuck",
+      "dur": 3.29
+    },
+    "chuck.intro.2": {
+      "file": "chuck/intro-2.mp3",
+      "text": "Both teams look ready. I can feel it.",
+      "speaker": "Chuck",
+      "dur": 2.38
+    },
+    "chuck.intro.3": {
+      "file": "chuck/intro-3.mp3",
+      "text": "Gotta win the battle in the trenches here.",
+      "speaker": "Chuck",
+      "dur": 2.0
+    },
+    "chuck.intro.4": {
+      "file": "chuck/intro-4.mp3",
+      "text": "Watch the first ten seconds. That sets the tone.",
+      "speaker": "Chuck",
+      "dur": 2.61
+    },
+    "chuck.intro.5": {
+      "file": "chuck/intro-5.mp3",
+      "text": "Game faces on! Let's see what they got!",
+      "speaker": "Chuck",
+      "dur": 2.78
+    },
+    "chuck.ko.1": {
+      "file": "chuck/ko-1.mp3",
+      "text": "KNOCKOUT! That's game!",
+      "speaker": "Chuck",
+      "dur": 2.0
+    },
+    "chuck.ko.2": {
+      "file": "chuck/ko-2.mp3",
+      "text": "He's out! It's over!",
+      "speaker": "Chuck",
+      "dur": 1.96
+    },
+    "chuck.ko.3": {
+      "file": "chuck/ko-3.mp3",
+      "text": "That's lights out, baby!",
+      "speaker": "Chuck",
+      "dur": 1.53
+    },
+    "chuck.ko.4": {
+      "file": "chuck/ko-4.mp3",
+      "text": "Game over! Hit the showers!",
+      "speaker": "Chuck",
+      "dur": 2.56
+    },
+    "chuck.panel.1": {
+      "file": "chuck/panel-1.mp3",
+      "text": "Ripped the armor right off!",
+      "speaker": "Chuck",
+      "dur": 1.83
+    },
+    "chuck.panel.2": {
+      "file": "chuck/panel-2.mp3",
+      "text": "There goes the shoulder pad!",
+      "speaker": "Chuck",
+      "dur": 1.61
+    },
+    "chuck.panel.3": {
+      "file": "chuck/panel-3.mp3",
+      "text": "Armor's gone! He's exposed now!",
+      "speaker": "Chuck",
+      "dur": 2.57
+    },
+    "chuck.panel.4": {
+      "file": "chuck/panel-4.mp3",
+      "text": "Panel's off! Go after that side!",
+      "speaker": "Chuck",
+      "dur": 2.55
+    },
+    "chuck.pin.1": {
+      "file": "chuck/pin-1.mp3",
+      "text": "He's got him pinned! Drive, drive!",
+      "speaker": "Chuck",
+      "dur": 2.8
+    },
+    "chuck.pin.2": {
+      "file": "chuck/pin-2.mp3",
+      "text": "He's carrying him like a fullback!",
+      "speaker": "Chuck",
+      "dur": 1.98
+    },
+    "chuck.pin.3": {
+      "file": "chuck/pin-3.mp3",
+      "text": "Pinned! Push him to the hazards!",
+      "speaker": "Chuck",
+      "dur": 2.34
+    },
+    "chuck.pin.4": {
+      "file": "chuck/pin-4.mp3",
+      "text": "Bear hug! Don't let go!",
+      "speaker": "Chuck",
+      "dur": 1.96
+    },
+    "chuck.pulverizer.1": {
+      "file": "chuck/pulverizer-1.mp3",
+      "text": "PULVERIZER! Right on the helmet!",
+      "speaker": "Chuck",
+      "dur": 2.62
+    },
+    "chuck.pulverizer.2": {
+      "file": "chuck/pulverizer-2.mp3",
+      "text": "Big hammer! Big damage!",
+      "speaker": "Chuck",
+      "dur": 2.16
+    },
+    "chuck.pulverizer.3": {
+      "file": "chuck/pulverizer-3.mp3",
+      "text": "That hammer does not miss!",
+      "speaker": "Chuck",
+      "dur": 1.99
+    },
+    "chuck.pulverizer.4": {
+      "file": "chuck/pulverizer-4.mp3",
+      "text": "Oh, he got hammered! Literally!",
+      "speaker": "Chuck",
+      "dur": 2.44
+    },
+    "chuck.ramrod.1": {
+      "file": "chuck/ramrod-1.mp3",
+      "text": "Ramrods! Right in the belly!",
+      "speaker": "Chuck",
+      "dur": 2.25
+    },
+    "chuck.ramrod.2": {
+      "file": "chuck/ramrod-2.mp3",
+      "text": "The floor came up and got him!",
+      "speaker": "Chuck",
+      "dur": 1.8
+    },
+    "chuck.ramrod.3": {
+      "file": "chuck/ramrod-3.mp3",
+      "text": "Ooh, spikes from below! Cheap shot!",
+      "speaker": "Chuck",
+      "dur": 2.7
+    },
+    "chuck.ramrod.4": {
+      "file": "chuck/ramrod-4.mp3",
+      "text": "Ramrods! Clipped from underneath!",
+      "speaker": "Chuck",
+      "dur": 2.47
+    },
+    "chuck.righted.1": {
+      "file": "chuck/righted-1.mp3",
+      "text": "He's back up! What a comeback!",
+      "speaker": "Chuck",
+      "dur": 2.32
+    },
+    "chuck.righted.2": {
+      "file": "chuck/righted-2.mp3",
+      "text": "Back on his feet! Get in there!",
+      "speaker": "Chuck",
+      "dur": 2.15
+    },
+    "chuck.righted.3": {
+      "file": "chuck/righted-3.mp3",
+      "text": "He shook it off! Tough kid!",
+      "speaker": "Chuck",
+      "dur": 2.53
+    },
+    "chuck.righted.4": {
+      "file": "chuck/righted-4.mp3",
+      "text": "Righted! The drive is still alive!",
+      "speaker": "Chuck",
+      "dur": 2.75
+    },
+    "chuck.rookie.1": {
+      "file": "chuck/rookie-1.mp3",
+      "text": "Love this rookie team. Hungry. Raw talent.",
+      "speaker": "Chuck",
+      "dur": 3.47
+    },
+    "chuck.rookie.2": {
+      "file": "chuck/rookie-2.mp3",
+      "text": "First time in the Box! Welcome to the big leagues!",
+      "speaker": "Chuck",
+      "dur": 3.13
+    },
+    "chuck.rookie.3": {
+      "file": "chuck/rookie-3.mp3",
+      "text": "The rookie's got heart, Dale. You can't coach heart.",
+      "speaker": "Chuck",
+      "dur": 3.04
+    },
+    "chuck.rookie.4": {
+      "file": "chuck/rookie-4.mp3",
+      "text": "Rookie season! I remember mine. I threw four interceptions.",
+      "speaker": "Chuck",
+      "dur": 4.08
+    },
+    "chuck.rookie.5": {
+      "file": "chuck/rookie-5.mp3",
+      "text": "Give this rookie a chance. They might surprise you.",
+      "speaker": "Chuck",
+      "dur": 2.83
+    },
+    "chuck.saw.1": {
+      "file": "chuck/saw-1.mp3",
+      "text": "Right into the saws! Brutal!",
+      "speaker": "Chuck",
+      "dur": 2.52
+    },
+    "chuck.saw.2": {
+      "file": "chuck/saw-2.mp3",
+      "text": "The killsaws are in the game!",
+      "speaker": "Chuck",
+      "dur": 1.85
+    },
+    "chuck.saw.3": {
+      "file": "chuck/saw-3.mp3",
+      "text": "Sparks everywhere! That's gotta hurt!",
+      "speaker": "Chuck",
+      "dur": 2.65
+    },
+    "chuck.saw.4": {
+      "file": "chuck/saw-4.mp3",
+      "text": "He drove right over the saws!",
+      "speaker": "Chuck",
+      "dur": 1.95
+    },
+    "chuck.smoke.1": {
+      "file": "chuck/smoke-1.mp3",
+      "text": "It's smoking! Something's fried!",
+      "speaker": "Chuck",
+      "dur": 2.24
+    },
+    "chuck.smoke.2": {
+      "file": "chuck/smoke-2.mp3",
+      "text": "Smoke! That motor is hurting!",
+      "speaker": "Chuck",
+      "dur": 2.43
+    },
+    "chuck.smoke.3": {
+      "file": "chuck/smoke-3.mp3",
+      "text": "He's smoking! Running on fumes!",
+      "speaker": "Chuck",
+      "dur": 2.5
+    },
+    "chuck.smoke.4": {
+      "file": "chuck/smoke-4.mp3",
+      "text": "Smoke coming out! He's hurt, Dale!",
+      "speaker": "Chuck",
+      "dur": 2.24
+    },
+    "chuck.spikes.1": {
+      "file": "chuck/spikes-1.mp3",
+      "text": "Into the spikes! That's a body slam!",
+      "speaker": "Chuck",
+      "dur": 2.69
+    },
+    "chuck.spikes.2": {
+      "file": "chuck/spikes-2.mp3",
+      "text": "He drove him right into the spikes!",
+      "speaker": "Chuck",
+      "dur": 2.09
+    },
+    "chuck.spikes.3": {
+      "file": "chuck/spikes-3.mp3",
+      "text": "Rammed into the spike wall! Ugh!",
+      "speaker": "Chuck",
+      "dur": 2.58
+    },
+    "chuck.spikes.4": {
+      "file": "chuck/spikes-4.mp3",
+      "text": "Up against the spikes! Bad spot!",
+      "speaker": "Chuck",
+      "dur": 2.64
+    },
+    "chuck.spinup.1": {
+      "file": "chuck/spinup-1.mp3",
+      "text": "Listen to that weapon wind up!",
+      "speaker": "Chuck",
+      "dur": 2.13
+    },
+    "chuck.spinup.2": {
+      "file": "chuck/spinup-2.mp3",
+      "text": "Spinner's up to speed! Look out!",
+      "speaker": "Chuck",
+      "dur": 2.28
+    },
+    "chuck.spinup.3": {
+      "file": "chuck/spinup-3.mp3",
+      "text": "That thing is screaming!",
+      "speaker": "Chuck",
+      "dur": 1.76
+    },
+    "chuck.spinup.4": {
+      "file": "chuck/spinup-4.mp3",
+      "text": "Hear that? That is pure power!",
+      "speaker": "Chuck",
+      "dur": 2.34
+    },
+    "chuck.start.1": {
+      "file": "chuck/start-1.mp3",
+      "text": "Here we go! Hike!",
+      "speaker": "Chuck",
+      "dur": 1.88
+    },
+    "chuck.start.2": {
+      "file": "chuck/start-2.mp3",
+      "text": "Ball is snapped! Let's go!",
+      "speaker": "Chuck",
+      "dur": 1.86
+    },
+    "chuck.start.3": {
+      "file": "chuck/start-3.mp3",
+      "text": "And they come off the line hard!",
+      "speaker": "Chuck",
+      "dur": 1.88
+    },
+    "chuck.start.4": {
+      "file": "chuck/start-4.mp3",
+      "text": "Kickoff! Somebody's getting hit!",
+      "speaker": "Chuck",
+      "dur": 2.36
+    },
+    "chuck.start.5": {
+      "file": "chuck/start-5.mp3",
+      "text": "Game time, baby! Let's go!",
+      "speaker": "Chuck",
+      "dur": 2.41
+    },
+    "chuck.timelow.1": {
+      "file": "chuck/timelow-1.mp3",
+      "text": "Thirty seconds! This is crunch time!",
+      "speaker": "Chuck",
+      "dur": 2.79
+    },
+    "chuck.timelow.2": {
+      "file": "chuck/timelow-2.mp3",
+      "text": "Thirty left! Leave it all on the field!",
+      "speaker": "Chuck",
+      "dur": 2.44
+    },
+    "chuck.timelow.3": {
+      "file": "chuck/timelow-3.mp3",
+      "text": "Under thirty! Gotta make a play!",
+      "speaker": "Chuck",
+      "dur": 2.3
+    },
+    "chuck.timelow.4": {
+      "file": "chuck/timelow-4.mp3",
+      "text": "Clock's running down! Go, go, go!",
+      "speaker": "Chuck",
+      "dur": 2.31
+    },
+    "chuck.upset.1": {
+      "file": "chuck/upset-1.mp3",
+      "text": "Upset! We've got an upset brewing!",
+      "speaker": "Chuck",
+      "dur": 2.67
+    },
+    "chuck.upset.2": {
+      "file": "chuck/upset-2.mp3",
+      "text": "The underdog's got some fight!",
+      "speaker": "Chuck",
+      "dur": 1.99
+    },
+    "chuck.upset.3": {
+      "file": "chuck/upset-3.mp3",
+      "text": "Nobody gave him a chance! Look at him now!",
+      "speaker": "Chuck",
+      "dur": 2.59
+    },
+    "chuck.upset.4": {
+      "file": "chuck/upset-4.mp3",
+      "text": "This is a Cinderella story, Dale!",
+      "speaker": "Chuck",
+      "dur": 2.4
+    },
+    "chuck.wall.1": {
+      "file": "chuck/wall-1.mp3",
+      "text": "Into the boards! What a check!",
+      "speaker": "Chuck",
+      "dur": 2.04
+    },
+    "chuck.wall.2": {
+      "file": "chuck/wall-2.mp3",
+      "text": "Slammed him into the wall!",
+      "speaker": "Chuck",
+      "dur": 1.73
+    },
+    "chuck.wall.3": {
+      "file": "chuck/wall-3.mp3",
+      "text": "Pinned on the sideline! Good effort!",
+      "speaker": "Chuck",
+      "dur": 2.6
+    },
+    "chuck.wall.4": {
+      "file": "chuck/wall-4.mp3",
+      "text": "He ran him right out of bounds!",
+      "speaker": "Chuck",
+      "dur": 1.94
+    },
+    "chuck.weapondown.1": {
+      "file": "chuck/weapondown-1.mp3",
+      "text": "The weapon's dead! No offense left!",
+      "speaker": "Chuck",
+      "dur": 2.45
+    },
+    "chuck.weapondown.2": {
+      "file": "chuck/weapondown-2.mp3",
+      "text": "Weapon's down! Gotta play defense now!",
+      "speaker": "Chuck",
+      "dur": 2.62
+    },
+    "chuck.weapondown.3": {
+      "file": "chuck/weapondown-3.mp3",
+      "text": "Lost the weapon! No passing game!",
+      "speaker": "Chuck",
+      "dur": 2.81
+    },
+    "chuck.weapondown.4": {
+      "file": "chuck/weapondown-4.mp3",
+      "text": "That weapon is done for the day!",
+      "speaker": "Chuck",
+      "dur": 2.06
+    },
+    "chuck.wheel.1": {
+      "file": "chuck/wheel-1.mp3",
+      "text": "Knocked the wheel clean off!",
+      "speaker": "Chuck",
+      "dur": 1.79
+    },
+    "chuck.wheel.2": {
+      "file": "chuck/wheel-2.mp3",
+      "text": "He lost a wheel! That's an injury!",
+      "speaker": "Chuck",
+      "dur": 2.48
+    },
+    "chuck.wheel.3": {
+      "file": "chuck/wheel-3.mp3",
+      "text": "Wheel's gone! That's a blown knee!",
+      "speaker": "Chuck",
+      "dur": 2.68
+    },
+    "chuck.wheel.4": {
+      "file": "chuck/wheel-4.mp3",
+      "text": "There goes the tire! Ouch!",
+      "speaker": "Chuck",
+      "dur": 2.1
+    },
+    "chuck.whiff.1": {
+      "file": "chuck/whiff-1.mp3",
+      "text": "Swing and a miss!",
+      "speaker": "Chuck",
+      "dur": 1.34
+    },
+    "chuck.whiff.2": {
+      "file": "chuck/whiff-2.mp3",
+      "text": "Whiffed it! Gotta wrap up!",
+      "speaker": "Chuck",
+      "dur": 1.95
+    },
+    "chuck.whiff.3": {
+      "file": "chuck/whiff-3.mp3",
+      "text": "Missed! He overran the play!",
+      "speaker": "Chuck",
+      "dur": 2.14
+    },
+    "chuck.whiff.4": {
+      "file": "chuck/whiff-4.mp3",
+      "text": "Ooh, too early! Jumped offsides!",
+      "speaker": "Chuck",
+      "dur": 2.43
+    },
+    "dale.airborne.1": {
+      "file": "dale/airborne-1.mp3",
+      "text": "And it's flying! Robots can fly now!",
+      "speaker": "Dale",
+      "dur": 2.16
+    },
+    "dale.airborne.2": {
+      "file": "dale/airborne-2.mp3",
+      "text": "Somebody call air traffic control.",
+      "speaker": "Dale",
+      "dur": 1.59
+    },
+    "dale.airborne.3": {
+      "file": "dale/airborne-3.mp3",
+      "text": "Look at it go! Bye!",
+      "speaker": "Dale",
+      "dur": 1.64
+    },
+    "dale.airborne.4": {
+      "file": "dale/airborne-4.mp3",
+      "text": "That's some serious hang time.",
+      "speaker": "Dale",
+      "dur": 1.6
+    },
+    "dale.airborne.5": {
+      "file": "dale/airborne-5.mp3",
+      "text": "Airborne! Fasten your seatbelts!",
+      "speaker": "Dale",
+      "dur": 2.21
+    },
+    "dale.bumper.1": {
+      "file": "dale/bumper-1.mp3",
+      "text": "We'll be right back.",
+      "speaker": "Dale",
+      "dur": 0.88
+    },
+    "dale.bumper.2": {
+      "file": "dale/bumper-2.mp3",
+      "text": "Don't go anywhere. BotBox will be right back.",
+      "speaker": "Dale",
+      "dur": 2.44
+    },
+    "dale.bumper.3": {
+      "file": "dale/bumper-3.mp3",
+      "text": "Stick around. More robot violence after this.",
+      "speaker": "Dale",
+      "dur": 2.64
+    },
+    "dale.bumper.4": {
+      "file": "dale/bumper-4.mp3",
+      "text": "We'll be right back, after a word from people with money.",
+      "speaker": "Dale",
+      "dur": 3.07
+    },
+    "dale.chase.1": {
+      "file": "dale/chase-1.mp3",
+      "text": "And the chase is on. Run, robot, run.",
+      "speaker": "Dale",
+      "dur": 2.67
+    },
+    "dale.chase.2": {
+      "file": "dale/chase-2.mp3",
+      "text": "One's running, one's chasing. It's a cartoon.",
+      "speaker": "Dale",
+      "dur": 2.61
+    },
+    "dale.chase.3": {
+      "file": "dale/chase-3.mp3",
+      "text": "This is a chase scene now.",
+      "speaker": "Dale",
+      "dur": 1.45
+    },
+    "dale.chase.4": {
+      "file": "dale/chase-4.mp3",
+      "text": "Look at it run. Smart, honestly.",
+      "speaker": "Dale",
+      "dur": 1.97
+    },
+    "dale.count.1": {
+      "file": "dale/count-1.mp3",
+      "text": "And the count is on.",
+      "speaker": "Dale",
+      "dur": 2.19
+    },
+    "dale.count.2": {
+      "file": "dale/count-2.mp3",
+      "text": "Uh oh. We have a count.",
+      "speaker": "Dale",
+      "dur": 1.48
+    },
+    "dale.count.3": {
+      "file": "dale/count-3.mp3",
+      "text": "It's not moving. Come on, little guy.",
+      "speaker": "Dale",
+      "dur": 2.37
+    },
+    "dale.count.4": {
+      "file": "dale/count-4.mp3",
+      "text": "Count's going. Somebody wiggle.",
+      "speaker": "Dale",
+      "dur": 1.68
+    },
+    "dale.decision.1": {
+      "file": "dale/decision-1.mp3",
+      "text": "And we're going to the judges. Fun.",
+      "speaker": "Dale",
+      "dur": 2.16
+    },
+    "dale.decision.2": {
+      "file": "dale/decision-2.mp3",
+      "text": "Nobody's dead, so the judges decide.",
+      "speaker": "Dale",
+      "dur": 2.34
+    },
+    "dale.decision.3": {
+      "file": "dale/decision-3.mp3",
+      "text": "Time for the judges. Everybody look nervous.",
+      "speaker": "Dale",
+      "dur": 2.38
+    },
+    "dale.decision.4": {
+      "file": "dale/decision-4.mp3",
+      "text": "It's up to the judges. I'd bribe them, but they're honest.",
+      "speaker": "Dale",
+      "dur": 3.07
+    },
+    "dale.desk.1": {
+      "file": "dale/desk-1.mp3",
+      "text": "Welcome to BotBox. I'm Dale Pruitt, and yes, this is my real job.",
+      "speaker": "Dale",
+      "dur": 4.19
+    },
+    "dale.desk.2": {
+      "file": "dale/desk-2.mp3",
+      "text": "Good evening. I'm Dale Pruitt. Tonight, robots fight and I make jokes about it.",
+      "speaker": "Dale",
+      "dur": 4.11
+    },
+    "dale.desk.3": {
+      "file": "dale/desk-3.mp3",
+      "text": "Welcome back to the Box. With me as always, the Cannon himself, Chuck Kowalski.",
+      "speaker": "Dale",
+      "dur": 4.78
+    },
+    "dale.desk.4": {
+      "file": "dale/desk-4.mp3",
+      "text": "Hi, I'm Dale. My mom thinks I host a cooking show.",
+      "speaker": "Dale",
+      "dur": 2.66
+    },
+    "dale.desk.5": {
+      "file": "dale/desk-5.mp3",
+      "text": "Tonight's robots have saws, hammers and flamethrowers. Well, no flamethrowers. Yet.",
+      "speaker": "Dale",
+      "dur": 5.16
+    },
+    "dale.drivedown.1": {
+      "file": "dale/drivedown-1.mp3",
+      "text": "It's driving in circles. We've all been there.",
+      "speaker": "Dale",
+      "dur": 2.43
+    },
+    "dale.drivedown.2": {
+      "file": "dale/drivedown-2.mp3",
+      "text": "Lost a drive side. Round and round we go.",
+      "speaker": "Dale",
+      "dur": 2.67
+    },
+    "dale.drivedown.3": {
+      "file": "dale/drivedown-3.mp3",
+      "text": "It drives like a broken shopping cart.",
+      "speaker": "Dale",
+      "dur": 1.96
+    },
+    "dale.drivedown.4": {
+      "file": "dale/drivedown-4.mp3",
+      "text": "Look at it spin. It's having a moment.",
+      "speaker": "Dale",
+      "dur": 2.23
+    },
+    "dale.fire.1": {
+      "file": "dale/fire-1.mp3",
+      "text": "And it's on fire. That's bad, right?",
+      "speaker": "Dale",
+      "dur": 2.17
+    },
+    "dale.fire.2": {
+      "file": "dale/fire-2.mp3",
+      "text": "Something's cooking, and it's not dinner.",
+      "speaker": "Dale",
+      "dur": 2.04
+    },
+    "dale.fire.3": {
+      "file": "dale/fire-3.mp3",
+      "text": "Fire! Robots shouldn't do that!",
+      "speaker": "Dale",
+      "dur": 1.86
+    },
+    "dale.fire.4": {
+      "file": "dale/fire-4.mp3",
+      "text": "Is anyone else smelling barbecue?",
+      "speaker": "Dale",
+      "dur": 1.75
+    },
+    "dale.fire.5": {
+      "file": "dale/fire-5.mp3",
+      "text": "Well, now it's a campfire.",
+      "speaker": "Dale",
+      "dur": 1.46
+    },
+    "dale.flip.1": {
+      "file": "dale/flip-1.mp3",
+      "text": "And it's upside down. Classic.",
+      "speaker": "Dale",
+      "dur": 2.24
+    },
+    "dale.flip.2": {
+      "file": "dale/flip-2.mp3",
+      "text": "Flipped like a pancake.",
+      "speaker": "Dale",
+      "dur": 1.32
+    },
+    "dale.flip.3": {
+      "file": "dale/flip-3.mp3",
+      "text": "Well, now it's a turtle.",
+      "speaker": "Dale",
+      "dur": 1.43
+    },
+    "dale.flip.4": {
+      "file": "dale/flip-4.mp3",
+      "text": "Wheels up. Not ideal.",
+      "speaker": "Dale",
+      "dur": 1.76
+    },
+    "dale.flip.5": {
+      "file": "dale/flip-5.mp3",
+      "text": "That's one way to see the ceiling.",
+      "speaker": "Dale",
+      "dur": 1.68
+    },
+    "dale.hit.1": {
+      "file": "dale/hit-1.mp3",
+      "text": "Ooh, that one left a mark.",
+      "speaker": "Dale",
+      "dur": 1.61
+    },
+    "dale.hit.2": {
+      "file": "dale/hit-2.mp3",
+      "text": "Well, that's a dent.",
+      "speaker": "Dale",
+      "dur": 1.05
+    },
+    "dale.hit.3": {
+      "file": "dale/hit-3.mp3",
+      "text": "Hey, that worked!",
+      "speaker": "Dale",
+      "dur": 1.25
+    },
+    "dale.hit.4": {
+      "file": "dale/hit-4.mp3",
+      "text": "Somebody felt that.",
+      "speaker": "Dale",
+      "dur": 1.17
+    },
+    "dale.hit.5": {
+      "file": "dale/hit-5.mp3",
+      "text": "That's gonna need a bandage. A metal one.",
+      "speaker": "Dale",
+      "dur": 2.33
+    },
+    "dale.huge.1": {
+      "file": "dale/huge-1.mp3",
+      "text": "Oh! Oh my goodness!",
+      "speaker": "Dale",
+      "dur": 1.8
+    },
+    "dale.huge.2": {
+      "file": "dale/huge-2.mp3",
+      "text": "Whoa! Okay, I'm awake now!",
+      "speaker": "Dale",
+      "dur": 2.25
+    },
+    "dale.huge.3": {
+      "file": "dale/huge-3.mp3",
+      "text": "Holy cow! Did you see that?",
+      "speaker": "Dale",
+      "dur": 1.91
+    },
+    "dale.huge.4": {
+      "file": "dale/huge-4.mp3",
+      "text": "That is going in the highlight reel!",
+      "speaker": "Dale",
+      "dur": 1.99
+    },
+    "dale.huge.5": {
+      "file": "dale/huge-5.mp3",
+      "text": "Oh, come on! That's just rude!",
+      "speaker": "Dale",
+      "dur": 2.0
+    },
+    "dale.idle.1": {
+      "file": "dale/idle-1.mp3",
+      "text": "These builders spent a whole year on this. And a lot of duct tape.",
+      "speaker": "Dale",
+      "dur": 3.86
+    },
+    "dale.idle.2": {
+      "file": "dale/idle-2.mp3",
+      "text": "Fun fact. Most of these robots were built in a garage. Most of these builders still live there.",
+      "speaker": "Dale",
+      "dur": 5.19
+    },
+    "dale.idle.3": {
+      "file": "dale/idle-3.mp3",
+      "text": "I asked a builder how much his robot cost. He started crying.",
+      "speaker": "Dale",
+      "dur": 3.38
+    },
+    "dale.idle.4": {
+      "file": "dale/idle-4.mp3",
+      "text": "If you're just joining us, robots are hitting each other. That's the show.",
+      "speaker": "Dale",
+      "dur": 3.65
+    },
+    "dale.idle.5": {
+      "file": "dale/idle-5.mp3",
+      "text": "The Box is bulletproof Lexan. Which is good, because I'm sitting right here.",
+      "speaker": "Dale",
+      "dur": 4.01
+    },
+    "dale.idle.6": {
+      "file": "dale/idle-6.mp3",
+      "text": "I tried to build a robot once. It's a lamp now.",
+      "speaker": "Dale",
+      "dur": 2.65
+    },
+    "dale.idle.7": {
+      "file": "dale/idle-7.mp3",
+      "text": "The judges are watching closely. Well, two of them. One's eating a pretzel.",
+      "speaker": "Dale",
+      "dur": 4.02
+    },
+    "dale.idle.8": {
+      "file": "dale/idle-8.mp3",
+      "text": "Somewhere, a mom is watching this and saying, please be careful, that's my son's robot.",
+      "speaker": "Dale",
+      "dur": 4.77
+    },
+    "dale.intro.1": {
+      "file": "dale/intro-1.mp3",
+      "text": "Two robots, one Box. Let's see who blinks.",
+      "speaker": "Dale",
+      "dur": 2.61
+    },
+    "dale.intro.2": {
+      "file": "dale/intro-2.mp3",
+      "text": "Look at these two. Somebody's going home in a bucket.",
+      "speaker": "Dale",
+      "dur": 2.76
+    },
+    "dale.intro.3": {
+      "file": "dale/intro-3.mp3",
+      "text": "The builders look nervous. The robots look fine.",
+      "speaker": "Dale",
+      "dur": 2.57
+    },
+    "dale.intro.4": {
+      "file": "dale/intro-4.mp3",
+      "text": "I like this matchup. I have no idea why.",
+      "speaker": "Dale",
+      "dur": 2.4
+    },
+    "dale.intro.5": {
+      "file": "dale/intro-5.mp3",
+      "text": "Here we go. Keep your hands inside the Lexan.",
+      "speaker": "Dale",
+      "dur": 3.35
+    },
+    "dale.ko.1": {
+      "file": "dale/ko-1.mp3",
+      "text": "And that's all she wrote.",
+      "speaker": "Dale",
+      "dur": 1.31
+    },
+    "dale.ko.2": {
+      "file": "dale/ko-2.mp3",
+      "text": "Lights out. Goodnight, robot.",
+      "speaker": "Dale",
+      "dur": 1.72
+    },
+    "dale.ko.3": {
+      "file": "dale/ko-3.mp3",
+      "text": "It's done. It's so done.",
+      "speaker": "Dale",
+      "dur": 1.87
+    },
+    "dale.ko.4": {
+      "file": "dale/ko-4.mp3",
+      "text": "Knockout. Somebody bring a dustpan.",
+      "speaker": "Dale",
+      "dur": 2.43
+    },
+    "dale.panel.1": {
+      "file": "dale/panel-1.mp3",
+      "text": "There goes a piece. Anybody want that?",
+      "speaker": "Dale",
+      "dur": 2.04
+    },
+    "dale.panel.2": {
+      "file": "dale/panel-2.mp3",
+      "text": "Armor's off. That's a souvenir now.",
+      "speaker": "Dale",
+      "dur": 1.96
+    },
+    "dale.panel.3": {
+      "file": "dale/panel-3.mp3",
+      "text": "And a panel goes flying. Duck!",
+      "speaker": "Dale",
+      "dur": 2.16
+    },
+    "dale.panel.4": {
+      "file": "dale/panel-4.mp3",
+      "text": "Well, that was load bearing.",
+      "speaker": "Dale",
+      "dur": 1.27
+    },
+    "dale.panel.5": {
+      "file": "dale/panel-5.mp3",
+      "text": "Lost some armor. Who needs it.",
+      "speaker": "Dale",
+      "dur": 1.96
+    },
+    "dale.pin.1": {
+      "file": "dale/pin-1.mp3",
+      "text": "And now it's a piggyback ride.",
+      "speaker": "Dale",
+      "dur": 1.97
+    },
+    "dale.pin.2": {
+      "file": "dale/pin-2.mp3",
+      "text": "That's not a hug. That's a hostage situation.",
+      "speaker": "Dale",
+      "dur": 2.65
+    },
+    "dale.pin.3": {
+      "file": "dale/pin-3.mp3",
+      "text": "He's got him. Now what?",
+      "speaker": "Dale",
+      "dur": 1.5
+    },
+    "dale.pin.4": {
+      "file": "dale/pin-4.mp3",
+      "text": "Pinned. Very rude.",
+      "speaker": "Dale",
+      "dur": 1.71
+    },
+    "dale.pulverizer.1": {
+      "file": "dale/pulverizer-1.mp3",
+      "text": "And the Pulverizer makes a house call.",
+      "speaker": "Dale",
+      "dur": 2.08
+    },
+    "dale.pulverizer.2": {
+      "file": "dale/pulverizer-2.mp3",
+      "text": "Bonk. Right on the head.",
+      "speaker": "Dale",
+      "dur": 1.58
+    },
+    "dale.pulverizer.3": {
+      "file": "dale/pulverizer-3.mp3",
+      "text": "That's the Pulverizer. Nobody likes the Pulverizer.",
+      "speaker": "Dale",
+      "dur": 2.84
+    },
+    "dale.pulverizer.4": {
+      "file": "dale/pulverizer-4.mp3",
+      "text": "The hammer has spoken.",
+      "speaker": "Dale",
+      "dur": 1.58
+    },
+    "dale.ramrod.1": {
+      "file": "dale/ramrod-1.mp3",
+      "text": "Floor spikes. The floor is angry.",
+      "speaker": "Dale",
+      "dur": 2.43
+    },
+    "dale.ramrod.2": {
+      "file": "dale/ramrod-2.mp3",
+      "text": "And the ramrods give it a poke.",
+      "speaker": "Dale",
+      "dur": 1.44
+    },
+    "dale.ramrod.3": {
+      "file": "dale/ramrod-3.mp3",
+      "text": "Ooh, right in the undercarriage.",
+      "speaker": "Dale",
+      "dur": 1.96
+    },
+    "dale.ramrod.4": {
+      "file": "dale/ramrod-4.mp3",
+      "text": "Surprise! The floor has spikes.",
+      "speaker": "Dale",
+      "dur": 2.29
+    },
+    "dale.righted.1": {
+      "file": "dale/righted-1.mp3",
+      "text": "And it's back on its wheels. Look at that.",
+      "speaker": "Dale",
+      "dur": 2.33
+    },
+    "dale.righted.2": {
+      "file": "dale/righted-2.mp3",
+      "text": "It got up! Good for you, buddy.",
+      "speaker": "Dale",
+      "dur": 2.0
+    },
+    "dale.righted.3": {
+      "file": "dale/righted-3.mp3",
+      "text": "Self righted. Nice.",
+      "speaker": "Dale",
+      "dur": 1.6
+    },
+    "dale.righted.4": {
+      "file": "dale/righted-4.mp3",
+      "text": "Back on its feet. Well, wheels.",
+      "speaker": "Dale",
+      "dur": 2.44
+    },
+    "dale.rookie.1": {
+      "file": "dale/rookie-1.mp3",
+      "text": "And here's our rookie team. Bless their hearts.",
+      "speaker": "Dale",
+      "dur": 2.37
+    },
+    "dale.rookie.2": {
+      "file": "dale/rookie-2.mp3",
+      "text": "The rookies built this in a garage. You can tell.",
+      "speaker": "Dale",
+      "dur": 2.58
+    },
+    "dale.rookie.3": {
+      "file": "dale/rookie-3.mp3",
+      "text": "First time in the Box. No pressure. Only everybody watching.",
+      "speaker": "Dale",
+      "dur": 3.77
+    },
+    "dale.rookie.4": {
+      "file": "dale/rookie-4.mp3",
+      "text": "Rookies! Everybody be nice. For now.",
+      "speaker": "Dale",
+      "dur": 2.8
+    },
+    "dale.rookie.5": {
+      "file": "dale/rookie-5.mp3",
+      "text": "I love a rookie. So much hope. So many loose bolts.",
+      "speaker": "Dale",
+      "dur": 3.22
+    },
+    "dale.saw.1": {
+      "file": "dale/saw-1.mp3",
+      "text": "The killsaws say hello.",
+      "speaker": "Dale",
+      "dur": 1.82
+    },
+    "dale.saw.2": {
+      "file": "dale/saw-2.mp3",
+      "text": "And the floor bites back.",
+      "speaker": "Dale",
+      "dur": 1.6
+    },
+    "dale.saw.3": {
+      "file": "dale/saw-3.mp3",
+      "text": "Ooh, the saws got a taste.",
+      "speaker": "Dale",
+      "dur": 2.05
+    },
+    "dale.saw.4": {
+      "file": "dale/saw-4.mp3",
+      "text": "Sparks! The killsaws are hungry.",
+      "speaker": "Dale",
+      "dur": 2.07
+    },
+    "dale.smoke.1": {
+      "file": "dale/smoke-1.mp3",
+      "text": "And now we have smoke. Love that.",
+      "speaker": "Dale",
+      "dur": 2.6
+    },
+    "dale.smoke.2": {
+      "file": "dale/smoke-2.mp3",
+      "text": "I see smoke. Not a great sign.",
+      "speaker": "Dale",
+      "dur": 2.68
+    },
+    "dale.smoke.3": {
+      "file": "dale/smoke-3.mp3",
+      "text": "It's smoking. It should really quit.",
+      "speaker": "Dale",
+      "dur": 1.92
+    },
+    "dale.smoke.4": {
+      "file": "dale/smoke-4.mp3",
+      "text": "Smoke signals. It's asking for help.",
+      "speaker": "Dale",
+      "dur": 2.17
+    },
+    "dale.spikes.1": {
+      "file": "dale/spikes-1.mp3",
+      "text": "Into the spikes. That's a no from me.",
+      "speaker": "Dale",
+      "dur": 2.52
+    },
+    "dale.spikes.2": {
+      "file": "dale/spikes-2.mp3",
+      "text": "Pinned on the spikestrip. Ouch.",
+      "speaker": "Dale",
+      "dur": 1.99
+    },
+    "dale.spikes.3": {
+      "file": "dale/spikes-3.mp3",
+      "text": "That wall has teeth, folks.",
+      "speaker": "Dale",
+      "dur": 1.69
+    },
+    "dale.spikes.4": {
+      "file": "dale/spikes-4.mp3",
+      "text": "Spikes. Nobody wants spikes.",
+      "speaker": "Dale",
+      "dur": 2.21
+    },
+    "dale.spinup.1": {
+      "file": "dale/spinup-1.mp3",
+      "text": "Hear that? That's the sound of trouble.",
+      "speaker": "Dale",
+      "dur": 2.03
+    },
+    "dale.spinup.2": {
+      "file": "dale/spinup-2.mp3",
+      "text": "And the spinner's winding up. Uh oh.",
+      "speaker": "Dale",
+      "dur": 2.24
+    },
+    "dale.spinup.3": {
+      "file": "dale/spinup-3.mp3",
+      "text": "That whine means somebody's gonna cry.",
+      "speaker": "Dale",
+      "dur": 2.17
+    },
+    "dale.spinup.4": {
+      "file": "dale/spinup-4.mp3",
+      "text": "Here comes the spin. Hide.",
+      "speaker": "Dale",
+      "dur": 2.08
+    },
+    "dale.start.1": {
+      "file": "dale/start-1.mp3",
+      "text": "And we're off. Mostly.",
+      "speaker": "Dale",
+      "dur": 2.11
+    },
+    "dale.start.2": {
+      "file": "dale/start-2.mp3",
+      "text": "Here we go. Try not to blink.",
+      "speaker": "Dale",
+      "dur": 1.99
+    },
+    "dale.start.3": {
+      "file": "dale/start-3.mp3",
+      "text": "And they're moving. That's step one.",
+      "speaker": "Dale",
+      "dur": 2.16
+    },
+    "dale.start.4": {
+      "file": "dale/start-4.mp3",
+      "text": "Okay, robots. Do your thing.",
+      "speaker": "Dale",
+      "dur": 1.86
+    },
+    "dale.start.5": {
+      "file": "dale/start-5.mp3",
+      "text": "And the fight is on. Finally.",
+      "speaker": "Dale",
+      "dur": 2.84
+    },
+    "dale.timelow.1": {
+      "file": "dale/timelow-1.mp3",
+      "text": "Thirty seconds left. Do something.",
+      "speaker": "Dale",
+      "dur": 2.47
+    },
+    "dale.timelow.2": {
+      "file": "dale/timelow-2.mp3",
+      "text": "Half a minute to go. Make it count.",
+      "speaker": "Dale",
+      "dur": 2.08
+    },
+    "dale.timelow.3": {
+      "file": "dale/timelow-3.mp3",
+      "text": "Thirty seconds. Panic time.",
+      "speaker": "Dale",
+      "dur": 1.69
+    },
+    "dale.timelow.4": {
+      "file": "dale/timelow-4.mp3",
+      "text": "Clock's ticking. Thirty left.",
+      "speaker": "Dale",
+      "dur": 1.7
+    },
+    "dale.upset.1": {
+      "file": "dale/upset-1.mp3",
+      "text": "Wait. Is the underdog winning?",
+      "speaker": "Dale",
+      "dur": 1.61
+    },
+    "dale.upset.2": {
+      "file": "dale/upset-2.mp3",
+      "text": "Upset alert! I did not see this coming.",
+      "speaker": "Dale",
+      "dur": 2.52
+    },
+    "dale.upset.3": {
+      "file": "dale/upset-3.mp3",
+      "text": "Folks, this was not in the script.",
+      "speaker": "Dale",
+      "dur": 2.3
+    },
+    "dale.upset.4": {
+      "file": "dale/upset-4.mp3",
+      "text": "The little guy's doing it!",
+      "speaker": "Dale",
+      "dur": 1.66
+    },
+    "dale.wall.1": {
+      "file": "dale/wall-1.mp3",
+      "text": "And into the wall. Walls win again.",
+      "speaker": "Dale",
+      "dur": 2.52
+    },
+    "dale.wall.2": {
+      "file": "dale/wall-2.mp3",
+      "text": "The wall remains undefeated.",
+      "speaker": "Dale",
+      "dur": 1.9
+    },
+    "dale.wall.3": {
+      "file": "dale/wall-3.mp3",
+      "text": "Boom. Say hi to the wall.",
+      "speaker": "Dale",
+      "dur": 1.58
+    },
+    "dale.wall.4": {
+      "file": "dale/wall-4.mp3",
+      "text": "Parked it. Right in the wall.",
+      "speaker": "Dale",
+      "dur": 1.86
+    },
+    "dale.weapondown.1": {
+      "file": "dale/weapondown-1.mp3",
+      "text": "And the weapon just quit. Relatable.",
+      "speaker": "Dale",
+      "dur": 2.01
+    },
+    "dale.weapondown.2": {
+      "file": "dale/weapondown-2.mp3",
+      "text": "Weapon's down. Now it's a very angry box.",
+      "speaker": "Dale",
+      "dur": 2.97
+    },
+    "dale.weapondown.3": {
+      "file": "dale/weapondown-3.mp3",
+      "text": "The weapon stopped. Awkward.",
+      "speaker": "Dale",
+      "dur": 2.7
+    },
+    "dale.weapondown.4": {
+      "file": "dale/weapondown-4.mp3",
+      "text": "No more weapon. Time for plan B.",
+      "speaker": "Dale",
+      "dur": 2.06
+    },
+    "dale.wheel.1": {
+      "file": "dale/wheel-1.mp3",
+      "text": "And that's a wheel. A loose wheel.",
+      "speaker": "Dale",
+      "dur": 2.36
+    },
+    "dale.wheel.2": {
+      "file": "dale/wheel-2.mp3",
+      "text": "Wheel's gone. Long drive home.",
+      "speaker": "Dale",
+      "dur": 1.96
+    },
+    "dale.wheel.3": {
+      "file": "dale/wheel-3.mp3",
+      "text": "There goes a tire. Literally.",
+      "speaker": "Dale",
+      "dur": 2.16
+    },
+    "dale.wheel.4": {
+      "file": "dale/wheel-4.mp3",
+      "text": "One wheel down. Nobody panic.",
+      "speaker": "Dale",
+      "dur": 2.28
+    },
+    "dale.whiff.1": {
+      "file": "dale/whiff-1.mp3",
+      "text": "And a swing and a miss.",
+      "speaker": "Dale",
+      "dur": 1.59
+    },
+    "dale.whiff.2": {
+      "file": "dale/whiff-2.mp3",
+      "text": "Missed. By a mile.",
+      "speaker": "Dale",
+      "dur": 2.0
+    },
+    "dale.whiff.3": {
+      "file": "dale/whiff-3.mp3",
+      "text": "That was a very aggressive nothing.",
+      "speaker": "Dale",
+      "dur": 2.15
+    },
+    "dale.whiff.4": {
+      "file": "dale/whiff-4.mp3",
+      "text": "Swinging at the air. Bold strategy.",
+      "speaker": "Dale",
+      "dur": 2.5
+    },
+    "jenna.champ.1": {
+      "file": "jenna/champ-1.mp3",
+      "text": "You did it! You won the Giant Nut! How does it feel?",
+      "speaker": "Jenna",
+      "dur": 2.83
+    },
+    "jenna.champ.2": {
+      "file": "jenna/champ-2.mp3",
+      "text": "BotBox champions! Oh my gosh! Say something!",
+      "speaker": "Jenna",
+      "dur": 3.24
+    },
+    "jenna.champ.3": {
+      "file": "jenna/champ-3.mp3",
+      "text": "Champions! Can you guys even lift that thing?",
+      "speaker": "Jenna",
+      "dur": 2.69
+    },
+    "jenna.final.1": {
+      "file": "jenna/final-1.mp3",
+      "text": "This is it, the final! How are you feeling right now?",
+      "speaker": "Jenna",
+      "dur": 2.76
+    },
+    "jenna.final.2": {
+      "file": "jenna/final-2.mp3",
+      "text": "One more fight for the Giant Nut! Are you nervous?",
+      "speaker": "Jenna",
+      "dur": 3.11
+    },
+    "jenna.final.3": {
+      "file": "jenna/final-3.mp3",
+      "text": "It's the final, guys! Any last words before you go in?",
+      "speaker": "Jenna",
+      "dur": 2.92
+    },
+    "jenna.lose.1": {
+      "file": "jenna/lose-1.mp3",
+      "text": "Tough loss. What happened out there?",
+      "speaker": "Jenna",
+      "dur": 1.84
+    },
+    "jenna.lose.2": {
+      "file": "jenna/lose-2.mp3",
+      "text": "Aw, I'm so sorry, guys. What went wrong?",
+      "speaker": "Jenna",
+      "dur": 2.5
+    },
+    "jenna.lose.3": {
+      "file": "jenna/lose-3.mp3",
+      "text": "That was rough. Are you gonna rebuild?",
+      "speaker": "Jenna",
+      "dur": 2.3
+    },
+    "jenna.lose.4": {
+      "file": "jenna/lose-4.mp3",
+      "text": "You fought hard out there. What's next for the team?",
+      "speaker": "Jenna",
+      "dur": 2.04
+    },
+    "jenna.pits.1": {
+      "file": "jenna/pits-1.mp3",
+      "text": "I'm down in the pits, where the rookie team is scrambling to get this thing ready!",
+      "speaker": "Jenna",
+      "dur": 4.18
+    },
+    "jenna.pits.2": {
+      "file": "jenna/pits-2.mp3",
+      "text": "Hey Dale! I'm in the pits, and there are tools everywhere. Like, everywhere!",
+      "speaker": "Jenna",
+      "dur": 3.74
+    },
+    "jenna.pits.3": {
+      "file": "jenna/pits-3.mp3",
+      "text": "I'm here with our rookies. They've got duct tape, a drill, and about four minutes!",
+      "speaker": "Jenna",
+      "dur": 3.74
+    },
+    "jenna.pits.4": {
+      "file": "jenna/pits-4.mp3",
+      "text": "Down here in the pits, you can smell the solder! It is so exciting!",
+      "speaker": "Jenna",
+      "dur": 4.0
+    },
+    "jenna.win.1": {
+      "file": "jenna/win-1.mp3",
+      "text": "I'm here with the winners! How does it feel?",
+      "speaker": "Jenna",
+      "dur": 2.67
+    },
+    "jenna.win.2": {
+      "file": "jenna/win-2.mp3",
+      "text": "Oh my gosh, you guys did it! Tell me everything!",
+      "speaker": "Jenna",
+      "dur": 2.22
+    },
+    "jenna.win.3": {
+      "file": "jenna/win-3.mp3",
+      "text": "What a fight! Was that the plan all along?",
+      "speaker": "Jenna",
+      "dur": 2.44
+    },
+    "jenna.win.4": {
+      "file": "jenna/win-4.mp3",
+      "text": "Congratulations! Did you think you could win that one?",
+      "speaker": "Jenna",
+      "dur": 2.89
+    },
+    "vic.blue": {
+      "file": "vic/blue.mp3",
+      "text": "And in the blue square...",
+      "speaker": "Vic",
+      "dur": 2.35
+    },
+    "vic.bot.blenderella": {
+      "file": "vic/bot-blenderella.mp3",
+      "text": "From Orlando, Florida, a one hundred and twenty pound pink shell spinner... BLENDERELLA!",
+      "speaker": "Vic",
+      "dur": 8.67
+    },
+    "vic.bot.blue-screen": {
+      "file": "vic/bot-blue-screen.mp3",
+      "text": "From Seattle, Washington, a sixty pound flipper. Press any key... BLUE SCREEN!",
+      "speaker": "Vic",
+      "dur": 7.86
+    },
+    "vic.bot.buzzkill": {
+      "file": "vic/bot-buzzkill.mp3",
+      "text": "From Gainesville, Florida, a one hundred and twenty pound horizontal spinner that ends the party... BUZZKILL!",
+      "speaker": "Vic",
+      "dur": 9.75
+    },
+    "vic.bot.ctrl-alt-defeat": {
+      "file": "vic/bot-ctrl-alt-defeat.mp3",
+      "text": "From Redmond, Washington, tech support's one hundred and twenty pound drum spinner... CTRL-ALT-DEFEAT!",
+      "speaker": "Vic",
+      "dur": 9.28
+    },
+    "vic.bot.dial-up": {
+      "file": "vic/bot-dial-up.mp3",
+      "text": "From Columbus, Ohio, a sixty pound drum spinner that takes forever to connect... DIAL-UP!",
+      "speaker": "Vic",
+      "dur": 8.27
+    },
+    "vic.bot.flapjack": {
+      "file": "vic/bot-flapjack.mp3",
+      "text": "From Portland, Oregon, a two hundred and twenty pound flipper. Breakfast is served... FLAPJACK!",
+      "speaker": "Vic",
+      "dur": 9.91
+    },
+    "vic.bot.frisbee-of-doom": {
+      "file": "vic/bot-frisbee-of-doom.mp3",
+      "text": "From Boulder, Colorado, a three hundred and forty pound shell spinner. Heads up... FRISBEE OF DOOM!",
+      "speaker": "Vic",
+      "dur": 10.05
+    },
+    "vic.bot.general-discontent": {
+      "file": "vic/bot-general-discontent.mp3",
+      "text": "From Detroit, Michigan, a two hundred and twenty pound horizontal spinner with a complaint... GENERAL DISCONTENT!",
+      "speaker": "Vic",
+      "dur": 9.81
+    },
+    "vic.bot.gigawatt": {
+      "file": "vic/bot-gigawatt.mp3",
+      "text": "From Phoenix, Arizona, a three hundred and forty pound drum spinner that dims the lights... GIGAWATT!",
+      "speaker": "Vic",
+      "dur": 10.02
+    },
+    "vic.bot.homewrecker": {
+      "file": "vic/bot-homewrecker.mp3",
+      "text": "From Bakersfield, California, a two hundred and twenty pound spinning steel shell... HOMEWRECKER!",
+      "speaker": "Vic",
+      "dur": 9.81
+    },
+    "vic.bot.knuckle-sandwich": {
+      "file": "vic/bot-knuckle-sandwich.mp3",
+      "text": "From Pittsburgh, Pennsylvania, three hundred and forty pounds of rammer. Today's special... KNUCKLE SANDWICH!",
+      "speaker": "Vic",
+      "dur": 10.09
+    },
+    "vic.bot.lunchbox": {
+      "file": "vic/bot-lunchbox.mp3",
+      "text": "From Madison, Wisconsin, five sophomores and a sixty pound wedge... LUNCHBOX!",
+      "speaker": "Vic",
+      "dur": 6.98
+    },
+    "vic.bot.meatloaf": {
+      "file": "vic/bot-meatloaf.mp3",
+      "text": "From Omaha, Nebraska, a three hundred and forty pound flipper. Seconds, anyone? MEATLOAF!",
+      "speaker": "Vic",
+      "dur": 9.58
+    },
+    "vic.bot.megahurtz": {
+      "file": "vic/bot-megahurtz.mp3",
+      "text": "From Sunnyvale, California, a two hundred and twenty pound vertical spinner, no warranty included... MEGAHURTZ!",
+      "speaker": "Vic",
+      "dur": 10.24
+    },
+    "vic.bot.nervous-wreck": {
+      "file": "vic/bot-nervous-wreck.mp3",
+      "text": "From Cambridge, Massachusetts, a one hundred and twenty pound vertical spinner that can't drive straight... NERVOUS WRECK!",
+      "speaker": "Vic",
+      "dur": 10.07
+    },
+    "vic.bot.paperweight": {
+      "file": "vic/bot-paperweight.mp3",
+      "text": "From Scranton, Pennsylvania, a sixty pound lifter made from a three hole punch... PAPERWEIGHT!",
+      "speaker": "Vic",
+      "dur": 8.48
+    },
+    "vic.bot.prune-juice": {
+      "file": "vic/bot-prune-juice.mp3",
+      "text": "From Sun City, Arizona, a one hundred and twenty pound axe that keeps things moving... PRUNE JUICE!",
+      "speaker": "Vic",
+      "dur": 8.8
+    },
+    "vic.bot.red-tape": {
+      "file": "vic/bot-red-tape.mp3",
+      "text": "From Arlington, Virginia, a three hundred and forty pound lifter. Please take a number... RED TAPE!",
+      "speaker": "Vic",
+      "dur": 8.34
+    },
+    "vic.bot.shrapnel-sam": {
+      "file": "vic/bot-shrapnel-sam.mp3",
+      "text": "From Mobile, Alabama, a sixty pound steel shell spinner, built by father and son... SHRAPNEL SAM!",
+      "speaker": "Vic",
+      "dur": 9.99
+    },
+    "vic.bot.snowplow": {
+      "file": "vic/bot-snowplow.mp3",
+      "text": "From Buffalo, New York, two hundred and twenty pounds of steel wedge and bad weather... SNOWPLOW!",
+      "speaker": "Vic",
+      "dur": 9.92
+    },
+    "vic.bot.soccer-mom": {
+      "file": "vic/bot-soccer-mom.mp3",
+      "text": "From Naperville, Illinois, a one hundred and twenty pound lifter shaped like a minivan... SOCCER MOM!",
+      "speaker": "Vic",
+      "dur": 9.23
+    },
+    "vic.bot.spatula": {
+      "file": "vic/bot-spatula.mp3",
+      "text": "From Austin, Texas, a diner cook's one hundred and twenty pound flipper. Order up... SPATULA!",
+      "speaker": "Vic",
+      "dur": 9.54
+    },
+    "vic.bot.tax-audit": {
+      "file": "vic/bot-tax-audit.mp3",
+      "text": "From Hartford, Connecticut, an accountant's two hundred and twenty pound pneumatic axe... TAX AUDIT!",
+      "speaker": "Vic",
+      "dur": 9.96
+    },
+    "vic.bot.the-contractor": {
+      "file": "vic/bot-the-contractor.mp3",
+      "text": "From Las Vegas, Nevada, a three hundred and forty pound axe that shows up late... THE CONTRACTOR!",
+      "speaker": "Vic",
+      "dur": 9.96
+    },
+    "vic.bot.tooth-fairy": {
+      "file": "vic/bot-tooth-fairy.mp3",
+      "text": "From Asheville, North Carolina, a dentist's sixty pound horizontal spinner... TOOTH FAIRY!",
+      "speaker": "Vic",
+      "dur": 8.56
+    },
+    "vic.bot.undertow": {
+      "file": "vic/bot-undertow.mp3",
+      "text": "From Pensacola, Florida, a two hundred and twenty pound lifter that drags you under... UNDERTOW!",
+      "speaker": "Vic",
+      "dur": 9.47
+    },
+    "vic.bot.wreckoning": {
+      "file": "vic/bot-wreckoning.mp3",
+      "text": "From Tulsa, Oklahoma, a three hundred and forty pound vertical spinner. Pray it misses... WRECKONING!",
+      "speaker": "Vic",
+      "dur": 9.88
+    },
+    "vic.bot.y2kill": {
+      "file": "vic/bot-y2kill.mp3",
+      "text": "From San Jose, California, a sixty pound vertical spinner. The world didn't end, but you will... Y2KILL!",
+      "speaker": "Vic",
+      "dur": 10.03
+    },
+    "vic.byscore": {
+      "file": "vic/byscore.mp3",
+      "text": "By a score of...",
+      "speaker": "Vic",
+      "dur": 2.53
+    },
+    "vic.champion": {
+      "file": "vic/champion.mp3",
+      "text": "Ladies and gentlemen... your BotBox champion, and the winner of the Giant Nut...",
+      "speaker": "Vic",
+      "dur": 7.49
+    },
+    "vic.class.heavy": {
+      "file": "vic/class-heavy.mp3",
+      "text": "Heavyweight division!",
+      "speaker": "Vic",
+      "dur": 2.22
+    },
+    "vic.class.light": {
+      "file": "vic/class-light.mp3",
+      "text": "Lightweight division!",
+      "speaker": "Vic",
+      "dur": 1.92
+    },
+    "vic.class.middle": {
+      "file": "vic/class-middle.mp3",
+      "text": "Middleweight division!",
+      "speaker": "Vic",
+      "dur": 1.94
+    },
+    "vic.class.super": {
+      "file": "vic/class-super.mp3",
+      "text": "Super heavyweight division!",
+      "speaker": "Vic",
+      "dur": 2.88
+    },
+    "vic.count.1": {
+      "file": "vic/count-1.mp3",
+      "text": "ONE!",
+      "speaker": "Vic",
+      "dur": 0.94
+    },
+    "vic.count.10": {
+      "file": "vic/count-10.mp3",
+      "text": "TEN!",
+      "speaker": "Vic",
+      "dur": 0.84
+    },
+    "vic.count.2": {
+      "file": "vic/count-2.mp3",
+      "text": "TWO!",
+      "speaker": "Vic",
+      "dur": 0.91
+    },
+    "vic.count.3": {
+      "file": "vic/count-3.mp3",
+      "text": "THREE!",
+      "speaker": "Vic",
+      "dur": 0.93
+    },
+    "vic.count.4": {
+      "file": "vic/count-4.mp3",
+      "text": "FOUR!",
+      "speaker": "Vic",
+      "dur": 0.95
+    },
+    "vic.count.5": {
+      "file": "vic/count-5.mp3",
+      "text": "FIVE!",
+      "speaker": "Vic",
+      "dur": 0.93
+    },
+    "vic.count.6": {
+      "file": "vic/count-6.mp3",
+      "text": "SIX!",
+      "speaker": "Vic",
+      "dur": 0.95
+    },
+    "vic.count.7": {
+      "file": "vic/count-7.mp3",
+      "text": "SEVEN!",
+      "speaker": "Vic",
+      "dur": 0.95
+    },
+    "vic.count.8": {
+      "file": "vic/count-8.mp3",
+      "text": "EIGHT!",
+      "speaker": "Vic",
+      "dur": 0.94
+    },
+    "vic.count.9": {
+      "file": "vic/count-9.mp3",
+      "text": "NINE!",
+      "speaker": "Vic",
+      "dur": 0.95
+    },
+    "vic.decision": {
+      "file": "vic/decision.mp3",
+      "text": "Ladies and gentlemen... we go to the judges.",
+      "speaker": "Vic",
+      "dur": 4.16
+    },
+    "vic.go.1": {
+      "file": "vic/go-1.mp3",
+      "text": "Unleash the STEEL!",
+      "speaker": "Vic",
+      "dur": 2.53
+    },
+    "vic.go.2": {
+      "file": "vic/go-2.mp3",
+      "text": "Turn 'em LOOSE!",
+      "speaker": "Vic",
+      "dur": 1.24
+    },
+    "vic.go.3": {
+      "file": "vic/go-3.mp3",
+      "text": "Let the metal FLY!",
+      "speaker": "Vic",
+      "dur": 2.33
+    },
+    "vic.go.4": {
+      "file": "vic/go-4.mp3",
+      "text": "Steel on STEEL!",
+      "speaker": "Vic",
+      "dur": 2.39
+    },
+    "vic.green": {
+      "file": "vic/green.mp3",
+      "text": "In the green square...",
+      "speaker": "Vic",
+      "dur": 1.82
+    },
+    "vic.ko.1": {
+      "file": "vic/ko-1.mp3",
+      "text": "It's a KNOCKOUT!",
+      "speaker": "Vic",
+      "dur": 2.34
+    },
+    "vic.ko.2": {
+      "file": "vic/ko-2.mp3",
+      "text": "Down and OUT! It's a knockout!",
+      "speaker": "Vic",
+      "dur": 2.93
+    },
+    "vic.ko.3": {
+      "file": "vic/ko-3.mp3",
+      "text": "That robot is DONE! Knockout!",
+      "speaker": "Vic",
+      "dur": 3.15
+    },
+    "vic.ko.4": {
+      "file": "vic/ko-4.mp3",
+      "text": "Lights OUT! It's a knockout!",
+      "speaker": "Vic",
+      "dur": 2.75
+    },
+    "vic.lastbot": {
+      "file": "vic/lastbot.mp3",
+      "text": "The last robot moving... and your rumble winner...",
+      "speaker": "Vic",
+      "dur": 4.9
+    },
+    "vic.name.blenderella": {
+      "file": "vic/name-blenderella.mp3",
+      "text": "BLENDERELLA!",
+      "speaker": "Vic",
+      "dur": 1.2
+    },
+    "vic.name.blue-screen": {
+      "file": "vic/name-blue-screen.mp3",
+      "text": "BLUE SCREEN!",
+      "speaker": "Vic",
+      "dur": 1.59
+    },
+    "vic.name.buzzkill": {
+      "file": "vic/name-buzzkill.mp3",
+      "text": "BUZZKILL!",
+      "speaker": "Vic",
+      "dur": 1.58
+    },
+    "vic.name.ctrl-alt-defeat": {
+      "file": "vic/name-ctrl-alt-defeat.mp3",
+      "text": "CTRL-ALT-DEFEAT!",
+      "speaker": "Vic",
+      "dur": 2.48
+    },
+    "vic.name.dial-up": {
+      "file": "vic/name-dial-up.mp3",
+      "text": "DIAL-UP!",
+      "speaker": "Vic",
+      "dur": 1.3
+    },
+    "vic.name.flapjack": {
+      "file": "vic/name-flapjack.mp3",
+      "text": "FLAPJACK!",
+      "speaker": "Vic",
+      "dur": 1.19
+    },
+    "vic.name.frisbee-of-doom": {
+      "file": "vic/name-frisbee-of-doom.mp3",
+      "text": "FRISBEE OF DOOM!",
+      "speaker": "Vic",
+      "dur": 2.33
+    },
+    "vic.name.general-discontent": {
+      "file": "vic/name-general-discontent.mp3",
+      "text": "GENERAL DISCONTENT!",
+      "speaker": "Vic",
+      "dur": 2.24
+    },
+    "vic.name.gigawatt": {
+      "file": "vic/name-gigawatt.mp3",
+      "text": "GIGAWATT!",
+      "speaker": "Vic",
+      "dur": 1.27
+    },
+    "vic.name.homewrecker": {
+      "file": "vic/name-homewrecker.mp3",
+      "text": "HOMEWRECKER!",
+      "speaker": "Vic",
+      "dur": 1.63
+    },
+    "vic.name.knuckle-sandwich": {
+      "file": "vic/name-knuckle-sandwich.mp3",
+      "text": "KNUCKLE SANDWICH!",
+      "speaker": "Vic",
+      "dur": 1.71
+    },
+    "vic.name.lunchbox": {
+      "file": "vic/name-lunchbox.mp3",
+      "text": "LUNCHBOX!",
+      "speaker": "Vic",
+      "dur": 1.38
+    },
+    "vic.name.meatloaf": {
+      "file": "vic/name-meatloaf.mp3",
+      "text": "MEATLOAF!",
+      "speaker": "Vic",
+      "dur": 1.31
+    },
+    "vic.name.megahurtz": {
+      "file": "vic/name-megahurtz.mp3",
+      "text": "MEGAHURTZ!",
+      "speaker": "Vic",
+      "dur": 1.44
+    },
+    "vic.name.nervous-wreck": {
+      "file": "vic/name-nervous-wreck.mp3",
+      "text": "NERVOUS WRECK!",
+      "speaker": "Vic",
+      "dur": 1.36
+    },
+    "vic.name.paperweight": {
+      "file": "vic/name-paperweight.mp3",
+      "text": "PAPERWEIGHT!",
+      "speaker": "Vic",
+      "dur": 1.2
+    },
+    "vic.name.prune-juice": {
+      "file": "vic/name-prune-juice.mp3",
+      "text": "PRUNE JUICE!",
+      "speaker": "Vic",
+      "dur": 1.58
+    },
+    "vic.name.red-tape": {
+      "file": "vic/name-red-tape.mp3",
+      "text": "RED TAPE!",
+      "speaker": "Vic",
+      "dur": 1.21
+    },
+    "vic.name.shrapnel-sam": {
+      "file": "vic/name-shrapnel-sam.mp3",
+      "text": "SHRAPNEL SAM!",
+      "speaker": "Vic",
+      "dur": 1.79
+    },
+    "vic.name.snowplow": {
+      "file": "vic/name-snowplow.mp3",
+      "text": "SNOWPLOW!",
+      "speaker": "Vic",
+      "dur": 2.0
+    },
+    "vic.name.soccer-mom": {
+      "file": "vic/name-soccer-mom.mp3",
+      "text": "SOCCER MOM!",
+      "speaker": "Vic",
+      "dur": 1.56
+    },
+    "vic.name.spatula": {
+      "file": "vic/name-spatula.mp3",
+      "text": "SPATULA!",
+      "speaker": "Vic",
+      "dur": 1.47
+    },
+    "vic.name.tax-audit": {
+      "file": "vic/name-tax-audit.mp3",
+      "text": "TAX AUDIT!",
+      "speaker": "Vic",
+      "dur": 1.36
+    },
+    "vic.name.the-contractor": {
+      "file": "vic/name-the-contractor.mp3",
+      "text": "THE CONTRACTOR!",
+      "speaker": "Vic",
+      "dur": 1.75
+    },
+    "vic.name.tooth-fairy": {
+      "file": "vic/name-tooth-fairy.mp3",
+      "text": "TOOTH FAIRY!",
+      "speaker": "Vic",
+      "dur": 1.47
+    },
+    "vic.name.undertow": {
+      "file": "vic/name-undertow.mp3",
+      "text": "UNDERTOW!",
+      "speaker": "Vic",
+      "dur": 1.85
+    },
+    "vic.name.wreckoning": {
+      "file": "vic/name-wreckoning.mp3",
+      "text": "WRECKONING!",
+      "speaker": "Vic",
+      "dur": 1.85
+    },
+    "vic.name.y2kill": {
+      "file": "vic/name-y2kill.mp3",
+      "text": "Y2KILL!",
+      "speaker": "Vic",
+      "dur": 1.91
+    },
+    "vic.num.0": {
+      "file": "vic/num-0.mp3",
+      "text": "Zero",
+      "speaker": "Vic",
+      "dur": 1.08
+    },
+    "vic.num.1": {
+      "file": "vic/num-1.mp3",
+      "text": "One",
+      "speaker": "Vic",
+      "dur": 0.83
+    },
+    "vic.num.10": {
+      "file": "vic/num-10.mp3",
+      "text": "Ten",
+      "speaker": "Vic",
+      "dur": 1.2
+    },
+    "vic.num.11": {
+      "file": "vic/num-11.mp3",
+      "text": "Eleven",
+      "speaker": "Vic",
+      "dur": 1.19
+    },
+    "vic.num.12": {
+      "file": "vic/num-12.mp3",
+      "text": "Twelve",
+      "speaker": "Vic",
+      "dur": 1.02
+    },
+    "vic.num.13": {
+      "file": "vic/num-13.mp3",
+      "text": "Thirteen",
+      "speaker": "Vic",
+      "dur": 1.23
+    },
+    "vic.num.14": {
+      "file": "vic/num-14.mp3",
+      "text": "Fourteen",
+      "speaker": "Vic",
+      "dur": 1.28
+    },
+    "vic.num.15": {
+      "file": "vic/num-15.mp3",
+      "text": "Fifteen",
+      "speaker": "Vic",
+      "dur": 1.28
+    },
+    "vic.num.16": {
+      "file": "vic/num-16.mp3",
+      "text": "Sixteen",
+      "speaker": "Vic",
+      "dur": 1.32
+    },
+    "vic.num.17": {
+      "file": "vic/num-17.mp3",
+      "text": "Seventeen",
+      "speaker": "Vic",
+      "dur": 1.34
+    },
+    "vic.num.18": {
+      "file": "vic/num-18.mp3",
+      "text": "Eighteen",
+      "speaker": "Vic",
+      "dur": 1.32
+    },
+    "vic.num.19": {
+      "file": "vic/num-19.mp3",
+      "text": "Nineteen",
+      "speaker": "Vic",
+      "dur": 1.3
+    },
+    "vic.num.2": {
+      "file": "vic/num-2.mp3",
+      "text": "Two",
+      "speaker": "Vic",
+      "dur": 1.0
+    },
+    "vic.num.20": {
+      "file": "vic/num-20.mp3",
+      "text": "Twenty",
+      "speaker": "Vic",
+      "dur": 1.09
+    },
+    "vic.num.21": {
+      "file": "vic/num-21.mp3",
+      "text": "Twenty-one",
+      "speaker": "Vic",
+      "dur": 1.34
+    },
+    "vic.num.22": {
+      "file": "vic/num-22.mp3",
+      "text": "Twenty-two",
+      "speaker": "Vic",
+      "dur": 1.2
+    },
+    "vic.num.23": {
+      "file": "vic/num-23.mp3",
+      "text": "Twenty-three",
+      "speaker": "Vic",
+      "dur": 1.2
+    },
+    "vic.num.24": {
+      "file": "vic/num-24.mp3",
+      "text": "Twenty-four",
+      "speaker": "Vic",
+      "dur": 1.37
+    },
+    "vic.num.25": {
+      "file": "vic/num-25.mp3",
+      "text": "Twenty-five",
+      "speaker": "Vic",
+      "dur": 1.34
+    },
+    "vic.num.26": {
+      "file": "vic/num-26.mp3",
+      "text": "Twenty-six",
+      "speaker": "Vic",
+      "dur": 1.23
+    },
+    "vic.num.27": {
+      "file": "vic/num-27.mp3",
+      "text": "Twenty-seven",
+      "speaker": "Vic",
+      "dur": 1.28
+    },
+    "vic.num.28": {
+      "file": "vic/num-28.mp3",
+      "text": "Twenty-eight",
+      "speaker": "Vic",
+      "dur": 1.19
+    },
+    "vic.num.29": {
+      "file": "vic/num-29.mp3",
+      "text": "Twenty-nine",
+      "speaker": "Vic",
+      "dur": 1.33
+    },
+    "vic.num.3": {
+      "file": "vic/num-3.mp3",
+      "text": "Three",
+      "speaker": "Vic",
+      "dur": 1.0
+    },
+    "vic.num.30": {
+      "file": "vic/num-30.mp3",
+      "text": "Thirty",
+      "speaker": "Vic",
+      "dur": 1.3
+    },
+    "vic.num.31": {
+      "file": "vic/num-31.mp3",
+      "text": "Thirty-one",
+      "speaker": "Vic",
+      "dur": 1.22
+    },
+    "vic.num.32": {
+      "file": "vic/num-32.mp3",
+      "text": "Thirty-two",
+      "speaker": "Vic",
+      "dur": 1.3
+    },
+    "vic.num.33": {
+      "file": "vic/num-33.mp3",
+      "text": "Thirty-three",
+      "speaker": "Vic",
+      "dur": 1.21
+    },
+    "vic.num.34": {
+      "file": "vic/num-34.mp3",
+      "text": "Thirty-four",
+      "speaker": "Vic",
+      "dur": 1.22
+    },
+    "vic.num.35": {
+      "file": "vic/num-35.mp3",
+      "text": "Thirty-five",
+      "speaker": "Vic",
+      "dur": 1.31
+    },
+    "vic.num.36": {
+      "file": "vic/num-36.mp3",
+      "text": "Thirty-six",
+      "speaker": "Vic",
+      "dur": 1.33
+    },
+    "vic.num.37": {
+      "file": "vic/num-37.mp3",
+      "text": "Thirty-seven",
+      "speaker": "Vic",
+      "dur": 1.21
+    },
+    "vic.num.38": {
+      "file": "vic/num-38.mp3",
+      "text": "Thirty-eight",
+      "speaker": "Vic",
+      "dur": 0.99
+    },
+    "vic.num.39": {
+      "file": "vic/num-39.mp3",
+      "text": "Thirty-nine",
+      "speaker": "Vic",
+      "dur": 1.29
+    },
+    "vic.num.4": {
+      "file": "vic/num-4.mp3",
+      "text": "Four",
+      "speaker": "Vic",
+      "dur": 0.99
+    },
+    "vic.num.40": {
+      "file": "vic/num-40.mp3",
+      "text": "Forty",
+      "speaker": "Vic",
+      "dur": 0.89
+    },
+    "vic.num.41": {
+      "file": "vic/num-41.mp3",
+      "text": "Forty-one",
+      "speaker": "Vic",
+      "dur": 1.27
+    },
+    "vic.num.42": {
+      "file": "vic/num-42.mp3",
+      "text": "Forty-two",
+      "speaker": "Vic",
+      "dur": 1.31
+    },
+    "vic.num.43": {
+      "file": "vic/num-43.mp3",
+      "text": "Forty-three",
+      "speaker": "Vic",
+      "dur": 1.23
+    },
+    "vic.num.44": {
+      "file": "vic/num-44.mp3",
+      "text": "Forty-four",
+      "speaker": "Vic",
+      "dur": 1.16
+    },
+    "vic.num.45": {
+      "file": "vic/num-45.mp3",
+      "text": "Forty-five",
+      "speaker": "Vic",
+      "dur": 1.25
+    },
+    "vic.num.5": {
+      "file": "vic/num-5.mp3",
+      "text": "Five",
+      "speaker": "Vic",
+      "dur": 1.2
+    },
+    "vic.num.6": {
+      "file": "vic/num-6.mp3",
+      "text": "Six",
+      "speaker": "Vic",
+      "dur": 0.91
+    },
+    "vic.num.7": {
+      "file": "vic/num-7.mp3",
+      "text": "Seven",
+      "speaker": "Vic",
+      "dur": 1.26
+    },
+    "vic.num.8": {
+      "file": "vic/num-8.mp3",
+      "text": "Eight",
+      "speaker": "Vic",
+      "dur": 0.72
+    },
+    "vic.num.9": {
+      "file": "vic/num-9.mp3",
+      "text": "Nine",
+      "speaker": "Vic",
+      "dur": 0.97
+    },
+    "vic.open.1": {
+      "file": "vic/open-1.mp3",
+      "text": "From Treasure Island in San Francisco... this is BOTBOX!",
+      "speaker": "Vic",
+      "dur": 7.12
+    },
+    "vic.open.2": {
+      "file": "vic/open-2.mp3",
+      "text": "Live from the steel cage on Treasure Island... welcome to BOTBOX!",
+      "speaker": "Vic",
+      "dur": 6.58
+    },
+    "vic.open.3": {
+      "file": "vic/open-3.mp3",
+      "text": "Eight robots. One Box. One Giant Nut. From San Francisco... this is BOTBOX!",
+      "speaker": "Vic",
+      "dur": 9.12
+    },
+    "vic.open.4": {
+      "file": "vic/open-4.mp3",
+      "text": "Sparks will fly, steel will bend... from Treasure Island, this is BOTBOX!",
+      "speaker": "Vic",
+      "dur": 7.76
+    },
+    "vic.player.brickhouse": {
+      "file": "vic/player-brickhouse.mp3",
+      "text": "BRICKHOUSE!",
+      "speaker": "Vic",
+      "dur": 1.34
+    },
+    "vic.player.bulldozer": {
+      "file": "vic/player-bulldozer.mp3",
+      "text": "BULLDOZER!",
+      "speaker": "Vic",
+      "dur": 1.99
+    },
+    "vic.player.chaos-theory": {
+      "file": "vic/player-chaos-theory.mp3",
+      "text": "CHAOS THEORY!",
+      "speaker": "Vic",
+      "dur": 2.24
+    },
+    "vic.player.crowbar": {
+      "file": "vic/player-crowbar.mp3",
+      "text": "CROWBAR!",
+      "speaker": "Vic",
+      "dur": 1.44
+    },
+    "vic.player.deadbolt": {
+      "file": "vic/player-deadbolt.mp3",
+      "text": "DEADBOLT!",
+      "speaker": "Vic",
+      "dur": 1.08
+    },
+    "vic.player.gearhead": {
+      "file": "vic/player-gearhead.mp3",
+      "text": "GEARHEAD!",
+      "speaker": "Vic",
+      "dur": 1.36
+    },
+    "vic.player.havoc": {
+      "file": "vic/player-havoc.mp3",
+      "text": "HAVOC!",
+      "speaker": "Vic",
+      "dur": 1.32
+    },
+    "vic.player.hot-rod": {
+      "file": "vic/player-hot-rod.mp3",
+      "text": "HOT ROD!",
+      "speaker": "Vic",
+      "dur": 1.39
+    },
+    "vic.player.intro.1": {
+      "file": "vic/player-intro-1.mp3",
+      "text": "A rookie team, straight out of the garage, making their very first trip into the Box...",
+      "speaker": "Vic",
+      "dur": 7.6
+    },
+    "vic.player.intro.2": {
+      "file": "vic/player-intro-2.mp3",
+      "text": "Built on a kitchen table, held together with hope and hex bolts... the rookies bring you...",
+      "speaker": "Vic",
+      "dur": 7.36
+    },
+    "vic.player.intro.3": {
+      "file": "vic/player-intro-3.mp3",
+      "text": "They've never been in the Box before, but they did not come here to lose...",
+      "speaker": "Vic",
+      "dur": 4.84
+    },
+    "vic.player.intro.4": {
+      "file": "vic/player-intro-4.mp3",
+      "text": "Fresh off the trailer and hungry for metal... please welcome the rookie robot...",
+      "speaker": "Vic",
+      "dur": 7.15
+    },
+    "vic.player.juggernaut": {
+      "file": "vic/player-juggernaut.mp3",
+      "text": "JUGGERNAUT!",
+      "speaker": "Vic",
+      "dur": 1.26
+    },
+    "vic.player.mayhem": {
+      "file": "vic/player-mayhem.mp3",
+      "text": "MAYHEM!",
+      "speaker": "Vic",
+      "dur": 1.38
+    },
+    "vic.player.monkey-wrench": {
+      "file": "vic/player-monkey-wrench.mp3",
+      "text": "MONKEY WRENCH!",
+      "speaker": "Vic",
+      "dur": 1.66
+    },
+    "vic.player.nitro": {
+      "file": "vic/player-nitro.mp3",
+      "text": "NITRO!",
+      "speaker": "Vic",
+      "dur": 1.24
+    },
+    "vic.player.payload": {
+      "file": "vic/player-payload.mp3",
+      "text": "PAYLOAD!",
+      "speaker": "Vic",
+      "dur": 1.93
+    },
+    "vic.player.pit-bull": {
+      "file": "vic/player-pit-bull.mp3",
+      "text": "PIT BULL!",
+      "speaker": "Vic",
+      "dur": 1.27
+    },
+    "vic.player.ratchet": {
+      "file": "vic/player-ratchet.mp3",
+      "text": "RATCHET!",
+      "speaker": "Vic",
+      "dur": 1.6
+    },
+    "vic.player.road-rash": {
+      "file": "vic/player-road-rash.mp3",
+      "text": "ROAD RASH!",
+      "speaker": "Vic",
+      "dur": 1.55
+    },
+    "vic.player.rock-bottom": {
+      "file": "vic/player-rock-bottom.mp3",
+      "text": "ROCK BOTTOM!",
+      "speaker": "Vic",
+      "dur": 2.08
+    },
+    "vic.player.rookie": {
+      "file": "vic/player-rookie.mp3",
+      "text": "The ROOKIE!",
+      "speaker": "Vic",
+      "dur": 1.56
+    },
+    "vic.player.rust-bucket": {
+      "file": "vic/player-rust-bucket.mp3",
+      "text": "RUST BUCKET!",
+      "speaker": "Vic",
+      "dur": 1.96
+    },
+    "vic.player.scrapper": {
+      "file": "vic/player-scrapper.mp3",
+      "text": "SCRAPPER!",
+      "speaker": "Vic",
+      "dur": 1.52
+    },
+    "vic.player.sledge": {
+      "file": "vic/player-sledge.mp3",
+      "text": "SLEDGE!",
+      "speaker": "Vic",
+      "dur": 1.28
+    },
+    "vic.player.sparky": {
+      "file": "vic/player-sparky.mp3",
+      "text": "SPARKY!",
+      "speaker": "Vic",
+      "dur": 1.33
+    },
+    "vic.player.tin-man": {
+      "file": "vic/player-tin-man.mp3",
+      "text": "TIN MAN!",
+      "speaker": "Vic",
+      "dur": 1.57
+    },
+    "vic.player.torque": {
+      "file": "vic/player-torque.mp3",
+      "text": "TORQUE!",
+      "speaker": "Vic",
+      "dur": 0.82
+    },
+    "vic.player.wrecking-ball": {
+      "file": "vic/player-wrecking-ball.mp3",
+      "text": "WRECKING BALL!",
+      "speaker": "Vic",
+      "dur": 1.89
+    },
+    "vic.ready": {
+      "file": "vic/ready.mp3",
+      "text": "Builders... ready...",
+      "speaker": "Vic",
+      "dur": 2.96
+    },
+    "vic.red": {
+      "file": "vic/red.mp3",
+      "text": "In the red square...",
+      "speaker": "Vic",
+      "dur": 1.6
+    },
+    "vic.release": {
+      "file": "vic/release.mp3",
+      "text": "Release! Release!",
+      "speaker": "Vic",
+      "dur": 2.44
+    },
+    "vic.round.exhibition": {
+      "file": "vic/round-exhibition.mp3",
+      "text": "Exhibition match!",
+      "speaker": "Vic",
+      "dur": 2.41
+    },
+    "vic.round.final": {
+      "file": "vic/round-final.mp3",
+      "text": "This... is the FINAL!",
+      "speaker": "Vic",
+      "dur": 3.11
+    },
+    "vic.round.quarter": {
+      "file": "vic/round-quarter.mp3",
+      "text": "Quarterfinal action!",
+      "speaker": "Vic",
+      "dur": 2.05
+    },
+    "vic.round.rumble": {
+      "file": "vic/round-rumble.mp3",
+      "text": "It's a ROBOT RUMBLE!",
+      "speaker": "Vic",
+      "dur": 3.15
+    },
+    "vic.round.semi": {
+      "file": "vic/round-semi.mp3",
+      "text": "It's the semifinals!",
+      "speaker": "Vic",
+      "dur": 2.4
+    },
+    "vic.tapout": {
+      "file": "vic/tapout.mp3",
+      "text": "They've tapped out! It's over!",
+      "speaker": "Vic",
+      "dur": 2.8
+    },
+    "vic.time": {
+      "file": "vic/time.mp3",
+      "text": "That's TIME!",
+      "speaker": "Vic",
+      "dur": 1.74
+    },
+    "vic.to": {
+      "file": "vic/to.mp3",
+      "text": "to...",
+      "speaker": "Vic",
+      "dur": 0.85
+    },
+    "vic.tonight.1": {
+      "file": "vic/tonight-1.mp3",
+      "text": "Tonight on BotBox... a rookie team rolls into the Box for the very first time.",
+      "speaker": "Vic",
+      "dur": 7.12
+    },
+    "vic.tonight.2": {
+      "file": "vic/tonight-2.mp3",
+      "text": "Tonight on BotBox... saws, hammers, and one very nervous rookie.",
+      "speaker": "Vic",
+      "dur": 6.93
+    },
+    "vic.tonight.3": {
+      "file": "vic/tonight-3.mp3",
+      "text": "Tonight on BotBox... steel meets steel, and only one walks away with the Nut.",
+      "speaker": "Vic",
+      "dur": 7.84
+    },
+    "vic.winner.1": {
+      "file": "vic/winner-1.mp3",
+      "text": "And your winner...",
+      "speaker": "Vic",
+      "dur": 1.54
+    },
+    "vic.winner.2": {
+      "file": "vic/winner-2.mp3",
+      "text": "Ladies and gentlemen... your winner...",
+      "speaker": "Vic",
+      "dur": 3.72
+    },
+    "vic.winner.3": {
+      "file": "vic/winner-3.mp3",
+      "text": "The winner of this fight...",
+      "speaker": "Vic",
+      "dur": 2.0
+    },
+    "vic.yellow": {
+      "file": "vic/yellow.mp3",
+      "text": "And in the yellow square...",
+      "speaker": "Vic",
+      "dur": 2.29
+    }
+  }
+}

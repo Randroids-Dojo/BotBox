@@ -1,0 +1,50 @@
+{
+  "model": "eleven_v3",
+  "design_model": "eleven_ttv_v3",
+  "voice_settings": {
+    "stability": 0.5
+  },
+  "speakers": {
+    "Vic": {
+      "name": "BotBox - Vic",
+      "role": "Vic Ramone, the announcer. Robot intros, the countdown call, the knockout count, the decision.",
+      "description": "American man in his fifties, a theatrical big-arena ring announcer with a deep bass-baritone voice. Rich, dark, gravelly, with huge chest resonance and a slow, savoring delivery. He rolls and stretches every name, starts low and confident, then builds to a thunderous roar. Showman, larger than life. Perfect audio quality, close microphone, dry studio.",
+      "sample": "Ladies and gentlemen... welcome to the Box. Tonight, eight robots enter, and only one leaves with the Giant Nut. In the red square, from Sunnyvale, California... a two hundred and twenty pound vertical spinner... MEGAHURTZ!",
+      "voice_id": "wixOHgi8fINj43iMSNa0",
+      "settings": {},
+      "audition_pick": 2,
+      "why": "Second design round, preview 2. Round one (a sample that shouted throughout) gave three previews that never left 260 to 330 Hz, a strained shout rather than a deep announcer. With a sample that starts low and builds, preview 2 sat lowest at rest (10th percentile 123 Hz), roared up to 262 Hz, and had the widest dynamics of the six (energy sd 8.2 dB) with some gravel (aperiodicity 0.15). Whisper 0.985. Previews 1 and 3 sat at 286 and 250 Hz median, and 3 misheard Sunnyvale."
+    },
+    "Dale": {
+      "name": "BotBox - Dale",
+      "role": "Dale Pruitt, host and play-by-play. Dry, sarcastic stand-up comedian.",
+      "description": "American man in his mid thirties, a stand-up comedian hosting a sports show. Dry, quick, sarcastic, deadpan mid-range voice with crisp comic timing, a little nasal, conversational and wry, then bursting into sudden genuine excitement when something big happens. Perfect audio quality, close microphone, dry studio.",
+      "sample": "Well, that's a robot. Technically. I've seen scarier toasters. Oh! Oh, wow, okay, that one actually hurt! Somebody check on the toaster. Folks, we'll be right back, assuming the arena is still standing.",
+      "voice_id": "zeJwcDEkFfBJjn4qX5nX",
+      "settings": {},
+      "audition_pick": 3,
+      "why": "Preview 3. Quick (11.7 s for the sample against 15.5 s for preview 1), a low resting pitch (144 Hz) and the flattest energy (sd 5.6 dB, deadpan) but a 12 semitone pitch swing for the sudden excitement. Preview 1 was slow and high (188 Hz); preview 2 was flat in pitch too (5.4 st). All three matched Whisper at 1.0."
+    },
+    "Chuck": {
+      "name": "BotBox - Chuck",
+      "role": "Chuck \"Cannon\" Kowalski, color commentary. Former pro quarterback.",
+      "description": "American man in his forties, a former pro football quarterback turned color commentator. Big, loud, earnest, booming voice with a slightly hoarse, raspy throat from years of shouting. Enthusiastic and sincere, takes everything as seriously as a championship game. Perfect audio quality, close microphone, dry studio.",
+      "sample": "That is a SACK! You do not see hits like that outside of a playoff game! That robot came off the line low and hard, just like we drilled it in camp. Fundamentals, Dale. It is all about fundamentals!",
+      "voice_id": "XE8jfQ6PvTYbRoNOpPdl",
+      "settings": {},
+      "audition_pick": 2,
+      "why": "Preview 2. Lowest and fastest of the three (200 Hz median while shouting, 13.0 s against 16.1 and 17.6 s) with an audible rasp (aperiodicity 0.12). Preview 1 screamed at 308 Hz; preview 3 was the smoothest (0.064), not hoarse. All matched Whisper at 1.0."
+    },
+    "Jenna": {
+      "name": "BotBox - Jenna",
+      "role": "Jenna Rae, pit reporter. Upbeat, fast, warm.",
+      "description": "American woman in her mid twenties, a bubbly sideline sports reporter. Upbeat, fast, bright and warm voice with friendly energy and a big smile you can hear, quick clear articulation, a little breathless with excitement. Perfect audio quality, close microphone, dry studio.",
+      "sample": "Hi Dale! I'm down here in the pits, and let me tell you, this rookie team is scrambling! They've got a drill, a roll of duct tape and about four minutes. Guys, how does it feel to win your first fight?",
+      "voice_id": "jlCYrmCYRUGrHrpR5nRq",
+      "settings": {},
+      "audition_pick": 1,
+      "why": "Preview 1. Fastest (9.1 s against 9.5 and 9.9 s), the most lively pitch movement (9.6 st) and the least breathy of the three, with a warm, not too bright spectrum (centroid 1.7 kHz). Whisper 1.0; preview 3 slipped a word."
+    }
+  },
+  "notes": "Pitch is YIN median over voiced frames, range is the 10th to 90th percentile in semitones, energy sd is the spread of frame loudness, aperiodicity is the YIN dip depth (higher is rougher). Audition numbers are in auditions/<speaker>.json (Vic's first round in auditions/vic-round1.json). eleven_v3 ignores the speed setting, so pace is shaped in the text and, where a line must fit a beat, with a per-line tempo."
+}

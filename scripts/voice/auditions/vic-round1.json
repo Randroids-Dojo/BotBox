@@ -1,0 +1,45 @@
+{
+  "who": "Vic",
+  "chars": 204,
+  "previews": [
+    {
+      "n": 1,
+      "generated_voice_id": "sb9NgGIGOln6RNLmbo16",
+      "file": "vic-1.mp3",
+      "pitch_hz": 327,
+      "range_st": 7.9,
+      "energy_db_sd": 7.2,
+      "dur": 21.7,
+      "match": 0.981,
+      "heard": "From Treasure Island in San Francisco, this is Bot Box. In the red square from Sunnyvale, California, a 220-pound vertical spinner, Megahertz. Ladies and gentlemen, your winner...",
+      "aperiodicity": 0.087,
+      "centroid_hz": 2160
+    },
+    {
+      "n": 2,
+      "generated_voice_id": "bv4MAYXeXB4MoOvgzgq6",
+      "file": "vic-2.mp3",
+      "pitch_hz": 262,
+      "range_st": 8.1,
+      "energy_db_sd": 7.7,
+      "dur": 22.0,
+      "match": 0.981,
+      "heard": "From Treasure Island in San Francisco, this is Bot Box in the Red Square from Sunnyvale, California, a 220-pound vertical spinner, megahertz. Ladies and gentlemen, your winner.",
+      "aperiodicity": 0.119,
+      "centroid_hz": 1968
+    },
+    {
+      "n": 3,
+      "generated_voice_id": "cBI0SUXiHmr7TZHRuZsn",
+      "file": "vic-3.mp3",
+      "pitch_hz": 327,
+      "range_st": 12.0,
+      "energy_db_sd": 8.0,
+      "dur": 21.6,
+      "match": 0.973,
+      "heard": "From Treasure Island in San Francisco, this is Butt Box! In the Red Square, from Sunnyvale, California, a 220-pound vertical spinner, Megahertz! Ladies and gentlemen, your winner!",
+      "aperiodicity": 0.083,
+      "centroid_hz": 1743
+    }
+  ]
+}

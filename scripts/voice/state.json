@@ -1,0 +1,1874 @@
+{
+  "chars_sent": 26389,
+  "renders": 625,
+  "clips": {
+    "vic.bot.megahurtz": {
+      "stamp": "d567ca02a021:5:-16.0:1.2",
+      "sha": "2f62f07157cc"
+    },
+    "vic.bot.shrapnel-sam": {
+      "stamp": "cf77f9337c83:5:-16.0:1.02",
+      "sha": "2b786e619965"
+    },
+    "vic.name.ctrl-alt-defeat": {
+      "stamp": "195e688dd8c7:5:-16.0:1.2",
+      "sha": "fe1757d8c28c"
+    },
+    "vic.name.y2kill": {
+      "stamp": "54950c24b39b:5:-16.0:1.03",
+      "sha": "2726af341cdd"
+    },
+    "vic.player.tin-man": {
+      "stamp": "8d76cb8e5233:5:-16.0:1.0",
+      "sha": "a8234f93badb"
+    },
+    "vic.go.1": {
+      "stamp": "f737cf4d38f5:5:-16.0:1.25",
+      "sha": "04e31ea6c07a"
+    },
+    "vic.count.7": {
+      "stamp": "3d70adad924f:5:-16.0:1.38",
+      "sha": "9aaabcca9917"
+    },
+    "vic.decision": {
+      "stamp": "03f578b59497:5:-16.0:1.0",
+      "sha": "cd0d038706c8"
+    },
+    "vic.num.0": {
+      "stamp": "b1f79a8f69d8:5:-16.0:1.0",
+      "sha": "88635e691045"
+    },
+    "vic.num.14": {
+      "stamp": "a09414a65107:5:-16.0:1.0",
+      "sha": "b2b2caf15e34"
+    },
+    "vic.num.31": {
+      "stamp": "1fb85547eac3:5:-16.0:1.05",
+      "sha": "81cdd972a4ae"
+    },
+    "vic.to": {
+      "stamp": "a6c80cf1c876:5:-16.0:1.0",
+      "sha": "80b5a28faa6c"
+    },
+    "dale.hit.2": {
+      "stamp": "f4707862ba51:5:-16.0:1.0",
+      "sha": "3e50e7bdf517"
+    },
+    "dale.huge.1": {
+      "stamp": "dd511f76d969:5:-16.0:1.0",
+      "sha": "e8ac5282d79e"
+    },
+    "chuck.huge.5": {
+      "stamp": "3ef707bd9fd8:5:-16.0:1.0",
+      "sha": "6abbad8df27b"
+    },
+    "chuck.flip.2": {
+      "stamp": "9b744d2dd73a:5:-16.0:1.0",
+      "sha": "c276d1b86c60"
+    },
+    "jenna.win.2": {
+      "stamp": "6eaf724130d8:5:-16.0:1.0",
+      "sha": "0823ae51c392"
+    },
+    "jenna.lose.1": {
+      "stamp": "8049f86084b3:5:-16.0:1.0",
+      "sha": "470426ee7f04"
+    },
+    "vic.open.1": {
+      "stamp": "96747cbe25e1:5:-16.0:1.0",
+      "sha": "a9887612465e"
+    },
+    "vic.open.2": {
+      "stamp": "de75ed98c3dd:5:-16.0:1.0",
+      "sha": "951d949f2ea8"
+    },
+    "vic.open.3": {
+      "stamp": "d5bc75011411:5:-16.0:1.0",
+      "sha": "e067bede41bf"
+    },
+    "vic.open.4": {
+      "stamp": "80eb0c1bf06d:5:-16.0:1.0",
+      "sha": "8797a851148e"
+    },
+    "vic.tonight.1": {
+      "stamp": "676e64193d50:5:-16.0:1.0",
+      "sha": "d50bc06ea157"
+    },
+    "vic.tonight.2": {
+      "stamp": "6ae3835d0a00:5:-16.0:1.0",
+      "sha": "3d3337b185b8"
+    },
+    "vic.tonight.3": {
+      "stamp": "914942ec6665:5:-16.0:1.0",
+      "sha": "3214291a07fd"
+    },
+    "vic.class.light": {
+      "stamp": "9be35e7a0e28:5:-16.0:1.0",
+      "sha": "5aca78503767"
+    },
+    "vic.class.middle": {
+      "stamp": "7b859e1c2d43:5:-16.0:1.0",
+      "sha": "430d5f99011b"
+    },
+    "vic.class.heavy": {
+      "stamp": "07e09f71842f:5:-16.0:1.0",
+      "sha": "55574bf9c6aa"
+    },
+    "vic.class.super": {
+      "stamp": "de4afe52cde6:5:-16.0:1.0",
+      "sha": "9bf989005f4a"
+    },
+    "vic.round.quarter": {
+      "stamp": "bfa560bb58e1:5:-16.0:1.0",
+      "sha": "42d2fdb5f420"
+    },
+    "vic.round.semi": {
+      "stamp": "e9c349f84818:5:-16.0:1.0",
+      "sha": "29fe170e010e"
+    },
+    "vic.round.final": {
+      "stamp": "8e7095437e6d:5:-16.0:1.0",
+      "sha": "0af13012a305"
+    },
+    "vic.round.exhibition": {
+      "stamp": "99c1665c8b17:5:-16.0:1.0",
+      "sha": "aa00622253be"
+    },
+    "vic.round.rumble": {
+      "stamp": "3a78085c29e6:5:-16.0:1.0",
+      "sha": "bd2de43c92dc"
+    },
+    "vic.red": {
+      "stamp": "902000839d3f:5:-16.0:1.0",
+      "sha": "894c555d5e51"
+    },
+    "vic.blue": {
+      "stamp": "71aa6b8d0a22:5:-16.0:1.0",
+      "sha": "4fa5c27fed48"
+    },
+    "vic.green": {
+      "stamp": "bb31aa1ab2ad:5:-16.0:1.0",
+      "sha": "30492657f10a"
+    },
+    "vic.yellow": {
+      "stamp": "a48ef8601543:5:-16.0:1.0",
+      "sha": "18c923009259"
+    },
+    "vic.bot.flapjack": {
+      "stamp": "fda2b9faa21e:5:-16.0:1.02",
+      "sha": "98edf9264cfd"
+    },
+    "vic.bot.general-discontent": {
+      "stamp": "a5f84d43a5ce:5:-16.0:1.2",
+      "sha": "3bed5178464c"
+    },
+    "vic.bot.tax-audit": {
+      "stamp": "cac224d31062:5:-16.0:1.05",
+      "sha": "9bb0b4c49b65"
+    },
+    "vic.bot.snowplow": {
+      "stamp": "66128a4f6125:5:-16.0:1.01",
+      "sha": "1b3b635f27f4"
+    },
+    "vic.bot.undertow": {
+      "stamp": "0af51f209201:5:-16.0:1.0",
+      "sha": "33ba903e5e31"
+    },
+    "vic.bot.homewrecker": {
+      "stamp": "1925fd587d49:5:-16.0:1.0",
+      "sha": "979b661d3fcf"
+    },
+    "vic.bot.gigawatt": {
+      "stamp": "570555d00889:5:-16.0:1.02",
+      "sha": "2c461c9e3e11"
+    },
+    "vic.bot.knuckle-sandwich": {
+      "stamp": "803afe8cffcd:5:-16.0:1.2",
+      "sha": "56fa82f203cd"
+    },
+    "vic.bot.frisbee-of-doom": {
+      "stamp": "f0cc45dd7b6a:5:-16.0:1.02",
+      "sha": "0e24f4f84039"
+    },
+    "vic.bot.red-tape": {
+      "stamp": "87a1e7e8ccb9:5:-16.0:1.0",
+      "sha": "527aa7ee17a2"
+    },
+    "vic.bot.wreckoning": {
+      "stamp": "8f2946eca2b2:5:-16.0:1.15",
+      "sha": "8c8b4ae96e33"
+    },
+    "vic.bot.the-contractor": {
+      "stamp": "7808ff967d33:5:-16.0:1.03",
+      "sha": "4b0bec3cd3ac"
+    },
+    "vic.bot.meatloaf": {
+      "stamp": "cc6a87da9d31:5:-16.0:1.0",
+      "sha": "5244eecf6fbb"
+    },
+    "vic.bot.ctrl-alt-defeat": {
+      "stamp": "0a2a83223e1e:5:-16.0:1.0",
+      "sha": "d67ff61d7d6a"
+    },
+    "vic.bot.spatula": {
+      "stamp": "590538c89b3f:5:-16.0:1.0",
+      "sha": "43d0474b9d26"
+    },
+    "vic.bot.buzzkill": {
+      "stamp": "ab2f682a3284:5:-16.0:1.11",
+      "sha": "8dd124ac1a71"
+    },
+    "vic.bot.nervous-wreck": {
+      "stamp": "da0a43645e71:5:-16.0:1.2",
+      "sha": "58d0bcd7b2f2"
+    },
+    "vic.bot.soccer-mom": {
+      "stamp": "dec36f2c1ab3:5:-16.0:1.0",
+      "sha": "5349495fd95a"
+    },
+    "vic.bot.blenderella": {
+      "stamp": "6f4aeb299048:5:-16.0:1.0",
+      "sha": "165bc9e925a0"
+    },
+    "vic.bot.prune-juice": {
+      "stamp": "96cb21529c53:5:-16.0:1.0",
+      "sha": "8455efefcd62"
+    },
+    "vic.bot.y2kill": {
+      "stamp": "f5e294c27881:5:-16.0:1.15",
+      "sha": "c7d4efda0b56"
+    },
+    "vic.bot.dial-up": {
+      "stamp": "5ebe72da2cca:5:-16.0:1.0",
+      "sha": "3735997fdfa5"
+    },
+    "vic.bot.lunchbox": {
+      "stamp": "56eb67a9df3d:5:-16.0:1.0",
+      "sha": "4176b6fdd9f0"
+    },
+    "vic.bot.tooth-fairy": {
+      "stamp": "35f525d47771:5:-16.0:1.0",
+      "sha": "54ef5b452b3d"
+    },
+    "vic.bot.blue-screen": {
+      "stamp": "c6b6d7f7d74a:5:-16.0:1.0",
+      "sha": "26e4944e6630"
+    },
+    "vic.bot.paperweight": {
+      "stamp": "fd19f82db1c0:5:-16.0:1.0",
+      "sha": "a97f0fb3c18d"
+    },
+    "vic.name.megahurtz": {
+      "stamp": "8b83365ce352:5:-16.0:1.0",
+      "sha": "b2b7b475093e"
+    },
+    "vic.name.flapjack": {
+      "stamp": "c97a2537e221:5:-16.0:1.0",
+      "sha": "8d72ed10c6d1"
+    },
+    "vic.name.general-discontent": {
+      "stamp": "45d57cd37cce:5:-16.0:1.0",
+      "sha": "ff4ad09e721e"
+    },
+    "vic.name.tax-audit": {
+      "stamp": "8b71327b4411:5:-16.0:1.0",
+      "sha": "0c4e30eff1ef"
+    },
+    "vic.name.snowplow": {
+      "stamp": "292e8a744a7e:5:-16.0:1.0",
+      "sha": "6fa7b0927b33"
+    },
+    "vic.name.undertow": {
+      "stamp": "98f9f04e2708:5:-16.0:1.0",
+      "sha": "7264ec7c507c"
+    },
+    "vic.name.homewrecker": {
+      "stamp": "712b548e40d0:5:-16.0:1.0",
+      "sha": "d2962739a7cb"
+    },
+    "vic.name.gigawatt": {
+      "stamp": "0c396c454588:5:-16.0:1.0",
+      "sha": "2bbc4f8d85a2"
+    },
+    "vic.name.knuckle-sandwich": {
+      "stamp": "7b34e8b183e7:5:-16.0:1.0",
+      "sha": "fca683ef0542"
+    },
+    "vic.name.frisbee-of-doom": {
+      "stamp": "a896a3b0090e:5:-16.0:1.0",
+      "sha": "9150445cee34"
+    },
+    "vic.name.red-tape": {
+      "stamp": "40725088a5e6:5:-16.0:1.0",
+      "sha": "a2d3a8b8997f"
+    },
+    "vic.name.wreckoning": {
+      "stamp": "0e67aef3572b:5:-16.0:1.0",
+      "sha": "e2ba702d418b"
+    },
+    "vic.name.the-contractor": {
+      "stamp": "42da7d96d416:5:-16.0:1.0",
+      "sha": "6acfabfb6c2c"
+    },
+    "vic.name.meatloaf": {
+      "stamp": "50e9befce6c7:5:-16.0:1.0",
+      "sha": "de49a7f113a5"
+    },
+    "vic.name.spatula": {
+      "stamp": "ebab3e57f38d:5:-16.0:1.0",
+      "sha": "077e32c475b2"
+    },
+    "vic.name.buzzkill": {
+      "stamp": "36cd57fd99fe:5:-16.0:1.0",
+      "sha": "22cd53466a72"
+    },
+    "vic.name.nervous-wreck": {
+      "stamp": "00fafd7eebc1:5:-16.0:1.0",
+      "sha": "999d911acc6d"
+    },
+    "vic.name.soccer-mom": {
+      "stamp": "8e5c8317c4ef:5:-16.0:1.0",
+      "sha": "99ca7f2e4073"
+    },
+    "vic.name.blenderella": {
+      "stamp": "541d2f93ab9f:5:-16.0:1.0",
+      "sha": "ac6928b9030e"
+    },
+    "vic.name.prune-juice": {
+      "stamp": "8e7453dc638b:5:-16.0:1.0",
+      "sha": "2c96973b9f21"
+    },
+    "vic.name.dial-up": {
+      "stamp": "fc10bdcf238b:5:-16.0:1.0",
+      "sha": "78c27cd05f7b"
+    },
+    "vic.name.lunchbox": {
+      "stamp": "1bbfda5773dd:5:-16.0:1.0",
+      "sha": "a441090f5571"
+    },
+    "vic.name.tooth-fairy": {
+      "stamp": "38b86aa81449:5:-16.0:1.0",
+      "sha": "0553cfdc025b"
+    },
+    "vic.name.blue-screen": {
+      "stamp": "c646b412ebc2:5:-16.0:1.0",
+      "sha": "9ad02e4c8b09"
+    },
+    "vic.name.shrapnel-sam": {
+      "stamp": "49e6d6ab24ad:5:-16.0:1.0",
+      "sha": "15bc10dde572"
+    },
+    "vic.name.paperweight": {
+      "stamp": "6e1fa9906ff8:5:-16.0:1.0",
+      "sha": "dc5a14d8aa95"
+    },
+    "vic.player.rust-bucket": {
+      "stamp": "40d11188c68f:5:-16.0:1.0",
+      "sha": "c8762f894892"
+    },
+    "vic.player.sledge": {
+      "stamp": "bff5b56748ac:5:-16.0:1.0",
+      "sha": "81295db2c910"
+    },
+    "vic.player.torque": {
+      "stamp": "d6c912315021:5:-16.0:1.0",
+      "sha": "c77fb732787e"
+    },
+    "vic.player.mayhem": {
+      "stamp": "573e6db597aa:5:-16.0:1.0",
+      "sha": "2e394f34087c"
+    },
+    "vic.player.havoc": {
+      "stamp": "fc3259e028f8:5:-16.0:1.0",
+      "sha": "fc8d0f27d5e9"
+    },
+    "vic.player.brickhouse": {
+      "stamp": "c0aad46ad032:5:-16.0:1.0",
+      "sha": "45c0d5c219fb"
+    },
+    "vic.player.juggernaut": {
+      "stamp": "992d8a48d97a:5:-16.0:1.0",
+      "sha": "f5c6cde68769"
+    },
+    "vic.player.gearhead": {
+      "stamp": "df6021d5ccb0:5:-16.0:1.0",
+      "sha": "7dd464b43503"
+    },
+    "vic.player.scrapper": {
+      "stamp": "c8221a877438:5:-16.0:1.0",
+      "sha": "75dc12244bd8"
+    },
+    "vic.player.bulldozer": {
+      "stamp": "a60349bd819e:5:-16.0:1.0",
+      "sha": "c5c1b6f75273"
+    },
+    "vic.player.payload": {
+      "stamp": "3f4c9ff61e46:5:-16.0:1.0",
+      "sha": "1301bda9f184"
+    },
+    "vic.player.hot-rod": {
+      "stamp": "46fc2560d00f:5:-16.0:1.0",
+      "sha": "c2c579442384"
+    },
+    "vic.player.crowbar": {
+      "stamp": "fc1b9362f28b:5:-16.0:1.0",
+      "sha": "50d885d2dbc2"
+    },
+    "vic.player.nitro": {
+      "stamp": "deaa7611dab4:5:-16.0:1.0",
+      "sha": "460b28f7141b"
+    },
+    "vic.player.wrecking-ball": {
+      "stamp": "d34d8bfb83ad:5:-16.0:1.0",
+      "sha": "9e42a5ab5c7f"
+    },
+    "vic.player.sparky": {
+      "stamp": "047207cf6850:5:-16.0:1.0",
+      "sha": "092e017bead4"
+    },
+    "vic.player.ratchet": {
+      "stamp": "fd0459433a4a:5:-16.0:1.0",
+      "sha": "ccf3cb341833"
+    },
+    "vic.player.pit-bull": {
+      "stamp": "9e45478e8d25:5:-16.0:1.0",
+      "sha": "de963b72516d"
+    },
+    "vic.player.chaos-theory": {
+      "stamp": "80f9c6ca3741:5:-16.0:1.0",
+      "sha": "b669b5284b09"
+    },
+    "vic.player.road-rash": {
+      "stamp": "b2366d665525:5:-16.0:1.0",
+      "sha": "e2fb82151943"
+    },
+    "vic.player.monkey-wrench": {
+      "stamp": "7ae9198cfb98:5:-16.0:1.0",
+      "sha": "40e95dddd66e"
+    },
+    "vic.player.deadbolt": {
+      "stamp": "9b6152c6e3b2:5:-16.0:1.0",
+      "sha": "e8576b5e1687"
+    },
+    "vic.player.rock-bottom": {
+      "stamp": "330a962685ae:5:-16.0:1.0",
+      "sha": "e524f6a178e4"
+    },
+    "vic.player.intro.1": {
+      "stamp": "490e09e269d2:5:-16.0:1.0",
+      "sha": "492ae62b5c2f"
+    },
+    "vic.player.intro.2": {
+      "stamp": "8e8f652cac1b:5:-16.0:1.0",
+      "sha": "4aa1965085af"
+    },
+    "vic.player.intro.3": {
+      "stamp": "d05452ec4e2b:5:-16.0:1.0",
+      "sha": "7ff6a1efd296"
+    },
+    "vic.player.intro.4": {
+      "stamp": "901388d0834d:5:-16.0:1.0",
+      "sha": "db9dfea97a52"
+    },
+    "vic.player.rookie": {
+      "stamp": "4761bc3f60c6:5:-16.0:1.0",
+      "sha": "3fd67f5658d1"
+    },
+    "vic.ready": {
+      "stamp": "cebb0340a526:5:-16.0:1.0",
+      "sha": "22d2e52bcd3f"
+    },
+    "vic.go.2": {
+      "stamp": "10398d6ebfce:5:-16.0:1.0",
+      "sha": "cd57e6d96494"
+    },
+    "vic.go.3": {
+      "stamp": "dc662e7dc11f:5:-16.0:1.24",
+      "sha": "71961ca2e7ea"
+    },
+    "vic.go.4": {
+      "stamp": "7166057a2ad5:5:-16.0:1.07",
+      "sha": "37f9bc06293f"
+    },
+    "vic.count.1": {
+      "stamp": "a344cf211b4c:5:-16.0:1.14",
+      "sha": "52f9e491a71b"
+    },
+    "vic.count.2": {
+      "stamp": "c14de7e615f5:5:-16.0:1.08",
+      "sha": "5b9f908d564b"
+    },
+    "vic.count.3": {
+      "stamp": "c0de33735b40:5:-16.0:1.11",
+      "sha": "6e52794d636d"
+    },
+    "vic.count.4": {
+      "stamp": "7bf44583463d:5:-16.0:1.06",
+      "sha": "6e3aa4792aa4"
+    },
+    "vic.count.5": {
+      "stamp": "c1cda932800a:5:-16.0:1.16",
+      "sha": "797667c1158a"
+    },
+    "vic.count.6": {
+      "stamp": "6deca81f6e1d:5:-16.0:1.32",
+      "sha": "7408775c1466"
+    },
+    "vic.count.8": {
+      "stamp": "53b886b8c5ad:5:-16.0:1.02",
+      "sha": "7fc8e2f6fcb2"
+    },
+    "vic.count.9": {
+      "stamp": "e450be0ee4f7:5:-16.0:1.07",
+      "sha": "82773ff50a9f"
+    },
+    "vic.count.10": {
+      "stamp": "7a65095c72e6:5:-16.0:1.0",
+      "sha": "5f0580b78ffe"
+    },
+    "vic.ko.1": {
+      "stamp": "e6f72d58f193:5:-16.0:1.0",
+      "sha": "251b34e5d5be"
+    },
+    "vic.ko.2": {
+      "stamp": "d26e4953cb86:5:-16.0:1.04",
+      "sha": "0a323af3b277"
+    },
+    "vic.ko.3": {
+      "stamp": "161fe08f7ece:5:-16.0:1.14",
+      "sha": "67be820d24a5"
+    },
+    "vic.ko.4": {
+      "stamp": "04a19854cb09:5:-16.0:1.0",
+      "sha": "f01fdb710485"
+    },
+    "vic.time": {
+      "stamp": "d774b0ac4b08:5:-16.0:1.0",
+      "sha": "161966e717ed"
+    },
+    "vic.byscore": {
+      "stamp": "d6901ef32772:5:-16.0:1.0",
+      "sha": "73dfef41ccac"
+    },
+    "vic.num.1": {
+      "stamp": "2f589fcde3db:5:-16.0:1.0",
+      "sha": "8665c3bce3b2"
+    },
+    "vic.num.2": {
+      "stamp": "72255a32d83c:5:-16.0:1.0",
+      "sha": "2201031c0b25"
+    },
+    "vic.num.3": {
+      "stamp": "24ca584af271:5:-16.0:1.0",
+      "sha": "523f9033ac46"
+    },
+    "vic.num.4": {
+      "stamp": "e2d8a5ed9b98:5:-16.0:1.0",
+      "sha": "09ccde04eb11"
+    },
+    "vic.num.5": {
+      "stamp": "e8c1b4419c92:5:-16.0:1.0",
+      "sha": "0db264d736fb"
+    },
+    "vic.num.6": {
+      "stamp": "0a8ae94551cb:5:-16.0:1.0",
+      "sha": "e036a8ce501d"
+    },
+    "vic.num.7": {
+      "stamp": "4e4697d58ef6:5:-16.0:1.0",
+      "sha": "d0b2bf2fedff"
+    },
+    "vic.num.8": {
+      "stamp": "7d23b7890adc:5:-16.0:1.0",
+      "sha": "61ee77fd7313"
+    },
+    "vic.num.9": {
+      "stamp": "5ad78a2f9a7c:5:-16.0:1.0",
+      "sha": "828c27522f58"
+    },
+    "vic.num.10": {
+      "stamp": "8502b38f4155:5:-16.0:1.0",
+      "sha": "7129eb0ee0ca"
+    },
+    "vic.num.11": {
+      "stamp": "49bf670c7069:5:-16.0:1.0",
+      "sha": "a581947e8495"
+    },
+    "vic.num.12": {
+      "stamp": "084f8ac247e4:5:-16.0:1.0",
+      "sha": "6bcd41409b6c"
+    },
+    "vic.num.13": {
+      "stamp": "2c7bea76e9d8:5:-16.0:1.0",
+      "sha": "d15a2d91a36b"
+    },
+    "vic.num.15": {
+      "stamp": "db554117e316:5:-16.0:1.0",
+      "sha": "a4603999f87c"
+    },
+    "vic.num.16": {
+      "stamp": "8aa4d4271e1e:5:-16.0:1.21",
+      "sha": "06092b921348"
+    },
+    "vic.num.17": {
+      "stamp": "d3586df0a08b:5:-16.0:1.15",
+      "sha": "f5bd3c546e0a"
+    },
+    "vic.num.18": {
+      "stamp": "40829b67241b:5:-16.0:1.05",
+      "sha": "1073d1238d96"
+    },
+    "vic.num.19": {
+      "stamp": "fa65ff854e86:5:-16.0:1.02",
+      "sha": "4a69b1d410d9"
+    },
+    "vic.num.20": {
+      "stamp": "fc02e52bb9a6:5:-16.0:1.0",
+      "sha": "d0b42e262beb"
+    },
+    "vic.num.21": {
+      "stamp": "9f14af90fbf3:5:-16.0:1.05",
+      "sha": "8601f278fbee"
+    },
+    "vic.num.22": {
+      "stamp": "495ca5d97d42:5:-16.0:1.0",
+      "sha": "78d42d24e767"
+    },
+    "vic.num.23": {
+      "stamp": "826ff486738d:5:-16.0:1.16",
+      "sha": "af4ca0c701b9"
+    },
+    "vic.num.24": {
+      "stamp": "75cd4109056d:5:-16.0:1.2",
+      "sha": "08ea5585f1fe"
+    },
+    "vic.num.25": {
+      "stamp": "debda025920d:5:-16.0:1.05",
+      "sha": "3d5e701ab29f"
+    },
+    "vic.num.26": {
+      "stamp": "2af65c9e8840:5:-16.0:1.0",
+      "sha": "d11f275ce9c5"
+    },
+    "vic.num.27": {
+      "stamp": "d5cd2973a304:5:-16.0:1.23",
+      "sha": "dfee0a870d05"
+    },
+    "vic.num.28": {
+      "stamp": "e873c6e5145f:5:-16.0:1.0",
+      "sha": "f0725c043cc9"
+    },
+    "vic.num.29": {
+      "stamp": "ef16f975b844:5:-16.0:1.05",
+      "sha": "5c85ad121e52"
+    },
+    "vic.num.30": {
+      "stamp": "3f31c0eb235e:5:-16.0:1.11",
+      "sha": "0609bcd88a13"
+    },
+    "vic.num.32": {
+      "stamp": "a3150f51fb46:5:-16.0:1.13",
+      "sha": "67f5a44745fd"
+    },
+    "vic.num.33": {
+      "stamp": "09ac8e2e0fd8:5:-16.0:1.0",
+      "sha": "9319b95117d0"
+    },
+    "vic.num.34": {
+      "stamp": "3f36b76c038f:5:-16.0:1.02",
+      "sha": "2e1c75f2c5ef"
+    },
+    "vic.num.35": {
+      "stamp": "0209137954d5:5:-16.0:1.18",
+      "sha": "9f1b7c24c5f8"
+    },
+    "vic.num.36": {
+      "stamp": "bd5267224f4a:5:-16.0:1.08",
+      "sha": "ed6bf0886708"
+    },
+    "vic.num.37": {
+      "stamp": "5fd2ac576af7:5:-16.0:1.0",
+      "sha": "1a293fb3e8ed"
+    },
+    "vic.num.38": {
+      "stamp": "db7677eeb2d9:5:-16.0:1.0",
+      "sha": "e25cc0ccfc29"
+    },
+    "vic.num.39": {
+      "stamp": "6a81f6326ee2:5:-16.0:1.15",
+      "sha": "62be2564ed69"
+    },
+    "vic.num.40": {
+      "stamp": "6f4c21eab0eb:5:-16.0:1.0",
+      "sha": "a86499f245d6"
+    },
+    "vic.num.41": {
+      "stamp": "6c14847b8fc4:5:-16.0:1.08",
+      "sha": "ff21bb105bd1"
+    },
+    "vic.num.42": {
+      "stamp": "0dfa6174d076:5:-16.0:1.06",
+      "sha": "db224faa7823"
+    },
+    "vic.num.43": {
+      "stamp": "47f4cc214306:5:-16.0:1.04",
+      "sha": "ccbe6536cdc0"
+    },
+    "vic.num.44": {
+      "stamp": "f96bb3aa5de5:5:-16.0:1.0",
+      "sha": "2d3d1f5d9324"
+    },
+    "vic.num.45": {
+      "stamp": "402fa3296e59:5:-16.0:1.0",
+      "sha": "f58ce8d06b04"
+    },
+    "vic.winner.1": {
+      "stamp": "e98297b62c44:5:-16.0:1.0",
+      "sha": "a6f67488a20a"
+    },
+    "vic.winner.2": {
+      "stamp": "42e6b0350cb2:5:-16.0:1.0",
+      "sha": "efd9caabc7f0"
+    },
+    "vic.winner.3": {
+      "stamp": "5251fcdb2bda:5:-16.0:1.0",
+      "sha": "42a510408ae9"
+    },
+    "vic.release": {
+      "stamp": "9f2d349a4c4d:5:-16.0:1.0",
+      "sha": "2a030519015f"
+    },
+    "vic.tapout": {
+      "stamp": "3ca07e7f7ab7:5:-16.0:1.0",
+      "sha": "661068600094"
+    },
+    "vic.lastbot": {
+      "stamp": "652767075ece:5:-16.0:1.0",
+      "sha": "c03597659517"
+    },
+    "vic.champion": {
+      "stamp": "23280c1137a8:5:-16.0:1.0",
+      "sha": "257c7f971812"
+    },
+    "dale.start.1": {
+      "stamp": "294516260db1:5:-16.0:1.0",
+      "sha": "615239883386"
+    },
+    "dale.start.2": {
+      "stamp": "6213ef23788b:5:-16.0:1.0",
+      "sha": "fe099de9cb0a"
+    },
+    "dale.start.3": {
+      "stamp": "967f1a147369:5:-16.0:1.0",
+      "sha": "26c379c30b22"
+    },
+    "dale.start.4": {
+      "stamp": "6103089eb2f1:5:-16.0:1.0",
+      "sha": "5f424b8e3636"
+    },
+    "dale.start.5": {
+      "stamp": "79f215f3fc57:5:-16.0:1.0",
+      "sha": "2734d42167b0"
+    },
+    "chuck.start.1": {
+      "stamp": "7466091db946:5:-16.0:1.0",
+      "sha": "b61176faff1d"
+    },
+    "chuck.start.2": {
+      "stamp": "cb10fd0660a1:5:-16.0:1.0",
+      "sha": "e8324da90380"
+    },
+    "chuck.start.3": {
+      "stamp": "57fcb4f43d2e:5:-16.0:1.0",
+      "sha": "d9e3c46018fd"
+    },
+    "chuck.start.4": {
+      "stamp": "243b348bb6d2:5:-16.0:1.0",
+      "sha": "92f08d64adae"
+    },
+    "chuck.start.5": {
+      "stamp": "afbc923615ad:5:-16.0:1.0",
+      "sha": "fc42c9f787e8"
+    },
+    "dale.hit.1": {
+      "stamp": "3401f3e506bb:5:-16.0:1.0",
+      "sha": "07aced92fe97"
+    },
+    "dale.hit.3": {
+      "stamp": "7737b409060f:5:-16.0:1.0",
+      "sha": "102252bd01ed"
+    },
+    "dale.hit.4": {
+      "stamp": "b257dab6890a:5:-16.0:1.0",
+      "sha": "46b895f00c4c"
+    },
+    "dale.hit.5": {
+      "stamp": "239b2c26cb61:5:-16.0:1.0",
+      "sha": "57ab91447468"
+    },
+    "chuck.hit.1": {
+      "stamp": "75f7e466f90a:5:-16.0:1.0",
+      "sha": "1752da6d8868"
+    },
+    "chuck.hit.2": {
+      "stamp": "92d2e6a92311:5:-16.0:1.0",
+      "sha": "98a7e0f70955"
+    },
+    "chuck.hit.3": {
+      "stamp": "861503877947:5:-16.0:1.0",
+      "sha": "bcfa909e67c8"
+    },
+    "chuck.hit.4": {
+      "stamp": "4697dffdd3c1:5:-16.0:1.0",
+      "sha": "e2c1cc419545"
+    },
+    "chuck.hit.5": {
+      "stamp": "d8c0fb10cde0:5:-16.0:1.0",
+      "sha": "1d9c3513650d"
+    },
+    "dale.huge.2": {
+      "stamp": "566ac729448c:5:-16.0:1.0",
+      "sha": "beebfa4189bc"
+    },
+    "dale.huge.3": {
+      "stamp": "011ce737e16d:5:-16.0:1.0",
+      "sha": "35c7d35cdd85"
+    },
+    "dale.huge.4": {
+      "stamp": "91e70a2df9ef:5:-16.0:1.0",
+      "sha": "ecd51b208ece"
+    },
+    "dale.huge.5": {
+      "stamp": "7775ad29d513:5:-16.0:1.0",
+      "sha": "3cd35593b2f5"
+    },
+    "chuck.huge.1": {
+      "stamp": "78c6ca38a01d:5:-16.0:1.0",
+      "sha": "8c0e5d0caf4e"
+    },
+    "chuck.huge.2": {
+      "stamp": "3ad674add7ea:5:-16.0:1.0",
+      "sha": "380af3dd8d95"
+    },
+    "chuck.huge.3": {
+      "stamp": "fab035954362:5:-16.0:1.0",
+      "sha": "2e98fa3f0d3c"
+    },
+    "chuck.huge.4": {
+      "stamp": "a44c250e0498:5:-16.0:1.0",
+      "sha": "df8080238f04"
+    },
+    "dale.flip.1": {
+      "stamp": "f5dc1efdbc55:5:-16.0:1.0",
+      "sha": "e5197797879c"
+    },
+    "dale.flip.2": {
+      "stamp": "d68b5908d9c9:5:-16.0:1.0",
+      "sha": "163e6771dbaf"
+    },
+    "dale.flip.3": {
+      "stamp": "53c6d0524a49:5:-16.0:1.0",
+      "sha": "f76c4864a545"
+    },
+    "dale.flip.4": {
+      "stamp": "5d591498ae1f:5:-16.0:1.0",
+      "sha": "2890ca225f33"
+    },
+    "dale.flip.5": {
+      "stamp": "6db8225d3ff3:5:-16.0:1.0",
+      "sha": "9d4c1a38a420"
+    },
+    "chuck.flip.1": {
+      "stamp": "0ae1c5c4781f:5:-16.0:1.0",
+      "sha": "45fa3fb879ad"
+    },
+    "chuck.flip.3": {
+      "stamp": "4fc3acb7bfa3:5:-16.0:1.0",
+      "sha": "55678a7f35e7"
+    },
+    "chuck.flip.4": {
+      "stamp": "56f7320f7a9d:5:-16.0:1.0",
+      "sha": "26c81f8e9734"
+    },
+    "dale.airborne.1": {
+      "stamp": "df9d54464c8d:5:-16.0:1.0",
+      "sha": "a74e3775d5ae"
+    },
+    "dale.airborne.2": {
+      "stamp": "ceadfa7defd1:5:-16.0:1.0",
+      "sha": "b7b41b16c756"
+    },
+    "dale.airborne.3": {
+      "stamp": "cfa1c8051a67:5:-16.0:1.0",
+      "sha": "09f92e9e5da6"
+    },
+    "dale.airborne.4": {
+      "stamp": "eacc7ef9a528:5:-16.0:1.0",
+      "sha": "014a5ebf5e8b"
+    },
+    "dale.airborne.5": {
+      "stamp": "d9bc85c09953:5:-16.0:1.0",
+      "sha": "6c5f72d01c42"
+    },
+    "chuck.airborne.1": {
+      "stamp": "46c5f1ef10e8:5:-16.0:1.0",
+      "sha": "3967e61eaeb4"
+    },
+    "chuck.airborne.2": {
+      "stamp": "d14534c9e809:5:-16.0:1.0",
+      "sha": "e53a85d16a98"
+    },
+    "chuck.airborne.3": {
+      "stamp": "12bb7178e64e:5:-16.0:1.0",
+      "sha": "3e283282cec0"
+    },
+    "chuck.airborne.4": {
+      "stamp": "eaee4242685d:5:-16.0:1.0",
+      "sha": "be4cef31e373"
+    },
+    "dale.saw.1": {
+      "stamp": "3cc8cfe340e1:5:-16.0:1.0",
+      "sha": "ecb1b92c0e0b"
+    },
+    "dale.saw.2": {
+      "stamp": "308abaea2c8f:5:-16.0:1.0",
+      "sha": "e1821b6d0494"
+    },
+    "dale.saw.3": {
+      "stamp": "8bda8efaf4d5:5:-16.0:1.0",
+      "sha": "171048578e9e"
+    },
+    "dale.saw.4": {
+      "stamp": "83633c03ad81:5:-16.0:1.0",
+      "sha": "bbaed6e2b74a"
+    },
+    "chuck.saw.1": {
+      "stamp": "56c4919bc795:5:-16.0:1.0",
+      "sha": "e98911da162a"
+    },
+    "chuck.saw.2": {
+      "stamp": "758c9e3c401a:5:-16.0:1.0",
+      "sha": "8b8884159c3c"
+    },
+    "chuck.saw.3": {
+      "stamp": "4b49fbcf0afe:5:-16.0:1.0",
+      "sha": "4a85be1ba42f"
+    },
+    "chuck.saw.4": {
+      "stamp": "1c5a5050d4fd:5:-16.0:1.0",
+      "sha": "6fac147433dd"
+    },
+    "dale.pulverizer.1": {
+      "stamp": "224967d1884f:5:-16.0:1.0",
+      "sha": "194c18006815"
+    },
+    "dale.pulverizer.2": {
+      "stamp": "2560f0a79328:5:-16.0:1.0",
+      "sha": "a80f6ce66564"
+    },
+    "dale.pulverizer.3": {
+      "stamp": "ea1d4fd49a76:5:-16.0:1.0",
+      "sha": "43864d62ad19"
+    },
+    "dale.pulverizer.4": {
+      "stamp": "f354323750a3:5:-16.0:1.0",
+      "sha": "206b3e82231f"
+    },
+    "chuck.pulverizer.1": {
+      "stamp": "3a752ff235d3:5:-16.0:1.0",
+      "sha": "cb58c0f06b87"
+    },
+    "chuck.pulverizer.2": {
+      "stamp": "651575e93868:5:-16.0:1.0",
+      "sha": "880fd6bcb185"
+    },
+    "chuck.pulverizer.3": {
+      "stamp": "1e9f18d028c4:5:-16.0:1.0",
+      "sha": "ba7bfacd0621"
+    },
+    "chuck.pulverizer.4": {
+      "stamp": "ed78f04aeef2:5:-16.0:1.0",
+      "sha": "284cca30101e"
+    },
+    "dale.ramrod.1": {
+      "stamp": "6fd5ff8e568c:5:-16.0:1.0",
+      "sha": "b4f1506b3772"
+    },
+    "dale.ramrod.2": {
+      "stamp": "e5e67cd2d9c0:5:-16.0:1.0",
+      "sha": "51c32452f447"
+    },
+    "dale.ramrod.3": {
+      "stamp": "4cc7aab4af6d:5:-16.0:1.0",
+      "sha": "742130f3f241"
+    },
+    "dale.ramrod.4": {
+      "stamp": "7714b331c110:5:-16.0:1.0",
+      "sha": "db9ea2d64da0"
+    },
+    "chuck.ramrod.1": {
+      "stamp": "5564518531d5:5:-16.0:1.0",
+      "sha": "5bac665194ad"
+    },
+    "chuck.ramrod.2": {
+      "stamp": "6ac56161c307:5:-16.0:1.0",
+      "sha": "15959fda721f"
+    },
+    "chuck.ramrod.3": {
+      "stamp": "a9cd9fa93b5e:5:-16.0:1.0",
+      "sha": "1a6a281546c1"
+    },
+    "chuck.ramrod.4": {
+      "stamp": "5936ae98a4f5:5:-16.0:1.0",
+      "sha": "0dd60c6d33eb"
+    },
+    "dale.spikes.1": {
+      "stamp": "1f3cca439c94:5:-16.0:1.0",
+      "sha": "354413180f3c"
+    },
+    "dale.spikes.2": {
+      "stamp": "6c010bbe5904:5:-16.0:1.0",
+      "sha": "bca5bc299912"
+    },
+    "dale.spikes.3": {
+      "stamp": "c1dc7ce77fbf:5:-16.0:1.0",
+      "sha": "e93cbb1f60d0"
+    },
+    "dale.spikes.4": {
+      "stamp": "c87655c18f08:5:-16.0:1.0",
+      "sha": "d2ff86e91edf"
+    },
+    "chuck.spikes.1": {
+      "stamp": "05533953fc1c:5:-16.0:1.0",
+      "sha": "85b30d40696b"
+    },
+    "chuck.spikes.2": {
+      "stamp": "0f6ba7e01231:5:-16.0:1.0",
+      "sha": "750a4e30b431"
+    },
+    "chuck.spikes.3": {
+      "stamp": "427d2c63604c:5:-16.0:1.0",
+      "sha": "fba202bfdbb3"
+    },
+    "chuck.spikes.4": {
+      "stamp": "3c9f8e85dd95:5:-16.0:1.0",
+      "sha": "7b98fafd9cd9"
+    },
+    "dale.wall.1": {
+      "stamp": "319e4acb00ae:5:-16.0:1.0",
+      "sha": "4f9afb905252"
+    },
+    "dale.wall.2": {
+      "stamp": "68d4752fd85e:5:-16.0:1.0",
+      "sha": "52f5cead121d"
+    },
+    "dale.wall.3": {
+      "stamp": "6ddc571b32e8:5:-16.0:1.0",
+      "sha": "d45b701eef68"
+    },
+    "dale.wall.4": {
+      "stamp": "986579b2a2b3:5:-16.0:1.0",
+      "sha": "cf5ac9cde581"
+    },
+    "chuck.wall.1": {
+      "stamp": "95206707d4db:5:-16.0:1.0",
+      "sha": "17240a3596b9"
+    },
+    "chuck.wall.2": {
+      "stamp": "f4baf49d4d1e:5:-16.0:1.0",
+      "sha": "87741797dd28"
+    },
+    "chuck.wall.3": {
+      "stamp": "b406e654c8fc:5:-16.0:1.0",
+      "sha": "1ae3268b3563"
+    },
+    "chuck.wall.4": {
+      "stamp": "dc7b3a733a23:5:-16.0:1.0",
+      "sha": "592455e7c8ea"
+    },
+    "dale.panel.1": {
+      "stamp": "6f040ce7ee89:5:-16.0:1.0",
+      "sha": "eb550195fdf7"
+    },
+    "dale.panel.2": {
+      "stamp": "56c20ee29dfa:5:-16.0:1.0",
+      "sha": "887614e8705c"
+    },
+    "dale.panel.3": {
+      "stamp": "20e44dcde1f5:5:-16.0:1.0",
+      "sha": "6bbe5bfe35d5"
+    },
+    "dale.panel.4": {
+      "stamp": "e2c67165e0ae:5:-16.0:1.0",
+      "sha": "472887a95287"
+    },
+    "dale.panel.5": {
+      "stamp": "a0430842b66c:5:-16.0:1.0",
+      "sha": "4501fa405ed1"
+    },
+    "chuck.panel.1": {
+      "stamp": "bbdf959cafd3:5:-16.0:1.0",
+      "sha": "ccf5e6e91afd"
+    },
+    "chuck.panel.2": {
+      "stamp": "5cf25f42343a:5:-16.0:1.0",
+      "sha": "f3f1319986a6"
+    },
+    "chuck.panel.3": {
+      "stamp": "c8e32533abe5:5:-16.0:1.0",
+      "sha": "b27c3262a3ef"
+    },
+    "chuck.panel.4": {
+      "stamp": "af93c9c78d7b:5:-16.0:1.0",
+      "sha": "e4ec70a3a82e"
+    },
+    "dale.wheel.1": {
+      "stamp": "b411a0954327:5:-16.0:1.0",
+      "sha": "ea4f58a9c132"
+    },
+    "dale.wheel.2": {
+      "stamp": "3f2681fe7a51:5:-16.0:1.0",
+      "sha": "6dd74f2331e1"
+    },
+    "dale.wheel.3": {
+      "stamp": "69f82ae89e96:5:-16.0:1.0",
+      "sha": "078e85fd6138"
+    },
+    "dale.wheel.4": {
+      "stamp": "9ee01b70654f:5:-16.0:1.0",
+      "sha": "ff4f5d56c32a"
+    },
+    "chuck.wheel.1": {
+      "stamp": "78ac990a8d39:5:-16.0:1.0",
+      "sha": "c5baa263cd7e"
+    },
+    "chuck.wheel.2": {
+      "stamp": "12cb65f72df3:5:-16.0:1.0",
+      "sha": "d9a49f5c6e14"
+    },
+    "chuck.wheel.3": {
+      "stamp": "dbe747e973b2:5:-16.0:1.0",
+      "sha": "ae9f69102dad"
+    },
+    "chuck.wheel.4": {
+      "stamp": "c7b5d7e8f387:5:-16.0:1.0",
+      "sha": "0aebee03d601"
+    },
+    "dale.fire.1": {
+      "stamp": "1377d278d640:5:-16.0:1.0",
+      "sha": "80bfef5e8b4b"
+    },
+    "dale.fire.2": {
+      "stamp": "07f07c1fc181:5:-16.0:1.0",
+      "sha": "c8850cc62209"
+    },
+    "dale.fire.3": {
+      "stamp": "6c1136c3fe9c:5:-16.0:1.0",
+      "sha": "c922967e2f41"
+    },
+    "dale.fire.4": {
+      "stamp": "6ea9bfc91f91:5:-16.0:1.0",
+      "sha": "b010a2606062"
+    },
+    "dale.fire.5": {
+      "stamp": "86ac0dbf5a41:5:-16.0:1.0",
+      "sha": "d23d0bd95e75"
+    },
+    "chuck.fire.1": {
+      "stamp": "bf9d1f70879a:5:-16.0:1.0",
+      "sha": "3059b128cd72"
+    },
+    "chuck.fire.2": {
+      "stamp": "3ff0247428d3:5:-16.0:1.0",
+      "sha": "07beacb7c738"
+    },
+    "chuck.fire.3": {
+      "stamp": "20ce91f2ebdf:5:-16.0:1.0",
+      "sha": "c20d656d3e32"
+    },
+    "chuck.fire.4": {
+      "stamp": "5e09220bb380:5:-16.0:1.0",
+      "sha": "bd9afcb929db"
+    },
+    "dale.smoke.1": {
+      "stamp": "37ba3cf79b0b:5:-16.0:1.0",
+      "sha": "be8f9272e407"
+    },
+    "dale.smoke.2": {
+      "stamp": "842b7a712a09:5:-16.0:1.0",
+      "sha": "01e1e0c328c9"
+    },
+    "dale.smoke.3": {
+      "stamp": "c9042531d072:5:-16.0:1.0",
+      "sha": "8cf0c02fadde"
+    },
+    "dale.smoke.4": {
+      "stamp": "7c967ac4562b:5:-16.0:1.0",
+      "sha": "c33ce11ed024"
+    },
+    "chuck.smoke.1": {
+      "stamp": "eefb0139e515:5:-16.0:1.0",
+      "sha": "092054927254"
+    },
+    "chuck.smoke.2": {
+      "stamp": "b4ffdacf97e3:5:-16.0:1.0",
+      "sha": "5e353bfde0f2"
+    },
+    "chuck.smoke.3": {
+      "stamp": "84fcfc348605:5:-16.0:1.0",
+      "sha": "abb382a21cdc"
+    },
+    "chuck.smoke.4": {
+      "stamp": "9e06313ae0fc:5:-16.0:1.0",
+      "sha": "4796c7a9f174"
+    },
+    "dale.weapondown.1": {
+      "stamp": "200c3f471a89:5:-16.0:1.0",
+      "sha": "7dc20abc3a85"
+    },
+    "dale.weapondown.2": {
+      "stamp": "f841ef6b0192:5:-16.0:1.0",
+      "sha": "a8e4127d49ef"
+    },
+    "dale.weapondown.3": {
+      "stamp": "3c6db333484a:5:-16.0:1.0",
+      "sha": "2884ca2e45cf"
+    },
+    "dale.weapondown.4": {
+      "stamp": "7d29b7df4c0d:5:-16.0:1.0",
+      "sha": "0e42ca0f7f71"
+    },
+    "chuck.weapondown.1": {
+      "stamp": "3663dea5136d:5:-16.0:1.0",
+      "sha": "2c3ff679779a"
+    },
+    "chuck.weapondown.2": {
+      "stamp": "76de0b92090c:5:-16.0:1.0",
+      "sha": "a1474c7c9ab2"
+    },
+    "chuck.weapondown.3": {
+      "stamp": "702b6cf172ed:5:-16.0:1.0",
+      "sha": "37694b3d1389"
+    },
+    "chuck.weapondown.4": {
+      "stamp": "ac62610bed3a:5:-16.0:1.0",
+      "sha": "2eb83daf5956"
+    },
+    "dale.drivedown.1": {
+      "stamp": "6fca5679e096:5:-16.0:1.0",
+      "sha": "bd8b7fedae0c"
+    },
+    "dale.drivedown.2": {
+      "stamp": "bed706b576f0:5:-16.0:1.0",
+      "sha": "0106be6619db"
+    },
+    "dale.drivedown.3": {
+      "stamp": "80cba8b61d81:5:-16.0:1.0",
+      "sha": "c98ca3a1ce1c"
+    },
+    "dale.drivedown.4": {
+      "stamp": "e4915c87fa73:5:-16.0:1.0",
+      "sha": "4dd2650b1b2b"
+    },
+    "chuck.drivedown.1": {
+      "stamp": "d5a2172423f3:5:-16.0:1.0",
+      "sha": "4a4824272b68"
+    },
+    "chuck.drivedown.2": {
+      "stamp": "da351074ec22:5:-16.0:1.0",
+      "sha": "8fd852a34882"
+    },
+    "chuck.drivedown.3": {
+      "stamp": "d9c17da6aeba:5:-16.0:1.0",
+      "sha": "91f35473826d"
+    },
+    "chuck.drivedown.4": {
+      "stamp": "8a537c1155aa:5:-16.0:1.0",
+      "sha": "2f07f7f9bbe5"
+    },
+    "dale.count.1": {
+      "stamp": "d46e4eeed1d2:5:-16.0:1.0",
+      "sha": "df98777ab2b0"
+    },
+    "dale.count.2": {
+      "stamp": "a19b9276af7f:5:-16.0:1.0",
+      "sha": "2050f29b1ba1"
+    },
+    "dale.count.3": {
+      "stamp": "9ece353cd74e:5:-16.0:1.0",
+      "sha": "4cffc70ee15d"
+    },
+    "dale.count.4": {
+      "stamp": "b1a99fa825d5:5:-16.0:1.0",
+      "sha": "6eb5b42a3413"
+    },
+    "chuck.count.1": {
+      "stamp": "5836cbcbc7e1:5:-16.0:1.0",
+      "sha": "1eccc6203e4b"
+    },
+    "chuck.count.2": {
+      "stamp": "f00021b46478:5:-16.0:1.0",
+      "sha": "41c25cb39678"
+    },
+    "chuck.count.3": {
+      "stamp": "c5322b07a26d:5:-16.0:1.0",
+      "sha": "c82e78d46f6a"
+    },
+    "chuck.count.4": {
+      "stamp": "d14712bb0e1d:5:-16.0:1.0",
+      "sha": "86c933a45abe"
+    },
+    "dale.ko.1": {
+      "stamp": "74a979c47428:5:-16.0:1.0",
+      "sha": "ad5fa9b5d530"
+    },
+    "dale.ko.2": {
+      "stamp": "f625659c3008:5:-16.0:1.0",
+      "sha": "3b87c3f0e5ec"
+    },
+    "dale.ko.3": {
+      "stamp": "510b2623bc91:5:-16.0:1.0",
+      "sha": "37242a9f9a9f"
+    },
+    "dale.ko.4": {
+      "stamp": "08ccadaf700e:5:-16.0:1.0",
+      "sha": "d3f08b9cc4cc"
+    },
+    "chuck.ko.1": {
+      "stamp": "507af39eb23e:5:-16.0:1.0",
+      "sha": "0afde54c5a29"
+    },
+    "chuck.ko.2": {
+      "stamp": "48872d937446:5:-16.0:1.0",
+      "sha": "f0f5802a2b2f"
+    },
+    "chuck.ko.3": {
+      "stamp": "a791698ede52:5:-16.0:1.0",
+      "sha": "f99d6242a195"
+    },
+    "chuck.ko.4": {
+      "stamp": "955cb3e2b8b8:5:-16.0:1.0",
+      "sha": "88bf271c9a37"
+    },
+    "dale.righted.1": {
+      "stamp": "79252b6a2406:5:-16.0:1.0",
+      "sha": "83d059bbcab7"
+    },
+    "dale.righted.2": {
+      "stamp": "1321d6411ae0:5:-16.0:1.0",
+      "sha": "5a1daccaa598"
+    },
+    "dale.righted.3": {
+      "stamp": "db9a8ad8af04:5:-16.0:1.0",
+      "sha": "978acc63c1bc"
+    },
+    "dale.righted.4": {
+      "stamp": "cd98b9ae15b6:5:-16.0:1.0",
+      "sha": "1e5b0389c538"
+    },
+    "chuck.righted.1": {
+      "stamp": "41826cebe4e1:5:-16.0:1.0",
+      "sha": "3510b12bf7df"
+    },
+    "chuck.righted.2": {
+      "stamp": "68fa358709ab:5:-16.0:1.0",
+      "sha": "2394b2aea2a9"
+    },
+    "chuck.righted.3": {
+      "stamp": "0c99d97e9e83:5:-16.0:1.0",
+      "sha": "63247fb2ce28"
+    },
+    "chuck.righted.4": {
+      "stamp": "0ec9eec96520:5:-16.0:1.0",
+      "sha": "a5905b99550b"
+    },
+    "dale.pin.1": {
+      "stamp": "c468061ba912:5:-16.0:1.0",
+      "sha": "b868e2ee4050"
+    },
+    "dale.pin.2": {
+      "stamp": "30486378a2f1:5:-16.0:1.0",
+      "sha": "34480c3d3748"
+    },
+    "dale.pin.3": {
+      "stamp": "299e5676eb92:5:-16.0:1.0",
+      "sha": "5c72b94530b6"
+    },
+    "dale.pin.4": {
+      "stamp": "62eb4955c59d:5:-16.0:1.0",
+      "sha": "149833cf1bee"
+    },
+    "chuck.pin.1": {
+      "stamp": "858ba3041fa4:5:-16.0:1.0",
+      "sha": "3a87312e6b2f"
+    },
+    "chuck.pin.2": {
+      "stamp": "2ea85f967b54:5:-16.0:1.0",
+      "sha": "5f868fb1f275"
+    },
+    "chuck.pin.3": {
+      "stamp": "1a1efdb5746b:5:-16.0:1.0",
+      "sha": "e8dda28196bc"
+    },
+    "chuck.pin.4": {
+      "stamp": "e17063f56c03:5:-16.0:1.0",
+      "sha": "bfde7390c873"
+    },
+    "dale.spinup.1": {
+      "stamp": "47e0983c8c55:5:-16.0:1.0",
+      "sha": "f5cfdc9cc0a8"
+    },
+    "dale.spinup.2": {
+      "stamp": "c93781fdb9c4:5:-16.0:1.0",
+      "sha": "2f68ae98bec6"
+    },
+    "dale.spinup.3": {
+      "stamp": "cb8b987ce5db:5:-16.0:1.0",
+      "sha": "16b933d425b7"
+    },
+    "dale.spinup.4": {
+      "stamp": "11799e91b0a5:5:-16.0:1.0",
+      "sha": "f8ae8e1491c2"
+    },
+    "chuck.spinup.1": {
+      "stamp": "a2214a9978fb:5:-16.0:1.0",
+      "sha": "14eff4555cbd"
+    },
+    "chuck.spinup.2": {
+      "stamp": "ae18a333ea5d:5:-16.0:1.0",
+      "sha": "5f017fefb772"
+    },
+    "chuck.spinup.3": {
+      "stamp": "2df7f8ccc7b4:5:-16.0:1.0",
+      "sha": "60e2adec706c"
+    },
+    "chuck.spinup.4": {
+      "stamp": "893fd230704d:5:-16.0:1.0",
+      "sha": "35cd2acbb709"
+    },
+    "dale.whiff.1": {
+      "stamp": "af6a15357d29:5:-16.0:1.0",
+      "sha": "bded5b206418"
+    },
+    "dale.whiff.2": {
+      "stamp": "5802eb7cff37:5:-16.0:1.0",
+      "sha": "80f4260bbfb7"
+    },
+    "dale.whiff.3": {
+      "stamp": "6bb44b587615:5:-16.0:1.0",
+      "sha": "e8d79430328f"
+    },
+    "dale.whiff.4": {
+      "stamp": "37dea4c6a709:5:-16.0:1.0",
+      "sha": "ed88af12e8d1"
+    },
+    "chuck.whiff.1": {
+      "stamp": "cf4830eba031:5:-16.0:1.0",
+      "sha": "85ab24f912e2"
+    },
+    "chuck.whiff.2": {
+      "stamp": "fa8f047a831c:5:-16.0:1.0",
+      "sha": "8c141ae7dd9e"
+    },
+    "chuck.whiff.3": {
+      "stamp": "8efd0ed56642:5:-16.0:1.0",
+      "sha": "a55addf36252"
+    },
+    "chuck.whiff.4": {
+      "stamp": "594188fbde6e:5:-16.0:1.0",
+      "sha": "1c801aec3b3a"
+    },
+    "dale.chase.1": {
+      "stamp": "262fcecf72cf:5:-16.0:1.0",
+      "sha": "d9512d65bd93"
+    },
+    "dale.chase.2": {
+      "stamp": "bb230c200f6f:5:-16.0:1.0",
+      "sha": "8afc96893f12"
+    },
+    "dale.chase.3": {
+      "stamp": "428658d9d048:5:-16.0:1.0",
+      "sha": "4304aa5f70e5"
+    },
+    "dale.chase.4": {
+      "stamp": "912cc7e5ef91:5:-16.0:1.0",
+      "sha": "3f17fcb20fd8"
+    },
+    "chuck.chase.1": {
+      "stamp": "8400468c1c22:5:-16.0:1.0",
+      "sha": "52398e5aee2e"
+    },
+    "chuck.chase.2": {
+      "stamp": "3064c4ab7f5d:5:-16.0:1.0",
+      "sha": "eb2225b5ca7e"
+    },
+    "chuck.chase.3": {
+      "stamp": "5c9d64c9f14c:5:-16.0:1.0",
+      "sha": "fb83fb986e42"
+    },
+    "chuck.chase.4": {
+      "stamp": "7caca4aff04d:5:-16.0:1.0",
+      "sha": "e8b9635f10c9"
+    },
+    "dale.timelow.1": {
+      "stamp": "8e469d27da1d:5:-16.0:1.0",
+      "sha": "3d7acda933a7"
+    },
+    "dale.timelow.2": {
+      "stamp": "68c9ec5ef526:5:-16.0:1.0",
+      "sha": "1cae52b88320"
+    },
+    "dale.timelow.3": {
+      "stamp": "bdf190e809b5:5:-16.0:1.0",
+      "sha": "4db29156cd36"
+    },
+    "dale.timelow.4": {
+      "stamp": "d477b20526ad:5:-16.0:1.0",
+      "sha": "2791b6252105"
+    },
+    "chuck.timelow.1": {
+      "stamp": "a8f1261f4bc8:5:-16.0:1.0",
+      "sha": "bab8408ba0ea"
+    },
+    "chuck.timelow.2": {
+      "stamp": "93ca3f93cba5:5:-16.0:1.0",
+      "sha": "67ca3e89f165"
+    },
+    "chuck.timelow.3": {
+      "stamp": "a1aa28868a47:5:-16.0:1.0",
+      "sha": "210796562d53"
+    },
+    "chuck.timelow.4": {
+      "stamp": "892f870933ab:5:-16.0:1.0",
+      "sha": "d91bb3321f06"
+    },
+    "dale.decision.1": {
+      "stamp": "66ff3b86fea1:5:-16.0:1.0",
+      "sha": "f3928d870c96"
+    },
+    "dale.decision.2": {
+      "stamp": "b2542e4d705c:5:-16.0:1.0",
+      "sha": "889095680f32"
+    },
+    "dale.decision.3": {
+      "stamp": "c13a01fd396f:5:-16.0:1.0",
+      "sha": "90ac057ff8f6"
+    },
+    "dale.decision.4": {
+      "stamp": "d6b6c518cbe4:5:-16.0:1.0",
+      "sha": "10ace58e8d4e"
+    },
+    "chuck.decision.1": {
+      "stamp": "1b3ce838977b:5:-16.0:1.0",
+      "sha": "af26c4f7f67f"
+    },
+    "chuck.decision.2": {
+      "stamp": "1c6085b54112:5:-16.0:1.0",
+      "sha": "142f37fa0259"
+    },
+    "chuck.decision.3": {
+      "stamp": "b9a978f77fc6:5:-16.0:1.0",
+      "sha": "c4b9144324f9"
+    },
+    "chuck.decision.4": {
+      "stamp": "1200a4b153e7:5:-16.0:1.0",
+      "sha": "0c983584b0d9"
+    },
+    "dale.upset.1": {
+      "stamp": "5379349a82ec:5:-16.0:1.0",
+      "sha": "5ad435c820b9"
+    },
+    "dale.upset.2": {
+      "stamp": "c1f8818fd613:5:-16.0:1.0",
+      "sha": "08d26f8587f3"
+    },
+    "dale.upset.3": {
+      "stamp": "eab1891e55ec:5:-16.0:1.0",
+      "sha": "4b5fbd11d774"
+    },
+    "dale.upset.4": {
+      "stamp": "a20c9a85bfc6:5:-16.0:1.0",
+      "sha": "3ea971a25158"
+    },
+    "chuck.upset.1": {
+      "stamp": "617265b3b124:5:-16.0:1.0",
+      "sha": "9c28fed8668c"
+    },
+    "chuck.upset.2": {
+      "stamp": "8f49f44d667e:5:-16.0:1.0",
+      "sha": "d573f2b5c34b"
+    },
+    "chuck.upset.3": {
+      "stamp": "4365f9260b50:5:-16.0:1.0",
+      "sha": "ff97d7915837"
+    },
+    "chuck.upset.4": {
+      "stamp": "8303c7777c7f:5:-16.0:1.0",
+      "sha": "42a8e2156f50"
+    },
+    "dale.idle.1": {
+      "stamp": "f87e908e87d1:5:-16.0:1.0",
+      "sha": "d1e766b04b6f"
+    },
+    "dale.idle.2": {
+      "stamp": "701ba3f1f784:5:-16.0:1.0",
+      "sha": "966a6b92ee94"
+    },
+    "dale.idle.3": {
+      "stamp": "369549aa39e0:5:-16.0:1.0",
+      "sha": "0da0165516cf"
+    },
+    "dale.idle.4": {
+      "stamp": "a8d103a2ac51:5:-16.0:1.0",
+      "sha": "e21a07398ca6"
+    },
+    "dale.idle.5": {
+      "stamp": "7d719d4a8d44:5:-16.0:1.0",
+      "sha": "3d2386f8199e"
+    },
+    "dale.idle.6": {
+      "stamp": "c894b242b6df:5:-16.0:1.0",
+      "sha": "287c3b256a71"
+    },
+    "dale.idle.7": {
+      "stamp": "c49c8b19a146:5:-16.0:1.0",
+      "sha": "a9e575e30591"
+    },
+    "dale.idle.8": {
+      "stamp": "a2854d4afa5b:5:-16.0:1.0",
+      "sha": "ccc91bd65fda"
+    },
+    "chuck.idle.1": {
+      "stamp": "28fe89b439a1:5:-16.0:1.0",
+      "sha": "723bafcc3ada"
+    },
+    "chuck.idle.2": {
+      "stamp": "bc57723054d1:5:-16.0:1.0",
+      "sha": "4d44b4c1c459"
+    },
+    "chuck.idle.3": {
+      "stamp": "8da6eefda310:5:-16.0:1.0",
+      "sha": "8fa25b140c7e"
+    },
+    "chuck.idle.4": {
+      "stamp": "19e90c899f7f:5:-16.0:1.0",
+      "sha": "ac8f851704e4"
+    },
+    "chuck.idle.5": {
+      "stamp": "056f8a5049ef:5:-16.0:1.0",
+      "sha": "00f7437c1eac"
+    },
+    "chuck.idle.6": {
+      "stamp": "6a5538254409:5:-16.0:1.0",
+      "sha": "a32a801735d2"
+    },
+    "chuck.idle.7": {
+      "stamp": "67690d4fdbe3:5:-16.0:1.0",
+      "sha": "b62dfda3427c"
+    },
+    "chuck.idle.8": {
+      "stamp": "1573d382af3c:5:-16.0:1.0",
+      "sha": "561da5c4fe51"
+    },
+    "dale.intro.1": {
+      "stamp": "05b52d54755e:5:-16.0:1.0",
+      "sha": "a0d2f746c79c"
+    },
+    "dale.intro.2": {
+      "stamp": "e6a544443bd6:5:-16.0:1.0",
+      "sha": "d11753a75473"
+    },
+    "dale.intro.3": {
+      "stamp": "f4a43749a1bd:5:-16.0:1.0",
+      "sha": "8ae50ea52e1c"
+    },
+    "dale.intro.4": {
+      "stamp": "d556de4e6337:5:-16.0:1.0",
+      "sha": "d60347ec57fa"
+    },
+    "dale.intro.5": {
+      "stamp": "5c7024e1721b:5:-16.0:1.0",
+      "sha": "6fda80db918f"
+    },
+    "chuck.intro.1": {
+      "stamp": "857f4ab7b13c:5:-16.0:1.0",
+      "sha": "0a2eef96af11"
+    },
+    "chuck.intro.2": {
+      "stamp": "b1d4aaf233b5:5:-16.0:1.0",
+      "sha": "f151fa7a2be8"
+    },
+    "chuck.intro.3": {
+      "stamp": "48da4f53c735:5:-16.0:1.0",
+      "sha": "b047fb3936ae"
+    },
+    "chuck.intro.4": {
+      "stamp": "544a0db4819f:5:-16.0:1.0",
+      "sha": "46b7de8e65ee"
+    },
+    "chuck.intro.5": {
+      "stamp": "a147c63d44df:5:-16.0:1.0",
+      "sha": "b545da88f4a8"
+    },
+    "dale.rookie.1": {
+      "stamp": "b4bd4bbd004d:5:-16.0:1.0",
+      "sha": "10e251d5d59d"
+    },
+    "dale.rookie.2": {
+      "stamp": "b9a61bea291d:5:-16.0:1.0",
+      "sha": "bd36ddae0a81"
+    },
+    "dale.rookie.3": {
+      "stamp": "88e163def6d6:5:-16.0:1.0",
+      "sha": "7e5dca270771"
+    },
+    "dale.rookie.4": {
+      "stamp": "b5c2dcf45ad4:5:-16.0:1.0",
+      "sha": "58cf2b5e3220"
+    },
+    "dale.rookie.5": {
+      "stamp": "c7c825144400:5:-16.0:1.0",
+      "sha": "ac28d26f59c4"
+    },
+    "chuck.rookie.1": {
+      "stamp": "9447cc62cf2e:5:-16.0:1.0",
+      "sha": "b580afbc64dc"
+    },
+    "chuck.rookie.2": {
+      "stamp": "21e4ab20e36b:5:-16.0:1.0",
+      "sha": "a808b73f8d73"
+    },
+    "chuck.rookie.3": {
+      "stamp": "a4e86437c2f9:5:-16.0:1.0",
+      "sha": "6a44d8e94b41"
+    },
+    "chuck.rookie.4": {
+      "stamp": "4fd1fbe7a98e:5:-16.0:1.0",
+      "sha": "16b50ce349ff"
+    },
+    "chuck.rookie.5": {
+      "stamp": "a93dd3996f2d:5:-16.0:1.0",
+      "sha": "f6cb4232d284"
+    },
+    "dale.desk.1": {
+      "stamp": "45dbacf7175b:5:-16.0:1.0",
+      "sha": "c54c0fb736b4"
+    },
+    "dale.desk.2": {
+      "stamp": "7e5e0a0c88b4:5:-16.0:1.0",
+      "sha": "cb421cba80fe"
+    },
+    "dale.desk.3": {
+      "stamp": "9fec7c0b0cee:5:-16.0:1.0",
+      "sha": "e20b2518bafc"
+    },
+    "dale.desk.4": {
+      "stamp": "5199176cabdd:5:-16.0:1.0",
+      "sha": "c1a6440ac23b"
+    },
+    "dale.desk.5": {
+      "stamp": "1afaaa861da5:5:-16.0:1.0",
+      "sha": "45d8c28e7293"
+    },
+    "chuck.desk.1": {
+      "stamp": "b5a08f6dede4:5:-16.0:1.0",
+      "sha": "d577a4228996"
+    },
+    "chuck.desk.2": {
+      "stamp": "037ae37c9ac6:5:-16.0:1.0",
+      "sha": "1cfc7dcc2d37"
+    },
+    "chuck.desk.3": {
+      "stamp": "26bfba6aba11:5:-16.0:1.0",
+      "sha": "77147648e284"
+    },
+    "chuck.desk.4": {
+      "stamp": "4d30d1c78dd1:5:-16.0:1.0",
+      "sha": "f97f5f439854"
+    },
+    "chuck.desk.5": {
+      "stamp": "53f570e5db7d:5:-16.0:1.0",
+      "sha": "e2d11479a312"
+    },
+    "dale.bumper.1": {
+      "stamp": "d728af340c83:5:-16.0:1.0",
+      "sha": "eb178a911b85"
+    },
+    "dale.bumper.2": {
+      "stamp": "ca1a41174ae6:5:-16.0:1.0",
+      "sha": "15306319e18f"
+    },
+    "dale.bumper.3": {
+      "stamp": "7fbd2246eb5d:5:-16.0:1.0",
+      "sha": "86e93307fc4f"
+    },
+    "dale.bumper.4": {
+      "stamp": "4cdbf100222f:5:-16.0:1.0",
+      "sha": "18c8964b6ba7"
+    },
+    "jenna.pits.1": {
+      "stamp": "757f76e30720:5:-16.0:1.0",
+      "sha": "da5ceb7d673e"
+    },
+    "jenna.pits.2": {
+      "stamp": "ea0401279844:5:-16.0:1.0",
+      "sha": "b7fe493cce02"
+    },
+    "jenna.pits.3": {
+      "stamp": "3fa8ee66207a:5:-16.0:1.0",
+      "sha": "b2b02b4f16de"
+    },
+    "jenna.pits.4": {
+      "stamp": "3c5d67c150a3:5:-16.0:1.0",
+      "sha": "913caae36c1b"
+    },
+    "jenna.win.1": {
+      "stamp": "e0b9abfed8b2:5:-16.0:1.0",
+      "sha": "74f301d309a8"
+    },
+    "jenna.win.3": {
+      "stamp": "85a7869b837a:5:-16.0:1.0",
+      "sha": "6303f7cbffc0"
+    },
+    "jenna.win.4": {
+      "stamp": "fe74c00401b0:5:-16.0:1.0",
+      "sha": "e711ed6ee90c"
+    },
+    "jenna.lose.2": {
+      "stamp": "611871234490:5:-16.0:1.0",
+      "sha": "33715c2eccc5"
+    },
+    "jenna.lose.3": {
+      "stamp": "37b636abe2b4:5:-16.0:1.0",
+      "sha": "7c844ee0465e"
+    },
+    "jenna.lose.4": {
+      "stamp": "c4e8ca463afa:5:-16.0:1.0",
+      "sha": "4ccf6c029ca2"
+    },
+    "jenna.final.1": {
+      "stamp": "8f7f03adae67:5:-16.0:1.0",
+      "sha": "c75e5008b447"
+    },
+    "jenna.final.2": {
+      "stamp": "27323e874c2d:5:-16.0:1.0",
+      "sha": "15072f8d5f24"
+    },
+    "jenna.final.3": {
+      "stamp": "1b16c63f434c:5:-16.0:1.0",
+      "sha": "761fc4c5b13e"
+    },
+    "jenna.champ.1": {
+      "stamp": "5b46071cc246:5:-16.0:1.0",
+      "sha": "5e09708dd1b4"
+    },
+    "jenna.champ.2": {
+      "stamp": "531e378bf0b4:5:-16.0:1.0",
+      "sha": "c6b0f787372e"
+    },
+    "jenna.champ.3": {
+      "stamp": "a1eaf4298192:5:-16.0:1.0",
+      "sha": "30ad9ad93bae"
+    }
+  }
+}
