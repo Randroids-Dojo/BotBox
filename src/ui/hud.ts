@@ -4,7 +4,7 @@
 
 import { COMPONENTS, FACETS, type BotFrame, type BotSpec, type Component, type Facet, type WorldFrame } from '../contract';
 import type { HudEntrant } from './types';
-import { CORNER_COLOR, el, fmtClock, healthColor } from './core';
+import { CORNER_COLOR, el, emitAction, fmtClock, healthColor } from './core';
 import type { UiCtx } from './fx';
 
 const SVG = 'http://www.w3.org/2000/svg';
@@ -88,8 +88,9 @@ class BotPanel {
     this.cells.hold = new Cell((v: number) => {
       hold.classList.toggle('on', v >= 0);
       if (v < 0) return;
-      holdFill.style.width = `${Math.min(1, v / 10) * 100}%`;
-      hold.classList.toggle('warn', v >= 7);
+      // v is tenths of a second; the release comes at 10 seconds, the warning from 7.
+      holdFill.style.width = `${Math.min(1, v / 100) * 100}%`;
+      hold.classList.toggle('warn', v >= 70);
       holdN.textContent = (v / 10).toFixed(1);
     });
 
@@ -106,9 +107,9 @@ class BotPanel {
       status,
     ]);
 
-    // ---- knockout count
+    // ---- knockout count: a referee count plaque shown under the scoreboard (see Hud).
     const koN = el('span.ko-n.cond');
-    this.ko = el(`div.ko.slot-${slot}${right ? '.right' : ''}`, { style: `--cc:${color}` }, [el('span.ko-k.wide', 'Count'), koN]);
+    this.ko = el(`div.ko.slot-${slot}`, { style: `--cc:${color}` }, [el('span.ko-k.wide', 'Count'), koN, el('span.ko-nm.wide', e.name)]);
     this.cells.ko = new Cell((v: number) => {
       this.ko.classList.toggle('on', v >= 0);
       if (v >= 0) {
@@ -118,7 +119,6 @@ class BotPanel {
         this.ko.classList.add('tick');
       }
     });
-    this.node.append(this.ko);
   }
 
   private schematic(spec: BotSpec): SVGSVGElement {
@@ -300,6 +300,7 @@ export class Hud {
   private lamps: HTMLElement[] = [];
   private tree: HTMLElement | null = null;
   private slow: HTMLElement | null = null;
+  private koRow: HTMLElement = el('div.ko-row');
   private cells: Record<string, Cell> = {};
   private lastT = 0;
   private fightStartT: number | null = null;
@@ -318,7 +319,16 @@ export class Hud {
     this.lamps = [el('span.lt.red'), el('span.lt.red'), el('span.lt.red'), el('span.lt.green')];
     this.tree = el('div.lighttree', this.lamps);
     this.slow = el('span.sb-slow.wide', 'Slo-mo');
-    this.board = el('div.scoreboard', [el('div.sb-face', [el('span.sb-logo.logo-type', 'BOTBOX'), this.clock, el('span.sb-phase.wide')]), this.tree, this.slow]);
+    // On touch screens the scoreboard doubles as the pause button.
+    const pause = el('span.sb-pause', [el('span.pz'), el('span.pz')]);
+    const face = el('div.sb-face', [el('span.sb-logo.logo-type', 'BOTBOX'), pause, this.clock, el('span.sb-phase.wide')]);
+    face.addEventListener('pointerup', (ev) => {
+      if (!this.ctx.root.classList.contains('touch-on')) return;
+      ev.preventDefault();
+      emitAction(this.ctx.input, 'pause');
+    });
+    this.koRow = el('div.ko-row');
+    this.board = el('div.scoreboard', [face, this.tree, this.slow]);
     const phase = this.board.querySelector('.sb-phase') as HTMLElement;
     this.cells = {
       clock: new Cell((v: string) => (this.clock!.textContent = v)),
@@ -335,9 +345,10 @@ export class Hud {
       slow: new Cell((v: boolean) => this.slow!.classList.toggle('on', v)),
     };
     this.panels = entrants.slice(0, 4).map((e, i) => new BotPanel(e, i));
+    for (const p of this.panels) this.koRow.append(p.ko);
     const colL = el('div.hud-col.left', this.panels.filter((_, i) => i % 2 === 0).map((p) => p.node));
     const colR = el('div.hud-col.right', this.panels.filter((_, i) => i % 2 === 1).map((p) => p.node));
-    this.node = el(`div.hud.n${this.panels.length}`, [this.board, colL, colR]);
+    this.node = el(`div.hud.n${this.panels.length}`, [this.board, colL, colR, this.koRow]);
     this.ctx.layers.hud.append(this.node);
     this.fightStartT = null;
   }

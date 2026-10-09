@@ -1,5 +1,5 @@
 // On-screen fight controls for phones: a floating left thumbstick, a big WEAPON button, a
-// RIGHT button when the robot can self-right, CAM and pause. Each control tracks its own
+// RIGHT button when the robot can self-right, and CAM. Tapping the scoreboard pauses. Each control tracks its own
 // pointer id so driving and firing work at the same time.
 
 import { el, emitAction } from './core';
@@ -143,10 +143,8 @@ export class TouchControls {
     if (right) hold(right, (d) => input.setTouchButton('selfRight', d));
     const cam = el('div.tb.tb-cam.live', el('span.tb-t.wide', 'Cam'));
     tapBtn(cam, () => emitAction(input, 'camera'));
-    const pause = el('div.tb.tb-pause.live', [el('span.pz'), el('span.pz')]);
-    tapBtn(pause, () => emitAction(input, 'pause'));
-
-    this.node = el('div.touch', [zone, weapon, right, cam, pause]);
+    // Pause lives on the scoreboard (see hud.ts), clear of the knockout count.
+    this.node = el('div.touch', [zone, weapon, right, cam]);
     this.ctx.layers.touch.append(this.node);
   }
 

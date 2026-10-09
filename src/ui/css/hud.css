@@ -27,7 +27,8 @@
   position: absolute;
   left: 50%;
   top: var(--pad-t);
-  transform: translateX(-50%);
+  /* The individual translate property, so the slam-in animation's transform cannot undo it. */
+  translate: -50% 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,7 +85,8 @@
   animation: bx-blink 1s steps(1) infinite;
 }
 .bx .sb-slow {
-  margin-top: 0.3em;
+  position: absolute;
+  top: calc(100% + 0.3em);
   font-size: calc(var(--hu) * 0.8);
   padding: 0.1em 0.8em;
   background: var(--blue);
@@ -97,6 +99,8 @@
 
 /* light tree */
 .bx .lighttree {
+  position: absolute;
+  top: 100%;
   display: flex;
   gap: calc(var(--hu) * 0.5);
   margin-top: calc(var(--hu) * 0.5);
@@ -474,7 +478,18 @@
 }
 .bx .hp-hold.warn {
   background: rgba(255, 42, 42, 0.3);
-  animation: bx-blink 0.5s steps(1) infinite;
+  /* Pulse the background, never the numbers: they must stay readable. */
+  animation: hold-warn 0.5s steps(1) infinite;
+}
+@keyframes hold-warn {
+  0%,
+  50% {
+    background: rgba(255, 42, 42, 0.5);
+  }
+  51%,
+  100% {
+    background: rgba(255, 42, 42, 0.18);
+  }
 }
 .bx .hp-hold.warn .hold-fill {
   background: var(--red);
@@ -496,38 +511,85 @@
   display: block;
 }
 
-/* KO count: big ref count beside the robot's panel. */
-.bx .ko {
+/* KO count: a referee count plaque under the scoreboard, one per robot being counted. It sits
+   below where the slo-mo tag appears, and the light tree is gone by the time anyone is counted. */
+.bx .ko-row {
   position: absolute;
-  top: 0;
-  left: calc(100% + var(--hu) * 0.6);
+  left: 50%;
+  top: calc(var(--pad-t) + max(44px, var(--hu) * 4.2) + var(--hu) * 2.6);
+  translate: -50% 0;
+  display: flex;
+  gap: calc(var(--hu) * 0.8);
+}
+.bx .ko {
   display: none;
   flex-direction: column;
   align-items: center;
-  padding: 0.2em 0.6em 0.1em;
-  background: rgba(0, 0, 0, 0.82);
+  min-width: calc(var(--hu) * 9);
+  padding: 0.25em 0.8em 0.35em;
+  background: rgba(0, 0, 0, 0.84);
   border: 3px solid var(--cc);
-  box-shadow: 0 0 1.6em rgba(255, 42, 42, 0.5);
-}
-.bx .hp.right .ko {
-  left: auto;
-  right: calc(100% + var(--hu) * 0.6);
+  box-shadow:
+    0 0 1.6em rgba(255, 42, 42, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 .bx .ko.on {
   display: flex;
 }
 .bx .ko-k {
   font-size: calc(var(--hu) * 0.8);
+  letter-spacing: 0.2em;
   color: #ff5b4f;
 }
 .bx .ko-n {
-  font-size: calc(var(--hu) * 6.6);
+  font-size: calc(var(--hu) * 5.6);
   line-height: 0.95;
   color: #fff;
   text-shadow: 0 0 0.2em #ff1a1a;
 }
+.bx .ko-nm {
+  max-width: calc(var(--hu) * 12);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 0.15em;
+  padding: 0.1em 0.5em;
+  font-size: calc(var(--hu) * 0.75);
+  color: #fff;
+  background: var(--cc);
+}
 .bx .ko.tick .ko-n {
   animation: bx-punch 0.3s cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+
+/* Pause glyph in the scoreboard, shown only with touch controls (the scoreboard is the button). */
+.bx .sb-pause {
+  display: none;
+  gap: calc(var(--hu) * 0.35);
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--hu) * 2.6);
+  height: calc(var(--hu) * 2.6);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(0, 0, 0, 0.35);
+}
+.bx .sb-pause .pz {
+  width: calc(var(--hu) * 0.35);
+  height: calc(var(--hu) * 1.1);
+  background: #fff;
+}
+.bx.touch-on .sb-pause {
+  display: flex;
+}
+.bx.touch-on .sb-logo {
+  display: none;
+}
+.bx.touch-on .sb-face {
+  pointer-events: auto;
+  cursor: pointer;
+  /* A comfortable tap target even on small phones. */
+  min-height: 44px;
 }
 
 /* ---- touch controls */
@@ -639,27 +701,19 @@
   height: 56px;
   font-size: 11px;
 }
-.bx .tb-pause {
-  left: calc(50% + var(--hu) * 22);
-  top: var(--pad-t);
-  width: 46px;
-  height: 46px;
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  align-items: center;
-}
-.bx .pz {
-  width: 6px;
-  height: 18px;
-  background: #fff;
-}
-
 @media (orientation: portrait) {
+  /* Portrait phones: scoreboard on top, the panels in a row beneath it, the count mid-screen. */
   .bx .hud {
-    --hu: clamp(8px, 2.1vw, 14px);
+    --hu: clamp(7px, 1.9vw, 13px);
   }
-  .bx .hp {
-    width: calc(var(--hu) * 17);
+  .bx .hud-col {
+    top: calc(var(--pad-t) + max(44px, var(--hu) * 4.2) + var(--hu) * 1.2);
+    gap: calc(var(--hu) * 0.4);
+  }
+  .bx .ko-row {
+    top: 36%;
+  }
+  .bx .ko-n {
+    font-size: calc(var(--hu) * 7);
   }
 }

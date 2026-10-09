@@ -984,3 +984,18 @@
     align-items: flex-end;
   }
 }
+
+/* A knockout count says it all: in-play callouts give way to the count plaque. */
+.bx:has(.ko.on) .banner.k-flipped,
+.bx:has(.ko.on) .banner.k-fire,
+.bx:has(.ko.on) .banner.k-release {
+  display: none;
+}
+
+/* With touch controls up, keep captions between the thumbstick and the buttons. */
+.bx.touch-on .caption {
+  left: 22%;
+  right: 28%;
+  width: auto;
+  margin: 0;
+}
