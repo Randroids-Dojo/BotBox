@@ -132,11 +132,11 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       out.pos.copy(r).addScaledVector(_c, back);
       out.pos.x += -_c.z * 0.75;
       out.pos.z += _c.x * 0.75;
-      out.pos.y = 0.5;
+      out.pos.y = 0.65 + (redBot?.length ?? 0.9) * 0.2;
       clampInside(out.pos, 0.35);
       out.target.copy(bl).setY(0.35);
-      // Nudge the aim toward red so both sit in frame.
-      out.target.lerp(r, 0.18);
+      // Nudge the aim toward red so it sits big in the lower foreground.
+      out.target.lerp(r, 0.3);
       out.target.y = 0.3;
       out.fov = 50;
       break;

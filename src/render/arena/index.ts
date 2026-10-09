@@ -25,6 +25,8 @@ export interface Arena {
   update(hazards: HazardFrame[], lights: number, dt: number, time: number): void;
 }
 
+export const CROWD_LAYER = 1;
+
 export function crowdDensity(q: Quality): number {
   return q === 'high' ? 0.92 : q === 'medium' ? 0.6 : 0.32;
 }
@@ -54,6 +56,9 @@ export async function buildArena(renderer: THREE.WebGLRenderer, quality: Quality
   await tick();
   const crowd = buildCrowd(stands.seats, crowdDensity(quality));
   root.add(crowd.root);
+  // The crowd lives on its own layer: the main camera sees it, the big screen feed and the
+  // shadow cameras skip it.
+  crowd.root.traverse((o) => o.layers.set(CROWD_LAYER));
   const env = buildArenaEnv(renderer, structure.fixtures);
   progress(0.8);
 
@@ -69,6 +74,7 @@ export async function buildArena(renderer: THREE.WebGLRenderer, quality: Quality
     setQuality(q) {
       lights.setQuality(q);
       crowd.setDensity(crowdDensity(q));
+      crowd.root.traverse((o) => o.layers.set(CROWD_LAYER));
     },
     update(hz, lit, dt, time) {
       hazards.update(hz, dt, time);

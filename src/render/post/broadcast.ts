@@ -26,8 +26,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   // Interlace lines.
   float line = 0.94 + 0.06 * sin(uv.y * uRes.y * 3.14159);
   // Grain.
-  float g = hash(uv * uRes + fract(uTime * 13.7) * 100.0) - 0.5;
-  vec3 outc = c * line + g * 0.045;
+  float g = hash(floor(uv * vec2(720.0, 486.0)) + fract(uTime * 13.7) * 100.0) - 0.5;
+  vec3 outc = c * line + g * 0.022;
   // Slight lift and saturation drop.
   float l = dot(outc, vec3(0.299, 0.587, 0.114));
   outc = mix(vec3(l), outc, 0.88) * 0.97 + 0.012;

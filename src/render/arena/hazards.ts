@@ -91,13 +91,15 @@ class Pulverizer implements HazardView {
     const colH = P.y + 0.55;
     for (const s of [-1, 1]) {
       const c = back.clone().addScaledVector(this.axle, s * 0.62);
-      const iBeam = (cx: number, cz: number) => {
-        // Flanges along the axle direction, web between.
-        g.add(new THREE.BoxGeometry(0.26, colH, 0.03), cx, colH / 2, cz, 0, Math.atan2(this.axle.x, this.axle.z) + Math.PI / 2, 0);
-      };
-      iBeam(c.x + this.d.x * 0.11, c.z + this.d.z * 0.11);
-      iBeam(c.x - this.d.x * 0.11, c.z - this.d.z * 0.11);
-      g.add(new THREE.BoxGeometry(0.03, colH, 0.22), c.x, colH / 2, c.z, 0, Math.atan2(this.axle.x, this.axle.z) + Math.PI / 2, 0);
+      const ry = Math.atan2(this.axle.x, this.axle.z) + Math.PI / 2;
+      // Heavy box section column with a gusseted base.
+      g.add(new THREE.BoxGeometry(0.34, colH, 0.34), c.x, colH / 2, c.z, 0, ry, 0);
+      g.add(new THREE.BoxGeometry(0.42, 0.06, 0.42), c.x, colH * 0.55, c.z, 0, ry, 0);
+      for (const k of [-1, 1]) {
+        const gx = c.x + this.d.x * k * 0.24;
+        const gz = c.z + this.d.z * k * 0.24;
+        g.add(new THREE.BoxGeometry(0.03, 0.5, 0.18), gx, 0.29, gz, 0, ry + Math.PI / 2, 0);
+      }
       // Foot plate.
       g.add(new THREE.BoxGeometry(0.5, 0.04, 0.5), c.x, 0.02, c.z, 0, Math.atan2(this.d.x, this.d.z), 0);
       // Diagonal brace back to the corner.
@@ -112,6 +114,15 @@ class Pulverizer implements HazardView {
     const top = back.clone();
     top.y = colH + 0.08;
     g.add(new THREE.BoxGeometry(1.5, 0.16, 0.28), top.x, top.y, top.z, 0, Math.atan2(this.d.x, this.d.z), 0);
+    // Hazard striped collars on the columns.
+    const collars = new GeoBatch();
+    for (const s of [-1, 1]) {
+      const c = back.clone().addScaledVector(this.axle, s * 0.62);
+      for (const y of [0.35, 1.35]) collars.add(new THREE.BoxGeometry(0.37, 0.26, 0.37), c.x, y, c.z, 0, Math.atan2(this.axle.x, this.axle.z), 0);
+    }
+    const collarMesh = new THREE.Mesh(worldUv(collars.build(), 2.5), mats.hazard);
+    collarMesh.castShadow = true;
+    this.root.add(collarMesh);
     const gantry = new THREE.Mesh(worldUv(g.build(), 1.5), mats.paintRed);
     gantry.castShadow = true;
     gantry.receiveShadow = true;

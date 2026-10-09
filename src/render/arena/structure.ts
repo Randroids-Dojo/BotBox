@@ -90,7 +90,7 @@ export function buildStructure(mats: ArenaMaterials): Structure {
   root.add(bolts);
 
   // ------------------------------------------------------------------ spikestrips
-  const spikeGeo = new THREE.ConeGeometry(0.035, 1, 8);
+  const spikeGeo = new THREE.ConeGeometry(0.045, 1, 10);
   spikeGeo.translate(0, 0.5, 0);
   spikeGeo.rotateZ(-Math.PI / 2); // point along +X
   const spikeMats: THREE.Matrix4[] = [];
@@ -107,7 +107,7 @@ export function buildStructure(mats: ArenaMaterials): Structure {
       spikeMats.push(new THREE.Matrix4().compose(p, q, new THREE.Vector3(s.reach - 0.05, 1, 1)));
     }
   }
-  const spikes = new THREE.InstancedMesh(spikeGeo, mats.brightSteel, spikeMats.length);
+  const spikes = new THREE.InstancedMesh(spikeGeo, mats.hydraulic, spikeMats.length);
   spikeMats.forEach((sm, i) => spikes.setMatrixAt(i, sm));
   spikes.castShadow = true;
   spikes.computeBoundingSphere();

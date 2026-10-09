@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import type { BotSpec, Component, Corner, Facet, MatchEvent, Quat, Vec3, WorldFrame } from '../contract';
 import { BIG_SCREEN } from '../data/arena';
-import { buildArena, type Arena } from './arena';
+import { buildArena, CROWD_LAYER, type Arena } from './arena';
 import { buildChromeEnv, buildGarageEnv } from './arena/env';
 import { createBotView } from './bots';
 import { BroadcastDirector, CameraSystem, type CamBot, type CamCtx } from './camera';
@@ -73,8 +73,11 @@ class StageImpl implements Stage, StageExtras {
   private listenerOut = { pos: { x: 0, y: 0, z: 0 } as Vec3, quat: { x: 0, y: 0, z: 0, w: 1 } as Quat };
   private ctx: CamCtx;
   private ready = false;
+  /** Frames to skip the big screen feed while shadow maps are rebuilt. */
+  private screenHold = 0;
 
   constructor(readonly canvas: HTMLCanvasElement) {
+    this.camera.layers.enable(CROWD_LAYER);
     const coarse = typeof matchMedia !== 'undefined' && matchMedia('(pointer: coarse)').matches;
     this.quality = coarse ? 'low' : 'high';
     const bots = this.camBots;
@@ -298,6 +301,10 @@ class StageImpl implements Stage, StageExtras {
   /** Big screen: a low res live feed from its own director, every few frames. */
   private updateScreen(world: WorldFrame): void {
     const q = QUALITY[this.quality];
+    if (this.screenHold > 0) {
+      this.screenHold--;
+      return;
+    }
     if (this.frameNo % q.screenEvery !== 0) return;
     const r = this.renderer;
     const screen = this.arena.stands.screen;
@@ -368,6 +375,8 @@ class StageImpl implements Stage, StageExtras {
     this.arena.setQuality(q);
     const res = QUALITY[q].screenRes;
     this.screenRT.setSize(res[0], res[1]);
+    // Shadow maps were reallocated: let the main pass render them before the feed reuses them.
+    this.screenHold = 3;
     this.resize();
   }
 

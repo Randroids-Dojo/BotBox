@@ -174,4 +174,18 @@ addEventListener('pointermove', (e) => {
   },
   stats: () => ({ fps, ...stage.stats() }),
   pause: (p: boolean) => (paused = p),
+  /** Render n frames back to back, waiting for the GPU each time. Milliseconds per frame. */
+  bench(n = 90): { ms: number; calls: number } {
+    const gl = stage.renderer.getContext();
+    const px = new Uint8Array(4);
+    let calls = 0;
+    const t0 = performance.now();
+    for (let i = 0; i < n; i++) {
+      const { frame: w, events } = mock.step(1 / 60);
+      stage.render(w, events, 1 / 60);
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      calls += stage.stats().calls;
+    }
+    return { ms: (performance.now() - t0) / n, calls: Math.round(calls / n) };
+  },
 };

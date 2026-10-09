@@ -295,7 +295,9 @@ export class GarageScene {
     const fov = 30;
     const hfov = 2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(fov) / 2) * cam.aspect);
     const r = this.size * 0.62 + 0.15;
-    const dist = Math.max(2.0, r / (0.5 * Math.tan(hfov / 2)));
+    // Fit by width (robot in the left 60 percent) and by height, whichever needs more room.
+    const vHalf = Math.tan(THREE.MathUtils.degToRad(fov) / 2);
+    const dist = Math.max(2.0, r / (0.5 * Math.tan(hfov / 2)), r / (0.62 * vHalf));
     const p = this.pose;
     p.pos.set(Math.sin(this.yaw) * Math.cos(this.pitch) * dist, this.center.y + Math.sin(this.pitch) * dist, Math.cos(this.yaw) * Math.cos(this.pitch) * dist);
     p.pos.add(this.center);
