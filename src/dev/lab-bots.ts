@@ -527,7 +527,8 @@ function focus(i: number, preset = params.get('cam') ?? 'close', instant = false
     broadcast: new THREE.Vector3(4.5, 3.6, 6.5),
     low: new THREE.Vector3(1.4, 0.25, 1.6),
   };
-  const off = presets[preset] ?? presets.close;
+  // Portrait screens need the camera further back to fit the robot.
+  const off = (presets[preset] ?? presets.close).clone().multiplyScalar(Math.max(1, 1.3 / camera.aspect));
   camTarget.copy(t);
   camPos.copy(t).add(off);
   if (instant) {
@@ -914,8 +915,9 @@ window.__lab = {
   follow: (id: string, dist = 3, height = 1.6) => {
     const b = mockFrame?.bots.find((x) => x.id === id);
     if (!b) return;
+    const k = Math.max(1, 1.3 / camera.aspect);
     controls.target.set(b.pos.x, 0.25, b.pos.z);
-    camera.position.set(b.pos.x + dist * 0.6, height, b.pos.z + dist * 0.8);
+    camera.position.set(b.pos.x + dist * 0.6 * k, height * k, b.pos.z + dist * 0.8 * k);
     flying = false;
   },
   part: (c: Component, v: number) => {
