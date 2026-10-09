@@ -8,6 +8,18 @@ Robot combat, Season 2001. A browser game that plays like an episode of a turn-o
 
 Everything is original: the show, its hosts and every robot are made up.
 
+Play: https://botbox-game.vercel.app (every push to `main` deploys; open copies offer a refresh when a new release is live).
+
+## Controls
+
+| Action | Keyboard | Gamepad | Touch |
+| --- | --- | --- | --- |
+| Drive | WASD or arrows | Left stick (tank mode: both sticks) | Left thumbstick |
+| Weapon | Space | RT or A | WEAPON |
+| Self-right | E | B | RIGHT |
+| Camera | C | Y | CAM |
+| Pause, tap out | Esc or P | Start | Pause button |
+
 ## Develop
 
 ```bash
@@ -18,5 +30,7 @@ npm run build
 ```
 
 Module workbenches: `?lab=arena`, `?lab=bots`, `?lab=audio`, `?lab=ui`.
+
+Testing hooks: `?autopilot` lets the AI drive your robot, `?speed=4` runs fights faster. `npx tsx scripts/simfight.ts [rivalA rivalB]` runs headless fights for physics tuning. Voice lines are generated with `scripts/voice/generate.py` (see `docs/VOICE.md`).
 
 Docs: `docs/DESIGN.md` (the show bible), `docs/ARCHITECTURE.md`, `docs/VOICE.md`.

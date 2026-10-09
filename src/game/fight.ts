@@ -8,6 +8,7 @@ import { Match } from '../sim/match';
 import { yawOf } from '../sim/math';
 import { Commentary } from './commentary';
 import type { Game } from './game';
+import { showControls } from './hint';
 import { interview } from './interview';
 import { Recorder } from './replay';
 
@@ -224,6 +225,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   ui.hud(setup.entrants.map((e) => ({ id: e.id, name: e.card.name, corner: e.corner, spec: e.spec, player: e.id === setup.playerId })));
   match.startCountdown();
   simRunning = true;
+  if (player && !g.autopilot) showControls(document.getElementById('ui')!, player.spec, input.lastDevice, g.save.fights < 4 ? 7 : 4.5);
   g.crowd(0.75);
   // Wait for green.
   while (match.phase === 'countdown') await g.frame();
