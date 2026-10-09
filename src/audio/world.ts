@@ -101,6 +101,7 @@ export class World {
       this.mixer.detachWorld();
       this.attached = false;
     }
+    this.updateGrind();
     this.crowd.maintain();
   }
 
@@ -146,7 +147,8 @@ export class World {
       this.hazardFrames(world);
       this.whiffs(world);
     }
-    this.updateGrind(dt);
+    this.updateGrind();
+    this.crowd.arm();
     this.crowd.update(dt, world);
     this.shots = this.shots.filter((s) => s.end > now);
   }
@@ -416,8 +418,14 @@ export class World {
     }
   }
 
-  private updateGrind(dt: number): void {
+  private grindAt = 0;
+
+  /** Grinding fades within ~0.15 s of the last grind event. Runs on the audio clock so it also
+   *  decays when frames stop or arrive with dt = 0. */
+  private updateGrind(): void {
     const t = this.ctx.currentTime;
+    const dt = Math.max(0, t - this.grindAt);
+    this.grindAt = t;
     const level = this.active ? this.grindTarget : 0;
     this.grindTarget *= Math.exp(-dt / 0.12);
     if (!this.grind && level > 0.02) {
@@ -446,6 +454,7 @@ export class World {
     g.bp.gain.setTargetAtTime(plastic ? -12 : this.grindMat === 'titanium' ? 4 : 0, t, 0.05);
     g.src.playbackRate.setTargetAtTime((plastic ? 0.7 : 1) * this.rate * (0.85 + 0.3 * level), t, 0.05);
     g.idle = level < 0.01 ? g.idle + dt : 0;
+    if (dt === 0) return;
     if (g.idle > 3) {
       g.src.stop(t + 0.1);
       this.grind = null;
@@ -486,8 +495,15 @@ export class Crowd {
     private mixer: Mixer,
   ) {}
 
+  /** The crowd is part of the arena: it starts with the first world frame or a scripted level. */
+  private armed = false;
+  arm(): void {
+    this.armed = true;
+  }
+
   private ensure(): boolean {
     if (this.started) return true;
+    if (!this.armed) return false;
     const murmur = this.bank.get('crowd.murmur');
     const roar = this.bank.get('crowd.roar');
     if (!murmur || !roar) return false;
@@ -550,6 +566,7 @@ export class Crowd {
 
   /** Scripted excitement floor (intro, ceremony). 0 hands control back to the action. */
   script(level: number): void {
+    if (level > 0) this.armed = true;
     const was = this.scripted;
     this.scripted = clamp(level, 0, 1);
     if (this.scripted > this.excitement + 0.3 && this.scripted > was) this.react('cheer', this.scripted);
