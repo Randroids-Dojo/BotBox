@@ -1,0 +1,45 @@
+{
+  "who": "Dale",
+  "chars": 202,
+  "previews": [
+    {
+      "n": 1,
+      "generated_voice_id": "qKm2HZ8AbMudSpIq5Vrm",
+      "file": "dale-1.mp3",
+      "pitch_hz": 188,
+      "range_st": 16.3,
+      "energy_db_sd": 6.8,
+      "dur": 15.5,
+      "match": 1.0,
+      "heard": "Well, that's a robot. Technically. I've seen scarier toasters. Oh! Oh, wow, okay, that one actually hurt. Somebody check on the toaster. Folks, we'll be right back, assuming the arena is still standing.",
+      "aperiodicity": 0.199,
+      "centroid_hz": 2130
+    },
+    {
+      "n": 2,
+      "generated_voice_id": "EMuJONlJt2RWlVZD8hJQ",
+      "file": "dale-2.mp3",
+      "pitch_hz": 142,
+      "range_st": 5.4,
+      "energy_db_sd": 6.1,
+      "dur": 11.7,
+      "match": 1.0,
+      "heard": "Well, that's a robot. Technically. I've seen scarier toasters. Oh! Oh, wow. Okay, that one actually hurt. Somebody check on the toaster. Folks, we'll be right back, assuming the arena is still standing.",
+      "aperiodicity": 0.212,
+      "centroid_hz": 1865
+    },
+    {
+      "n": 3,
+      "generated_voice_id": "zeJwcDEkFfBJjn4qX5nX",
+      "file": "dale-3.mp3",
+      "pitch_hz": 144,
+      "range_st": 12.2,
+      "energy_db_sd": 5.6,
+      "dur": 11.7,
+      "match": 1.0,
+      "heard": "Well, that's a robot. Technically, I've seen scarier toasters. Oh, oh, wow. Okay, that one actually hurt. Somebody check on the toaster. Folks, we'll be right back, assuming the arena is still standing.",
+      "aperiodicity": 0.193,
+      "centroid_hz": 1669
+    }
+  ]
+}

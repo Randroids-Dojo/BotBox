@@ -1,0 +1,45 @@
+{
+  "who": "Vic",
+  "chars": 223,
+  "previews": [
+    {
+      "n": 1,
+      "generated_voice_id": "5oig3kxN3CzWn874d16R",
+      "file": "vic-1.mp3",
+      "pitch_hz": 286,
+      "range_st": 19.4,
+      "energy_db_sd": 7.1,
+      "aperiodicity": 0.145,
+      "centroid_hz": 2116,
+      "dur": 24.5,
+      "match": 0.985,
+      "heard": "Ladies and gentlemen, welcome to the box. Tonight, eight robots enter, and only one leaves with the giant nut. In the red square, from Sunnyvale, California, a 220-pound vertical spinner, megahertz!"
+    },
+    {
+      "n": 2,
+      "generated_voice_id": "wixOHgi8fINj43iMSNa0",
+      "file": "vic-2.mp3",
+      "pitch_hz": 193,
+      "range_st": 13.2,
+      "energy_db_sd": 8.2,
+      "aperiodicity": 0.152,
+      "centroid_hz": 1737,
+      "dur": 26.4,
+      "match": 0.985,
+      "heard": "Ladies and gentlemen, welcome to the box. Tonight, eight robots enter and only one leaves with the giant nut. In the red square, from Sunnyvale, California, a 220-pound vertical spinner, megahertz."
+    },
+    {
+      "n": 3,
+      "generated_voice_id": "JGL3GVInSvq6Y7LlrT80",
+      "file": "vic-3.mp3",
+      "pitch_hz": 250,
+      "range_st": 13.4,
+      "energy_db_sd": 7.1,
+      "aperiodicity": 0.112,
+      "centroid_hz": 1511,
+      "dur": 24.7,
+      "match": 0.963,
+      "heard": "Ladies and gentlemen, welcome to the box. Tonight, eight robots enter and only one leaves with a giant nut. In the red square, from Sudivale, California, a 220-pound vertical spinner, megahertz."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "who": "Jenna",
+  "chars": 201,
+  "previews": [
+    {
+      "n": 1,
+      "generated_voice_id": "jlCYrmCYRUGrHrpR5nRq",
+      "file": "jenna-1.mp3",
+      "pitch_hz": 308,
+      "range_st": 9.6,
+      "energy_db_sd": 7.7,
+      "dur": 9.1,
+      "match": 1.0,
+      "heard": "Hi, Dale! I'm down here in the pits, and let me tell you, this rookie team is scrambling. They've got a drill, a roll of duct tape, and about four minutes. Guys, how does it feel to win your first fight?",
+      "aperiodicity": 0.094,
+      "centroid_hz": 1727
+    },
+    {
+      "n": 2,
+      "generated_voice_id": "VJejphRUeBHAEfTOqOBp",
+      "file": "jenna-2.mp3",
+      "pitch_hz": 271,
+      "range_st": 7.2,
+      "energy_db_sd": 8.1,
+      "dur": 9.5,
+      "match": 1.0,
+      "heard": "Hi, Dale. I'm down here in the pits, and let me tell you, this rookie team is scrambling. They've got a drill, a roll of duct tape, and about four minutes. Guys, how does it feel to win your first fight?",
+      "aperiodicity": 0.131,
+      "centroid_hz": 2006
+    },
+    {
+      "n": 3,
+      "generated_voice_id": "TqdfiTThWWVFqRA64f8U",
+      "file": "jenna-3.mp3",
+      "pitch_hz": 291,
+      "range_st": 8.5,
+      "energy_db_sd": 7.6,
+      "dur": 9.9,
+      "match": 0.982,
+      "heard": "Hi, Dale. I'm down here in the pits and let me tell you, this worky team is scrambling. They've got a drill, a roll of duct tape, and about four minutes. Guys, how does it feel to win your first fight?",
+      "aperiodicity": 0.112,
+      "centroid_hz": 1738
+    }
+  ]
+}

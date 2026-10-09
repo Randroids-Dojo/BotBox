@@ -1,0 +1,2812 @@
+{
+  "chuck.airborne.1": {
+    "sha": "3967e61eaeb4",
+    "heard": "Look at that hang time.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.airborne.2": {
+    "sha": "e53a85d16a98",
+    "heard": "It's up and it's good.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.airborne.3": {
+    "sha": "3e283282cec0",
+    "heard": "He punted him! He punted him!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.airborne.4": {
+    "sha": "be4cef31e373",
+    "heard": "Up, up, and out of here.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.chase.1": {
+    "sha": "52398e5aee2e",
+    "heard": "He's on the run. Go get him.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.chase.2": {
+    "sha": "eb2225b5ca7e",
+    "heard": "Chase him down. Don't let him escape.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.chase.3": {
+    "sha": "fb83fb986e42",
+    "heard": "Break away. Somebody tackle him.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.chase.4": {
+    "sha": "e8b9635f10c9",
+    "heard": "Run baby, run. He's right behind you.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.count.1": {
+    "sha": "1eccc6203e4b",
+    "heard": "The count's on. Get up. Get up.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.count.2": {
+    "sha": "41c25cb39678",
+    "heard": "Move it! You gotta move!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.count.3": {
+    "sha": "c82e78d46f6a",
+    "heard": "Count's going. Show me something.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.count.4": {
+    "sha": "86c933a45abe",
+    "heard": "Get off the mat. Move.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.decision.1": {
+    "sha": "af26c4f7f67f",
+    "heard": "Going to the judges. It's in their hands now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.decision.2": {
+    "sha": "142f37fa0259",
+    "heard": "Both still standing. Judges, your call.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.decision.3": {
+    "sha": "c4b9144324f9",
+    "heard": "Close one, Dale. Could go either way.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.decision.4": {
+    "sha": "0c983584b0d9",
+    "heard": "That's a full 60 minutes of football. Er, three. Three minutes.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.desk.1": {
+    "sha": "d577a4228996",
+    "heard": "Dale, I have been waiting all week for this.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.desk.2": {
+    "sha": "1cfc7dcc2d37",
+    "heard": "Chuck Kowalski here, and Dale, I am fired up.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.desk.3": {
+    "sha": "77147648e284",
+    "heard": "These robots came to play tonight, Dale. I can feel it.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.desk.4": {
+    "sha": "f97f5f439854",
+    "heard": "Big night, Dale. Big night. I barely slept.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.desk.5": {
+    "sha": "e2d11479a312",
+    "heard": "I watch film on every one of these robots. Twice.",
+    "score": 0.979,
+    "issues": []
+  },
+  "chuck.drivedown.1": {
+    "sha": "4a4824272b68",
+    "heard": "He's running in circles. Lost a drive.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.drivedown.2": {
+    "sha": "8fd852a34882",
+    "heard": "One side's dead. He can't go straight.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.drivedown.3": {
+    "sha": "91f35473826d",
+    "heard": "He's limping. Only one side pushing.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.drivedown.4": {
+    "sha": "2f07f7f9bbe5",
+    "heard": "Spinning in place. That's a bad ankle.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.fire.1": {
+    "sha": "3059b128cd72",
+    "heard": "It's on fire! It's on fire!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.fire.2": {
+    "sha": "07beacb7c738",
+    "heard": "Flames, get the extinguisher!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.fire.3": {
+    "sha": "c20d656d3e32",
+    "heard": "He's burning up out there.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.fire.4": {
+    "sha": "bd9afcb929db",
+    "heard": "Fire! That battery is cooked!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.flip.1": {
+    "sha": "45fa3fb879ad",
+    "heard": "flipped right on its back.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.flip.2": {
+    "sha": "c276d1b86c60",
+    "heard": "Turned him over like a fumble.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.flip.3": {
+    "sha": "55678a7f35e7",
+    "heard": "Upside down! That's a turnover!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.flip.4": {
+    "sha": "26c81f8e9734",
+    "heard": "He's on his back. Get up.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.hit.1": {
+    "sha": "1752da6d8868",
+    "heard": "Big hit! Big hit!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.hit.2": {
+    "sha": "98a7e0f70955",
+    "heard": "Oh, he got popped!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.hit.3": {
+    "sha": "bcfa909e67c8",
+    "heard": "That's a clean shot right there.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.hit.4": {
+    "sha": "e2c1cc419545",
+    "heard": "Ooh, right in the numbers.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.hit.5": {
+    "sha": "1d9c3513650d",
+    "heard": "Somebody get that robot a helmet.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.huge.1": {
+    "sha": "8c0e5d0caf4e",
+    "heard": "Oh, he got destroyed!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.huge.2": {
+    "sha": "380af3dd8d95",
+    "heard": "That is a Hall of Fame hit, Dale.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.huge.3": {
+    "sha": "2e98fa3f0d3c",
+    "heard": "Call the trainer. Call the trainer.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.huge.4": {
+    "sha": "df8080238f04",
+    "heard": "I felt that one in my knees.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.huge.5": {
+    "sha": "6abbad8df27b",
+    "heard": "That's a sack. That is a sack.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.1": {
+    "sha": "723bafcc3ada",
+    "heard": "You know Dale, a robot is a lot like a lineman. Low center of gravity wins.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.2": {
+    "sha": "4d44b4c1c459",
+    "heard": "These builders practice all year. That's dedication. That's heart.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.3": {
+    "sha": "8fa25b140c7e",
+    "heard": "In my playing days, I would have loved a hammer like that pulverizer.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.4": {
+    "sha": "ac8f851704e4",
+    "heard": "Driving a robot is all about vision. You got to read the field.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.5": {
+    "sha": "00f7437c1eac",
+    "heard": "I talked to the teams in the pits. These folks are tough, Dale.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.6": {
+    "sha": "a32a801735d2",
+    "heard": "Defense wins championships. Armor is defense. It's that simple.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.7": {
+    "sha": "b62dfda3427c",
+    "heard": "I've been hit hard, Dale. Real hard. Nothing like these robots, though.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.idle.8": {
+    "sha": "561da5c4fe51",
+    "heard": "You got to respect the hustle. Every robot out here earned its spot.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.intro.1": {
+    "sha": "0a2eef96af11",
+    "heard": "This is a great matchup, Dale. Strength on strength.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.intro.2": {
+    "sha": "f151fa7a2be8",
+    "heard": "Both teams look ready. I can feel it.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.intro.3": {
+    "sha": "b047fb3936ae",
+    "heard": "Gotta win the battle in the trenches here.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.intro.4": {
+    "sha": "46b7de8e65ee",
+    "heard": "Watch the first 10 seconds, that sets the tone.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.intro.5": {
+    "sha": "b545da88f4a8",
+    "heard": "Game face is on. Let's see what they got.",
+    "score": 0.984,
+    "issues": []
+  },
+  "chuck.ko.1": {
+    "sha": "0afde54c5a29",
+    "heard": "Knockout! That's game!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.ko.2": {
+    "sha": "f0f5802a2b2f",
+    "heard": "He's out. It's over.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.ko.3": {
+    "sha": "f99d6242a195",
+    "heard": "That's lights out, baby.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.ko.4": {
+    "sha": "88bf271c9a37",
+    "heard": "Game over. Hit the showers.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.panel.1": {
+    "sha": "ccf5e6e91afd",
+    "heard": "Rip the armor right off.",
+    "score": 0.939,
+    "issues": []
+  },
+  "chuck.panel.2": {
+    "sha": "f3f1319986a6",
+    "heard": "There goes the shoulder pad.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.panel.3": {
+    "sha": "b27c3262a3ef",
+    "heard": "Armor's gone. He's exposed now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.panel.4": {
+    "sha": "e4ec70a3a82e",
+    "heard": "Panels off. Go after that side.",
+    "score": 0.983,
+    "issues": []
+  },
+  "chuck.pin.1": {
+    "sha": "3a87312e6b2f",
+    "heard": "He's got him pinned. Drive, drive.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pin.2": {
+    "sha": "5f868fb1f275",
+    "heard": "He's carrying him like a fullback.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pin.3": {
+    "sha": "e8dda28196bc",
+    "heard": "Pinned! Push him to the hazards!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pin.4": {
+    "sha": "bfde7390c873",
+    "heard": "Bear hug! Don't let go!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pulverizer.1": {
+    "sha": "cb58c0f06b87",
+    "heard": "Pulverizer right on the helmet.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pulverizer.2": {
+    "sha": "880fd6bcb185",
+    "heard": "Big hammer! Big damage!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pulverizer.3": {
+    "sha": "ba7bfacd0621",
+    "heard": "That hammer does not miss.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pulverizer.4": {
+    "sha": "284cca30101e",
+    "heard": "Oh, he got hammered. Literally.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.ramrod.1": {
+    "sha": "5bac665194ad",
+    "heard": "Ramrods! Right in the belly!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.ramrod.2": {
+    "sha": "15959fda721f",
+    "heard": "The floor came up and got him.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.ramrod.3": {
+    "sha": "1a6a281546c1",
+    "heard": "Ooh, spikes from below. Cheap shot.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.ramrod.4": {
+    "sha": "0dd60c6d33eb",
+    "heard": "Ramrods, clip from underneath.",
+    "score": 0.949,
+    "issues": []
+  },
+  "chuck.righted.1": {
+    "sha": "3510b12bf7df",
+    "heard": "He's back up. What a comeback.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.righted.2": {
+    "sha": "2394b2aea2a9",
+    "heard": "Back on his feet. Get in there.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.righted.3": {
+    "sha": "63247fb2ce28",
+    "heard": "He shook it off. Tough kid.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.righted.4": {
+    "sha": "a5905b99550b",
+    "heard": "Righted! The drive is still alive!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.rookie.1": {
+    "sha": "b580afbc64dc",
+    "heard": "Love this rookie team. Hungry, raw talent.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.rookie.2": {
+    "sha": "a808b73f8d73",
+    "heard": "First time in the box. Welcome to the big leagues.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.rookie.3": {
+    "sha": "6a44d8e94b41",
+    "heard": "The rookie's got heart, Dale. You can't coach heart.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.rookie.4": {
+    "sha": "16b50ce349ff",
+    "heard": "Rookie season. I remember mine. I threw four interceptions.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.rookie.5": {
+    "sha": "f6cb4232d284",
+    "heard": "Give this rookie a chance. They might surprise you.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.saw.1": {
+    "sha": "e98911da162a",
+    "heard": "Right into the saws. Brutal.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.saw.2": {
+    "sha": "8b8884159c3c",
+    "heard": "The Killsaws are in the game.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.saw.3": {
+    "sha": "4a85be1ba42f",
+    "heard": "Sparks everywhere. That's got to hurt.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.saw.4": {
+    "sha": "6fac147433dd",
+    "heard": "He drove right over the saws.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.smoke.1": {
+    "sha": "092054927254",
+    "heard": "It's smoking. Something's fried.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.smoke.2": {
+    "sha": "5e353bfde0f2",
+    "heard": "Smoke! That motor is hurting!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.smoke.3": {
+    "sha": "abb382a21cdc",
+    "heard": "He's smoking, running on fumes.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.smoke.4": {
+    "sha": "4796c7a9f174",
+    "heard": "Smoke coming out. He's hurt, Dale.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spikes.1": {
+    "sha": "85b30d40696b",
+    "heard": "Into the spikes! That's a body slam!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spikes.2": {
+    "sha": "750a4e30b431",
+    "heard": "He drove him right into the spikes.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spikes.3": {
+    "sha": "fba202bfdbb3",
+    "heard": "Rammed into the spike wall. Ugh.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spikes.4": {
+    "sha": "7b98fafd9cd9",
+    "heard": "Up against the spikes. Bad spot.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spinup.1": {
+    "sha": "14eff4555cbd",
+    "heard": "Listen to that weapon wind up.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spinup.2": {
+    "sha": "5f017fefb772",
+    "heard": "Spinner's up to speed. Look out!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spinup.3": {
+    "sha": "60e2adec706c",
+    "heard": "That thing is screaming!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.spinup.4": {
+    "sha": "35cd2acbb709",
+    "heard": "Hear that? That is pure power.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.start.1": {
+    "sha": "b61176faff1d",
+    "heard": "Here we go. Hike.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.start.2": {
+    "sha": "e8324da90380",
+    "heard": "Ball is snapped. Let's go.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.start.3": {
+    "sha": "d9e3c46018fd",
+    "heard": "And they come off the line hard.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.start.4": {
+    "sha": "92f08d64adae",
+    "heard": "Kickoff! Somebody's getting hit!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.start.5": {
+    "sha": "fc42c9f787e8",
+    "heard": "Game time, baby! Let's go!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.timelow.1": {
+    "sha": "bab8408ba0ea",
+    "heard": "30 seconds. This is crunch time.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.timelow.2": {
+    "sha": "67ca3e89f165",
+    "heard": "30 left. Leave it all on the field.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.timelow.3": {
+    "sha": "210796562d53",
+    "heard": "Under 30. Gotta make a play.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.timelow.4": {
+    "sha": "d91bb3321f06",
+    "heard": "Clock's running down. Go, go, go.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.upset.1": {
+    "sha": "9c28fed8668c",
+    "heard": "Upset! We've got an upset brewing!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.upset.2": {
+    "sha": "d573f2b5c34b",
+    "heard": "The underdog's got some fight.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.upset.3": {
+    "sha": "ff97d7915837",
+    "heard": "Nobody gave him a chance. Look at him now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.upset.4": {
+    "sha": "42a8e2156f50",
+    "heard": "This is a Cinderella story, Dale.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.wall.1": {
+    "sha": "17240a3596b9",
+    "heard": "Into the boards! What a check!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.wall.2": {
+    "sha": "87741797dd28",
+    "heard": "Slammed him into the wall.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.wall.3": {
+    "sha": "1ae3268b3563",
+    "heard": "Pinned on the sideline. Good effort.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.wall.4": {
+    "sha": "592455e7c8ea",
+    "heard": "He ran him right out of bounds.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.weapondown.1": {
+    "sha": "2c3ff679779a",
+    "heard": "The weapon's dead. No offense left.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.weapondown.2": {
+    "sha": "a1474c7c9ab2",
+    "heard": "Weapons down. Gotta play defense now.",
+    "score": 0.986,
+    "issues": []
+  },
+  "chuck.weapondown.3": {
+    "sha": "37694b3d1389",
+    "heard": "Lost the weapon. No passing game.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.weapondown.4": {
+    "sha": "2eb83daf5956",
+    "heard": "That weapon is done for the day.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.wheel.1": {
+    "sha": "c5baa263cd7e",
+    "heard": "Knock the wheel, clean off!",
+    "score": 0.962,
+    "issues": []
+  },
+  "chuck.wheel.2": {
+    "sha": "d9a49f5c6e14",
+    "heard": "He lost a wheel. That's an injury.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.wheel.3": {
+    "sha": "ae9f69102dad",
+    "heard": "Wheels gone. That's a blown knee.",
+    "score": 0.984,
+    "issues": []
+  },
+  "chuck.wheel.4": {
+    "sha": "0aebee03d601",
+    "heard": "There goes the tire. Ouch.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.whiff.1": {
+    "sha": "85ab24f912e2",
+    "heard": "Swing and a miss.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.whiff.2": {
+    "sha": "8c141ae7dd9e",
+    "heard": "Whiffed it. Gotta wrap up.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.whiff.3": {
+    "sha": "a55addf36252",
+    "heard": "Missed! He overran the play!",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.whiff.4": {
+    "sha": "1c801aec3b3a",
+    "heard": "Ooh, too early. Jumped offsides.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.airborne.1": {
+    "sha": "a74e3775d5ae",
+    "heard": "And it's flying. Robots can fly now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.airborne.2": {
+    "sha": "b7b41b16c756",
+    "heard": "Somebody call air traffic control.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.airborne.3": {
+    "sha": "09f92e9e5da6",
+    "heard": "Look at it go. Bye.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.airborne.4": {
+    "sha": "014a5ebf5e8b",
+    "heard": "That's some serious hang time.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.airborne.5": {
+    "sha": "6c5f72d01c42",
+    "heard": "Airborne, fasten your seatbelts.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.bumper.1": {
+    "sha": "eb178a911b85",
+    "heard": "We'll be right back.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.bumper.2": {
+    "sha": "15306319e18f",
+    "heard": "Don't go anywhere. Bot Box will be right back.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.bumper.3": {
+    "sha": "86e93307fc4f",
+    "heard": "Stick around. More robot violence after this.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.bumper.4": {
+    "sha": "18c8964b6ba7",
+    "heard": "We'll be right back after a word from people with money.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.chase.1": {
+    "sha": "d9512d65bd93",
+    "heard": "And the chase is on. Run, robot, run!",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.chase.2": {
+    "sha": "8afc96893f12",
+    "heard": "One's running, one's chasing. It's a cartoon.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.chase.3": {
+    "sha": "4304aa5f70e5",
+    "heard": "This is a chase scene now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.chase.4": {
+    "sha": "3f17fcb20fd8",
+    "heard": "Look at it run. Smart, honestly.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.count.1": {
+    "sha": "df98777ab2b0",
+    "heard": "And the count is on.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.count.2": {
+    "sha": "2050f29b1ba1",
+    "heard": "Uh-oh, we have a count.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.count.3": {
+    "sha": "4cffc70ee15d",
+    "heard": "It's not moving. Come on, little guy.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.count.4": {
+    "sha": "6eb5b42a3413",
+    "heard": "Count's going. Somebody wiggle.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.decision.1": {
+    "sha": "f3928d870c96",
+    "heard": "And we're going to the judges. Fun.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.decision.2": {
+    "sha": "889095680f32",
+    "heard": "Nobody's dead, so the judges decide.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.decision.3": {
+    "sha": "90ac057ff8f6",
+    "heard": "Time for the judges. Everybody looked nervous.",
+    "score": 0.977,
+    "issues": []
+  },
+  "dale.decision.4": {
+    "sha": "10ace58e8d4e",
+    "heard": "It's up to the judges. I'd bribe them, but they're honest.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.desk.1": {
+    "sha": "c54c0fb736b4",
+    "heard": "Welcome to Bot Box. I'm Dale Pruitt. And yes, this is my real job.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.desk.2": {
+    "sha": "cb421cba80fe",
+    "heard": "Good evening. I'm Dale Pruitt. Tonight, robots fight and I make jokes about it.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.desk.3": {
+    "sha": "e20b2518bafc",
+    "heard": "Welcome back to the box with me as always the cannon himself, Chuck Kowalski.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.desk.4": {
+    "sha": "c1a6440ac23b",
+    "heard": "Hi, I'm Dale. My mom thinks I host a cooking show.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.desk.5": {
+    "sha": "45d8c28e7293",
+    "heard": "Tonight's robots have saws, hammers, and flamethrowers. Well, no flamethrowers. Yet.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.drivedown.1": {
+    "sha": "bd8b7fedae0c",
+    "heard": "It's driving in circles. We've all been there.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.drivedown.2": {
+    "sha": "0106be6619db",
+    "heard": "Lost the drive side. Round and round we go.",
+    "score": 0.95,
+    "issues": []
+  },
+  "dale.drivedown.3": {
+    "sha": "c98ca3a1ce1c",
+    "heard": "It drives like a broken shopping cart.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.drivedown.4": {
+    "sha": "4dd2650b1b2b",
+    "heard": "Look at its spin. It's having a moment.",
+    "score": 0.986,
+    "issues": []
+  },
+  "dale.fire.1": {
+    "sha": "80bfef5e8b4b",
+    "heard": "And it's on fire. That's bad, right?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.fire.2": {
+    "sha": "c8850cc62209",
+    "heard": "Something's cooking and it's not dinner.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.fire.3": {
+    "sha": "c922967e2f41",
+    "heard": "Fire! Robots shouldn't do that!",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.fire.4": {
+    "sha": "b010a2606062",
+    "heard": "Is anyone else smelling barbecue?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.fire.5": {
+    "sha": "d23d0bd95e75",
+    "heard": "Well, now it's a campfire.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.flip.1": {
+    "sha": "e5197797879c",
+    "heard": "And it's upside down. Classic.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.flip.2": {
+    "sha": "163e6771dbaf",
+    "heard": "Flipped like a pancake.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.flip.3": {
+    "sha": "f76c4864a545",
+    "heard": "Well, now it's a turtle.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.flip.4": {
+    "sha": "2890ca225f33",
+    "heard": "Wheels up, not ideal.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.flip.5": {
+    "sha": "9d4c1a38a420",
+    "heard": "That's one way to see the ceiling.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.hit.1": {
+    "sha": "07aced92fe97",
+    "heard": "Ooh, that one left a mark.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.hit.2": {
+    "sha": "3e50e7bdf517",
+    "heard": "Well, that's a dent.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.hit.3": {
+    "sha": "102252bd01ed",
+    "heard": "Hey, that worked.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.hit.4": {
+    "sha": "46b895f00c4c",
+    "heard": "Somebody felt that.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.hit.5": {
+    "sha": "57ab91447468",
+    "heard": "That's going to need a bandage. A metal one.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.huge.1": {
+    "sha": "e8ac5282d79e",
+    "heard": "Oh, oh my goodness.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.huge.2": {
+    "sha": "beebfa4189bc",
+    "heard": "Whoa, okay, I'm awake now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.huge.3": {
+    "sha": "35c7d35cdd85",
+    "heard": "Holy cow! Did you see that?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.huge.4": {
+    "sha": "ecd51b208ece",
+    "heard": "That is going in the highlight reel.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.huge.5": {
+    "sha": "3cd35593b2f5",
+    "heard": "Oh, come on. That's just rude.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.1": {
+    "sha": "d1e766b04b6f",
+    "heard": "These builders spent a whole year on this and a lot of duct tape.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.2": {
+    "sha": "966a6b92ee94",
+    "heard": "Fun fact, most of these robots were built in a garage. Most of these builders still live there.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.3": {
+    "sha": "0da0165516cf",
+    "heard": "I asked a builder how much his robot cost. He started crying.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.4": {
+    "sha": "e21a07398ca6",
+    "heard": "If you're just joining us, robots are hitting each other. That's the show.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.5": {
+    "sha": "3d2386f8199e",
+    "heard": "The box is bulletproof Lexan, which is good because I'm sitting right here.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.6": {
+    "sha": "287c3b256a71",
+    "heard": "I tried to build a robot once. It's a lamp now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.7": {
+    "sha": "a9e575e30591",
+    "heard": "The judges are watching closely. Well, two of them. One's eating a pretzel.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.idle.8": {
+    "sha": "ccc91bd65fda",
+    "heard": "Somewhere a mom is watching this and saying, please be careful. That's my son's robot.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.intro.1": {
+    "sha": "a0d2f746c79c",
+    "heard": "Two robots, one box. Let's see who blinks.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.intro.2": {
+    "sha": "d11753a75473",
+    "heard": "Look at these two. Somebody's going home in a bucket.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.intro.3": {
+    "sha": "8ae50ea52e1c",
+    "heard": "The builders look nervous. The robots look fine.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.intro.4": {
+    "sha": "d60347ec57fa",
+    "heard": "I like this matchup. I have no idea why.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.intro.5": {
+    "sha": "6fda80db918f",
+    "heard": "Here we go. Keep your hands inside the Lexan.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ko.1": {
+    "sha": "ad5fa9b5d530",
+    "heard": "And that's all she wrote.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ko.2": {
+    "sha": "3b87c3f0e5ec",
+    "heard": "Lights out. Good night, robot.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ko.3": {
+    "sha": "37242a9f9a9f",
+    "heard": "It's done. It's so done.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ko.4": {
+    "sha": "d3f08b9cc4cc",
+    "heard": "Knockout. Somebody bring a dustpan.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.panel.1": {
+    "sha": "eb550195fdf7",
+    "heard": "There goes a piece. Anybody want that?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.panel.2": {
+    "sha": "887614e8705c",
+    "heard": "Armors off. That's a souvenir now.",
+    "score": 0.985,
+    "issues": []
+  },
+  "dale.panel.3": {
+    "sha": "6bbe5bfe35d5",
+    "heard": "And a panel goes flying. Duck.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.panel.4": {
+    "sha": "472887a95287",
+    "heard": "Well, that was load-bearing.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.panel.5": {
+    "sha": "4501fa405ed1",
+    "heard": "Lost some armor. Who needs it?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pin.1": {
+    "sha": "b868e2ee4050",
+    "heard": "And now it's a piggyback ride.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pin.2": {
+    "sha": "34480c3d3748",
+    "heard": "That's not a hug. That's a hostage situation.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pin.3": {
+    "sha": "5c72b94530b6",
+    "heard": "He's got him. Now what?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pin.4": {
+    "sha": "149833cf1bee",
+    "heard": "Pinned. Very rude.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pulverizer.1": {
+    "sha": "194c18006815",
+    "heard": "And the Pulverizer makes a house call.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pulverizer.2": {
+    "sha": "a80f6ce66564",
+    "heard": "Bonk right on the head.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pulverizer.3": {
+    "sha": "43864d62ad19",
+    "heard": "That's the pulverizer. Nobody likes the pulverizer.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.pulverizer.4": {
+    "sha": "206b3e82231f",
+    "heard": "The hammer has spoken.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ramrod.1": {
+    "sha": "b4f1506b3772",
+    "heard": "Floor spikes. The floor is angry.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ramrod.2": {
+    "sha": "51c32452f447",
+    "heard": "and the Ramrods give it a poke.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ramrod.3": {
+    "sha": "742130f3f241",
+    "heard": "Ooh, right in the undercarriage.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.ramrod.4": {
+    "sha": "db9ea2d64da0",
+    "heard": "Surprise! The floor has spikes.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.righted.1": {
+    "sha": "83d059bbcab7",
+    "heard": "And it's back on its wheels. Look at that.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.righted.2": {
+    "sha": "5a1daccaa598",
+    "heard": "It got up. Good for you, buddy.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.righted.3": {
+    "sha": "978acc63c1bc",
+    "heard": "Self-righted. Nice.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.righted.4": {
+    "sha": "1e5b0389c538",
+    "heard": "Back on its feet. Well, wheels.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.rookie.1": {
+    "sha": "10e251d5d59d",
+    "heard": "And here's our rookie team. Bless their hearts.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.rookie.2": {
+    "sha": "bd36ddae0a81",
+    "heard": "The rookies built this in a garage. You can tell.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.rookie.3": {
+    "sha": "7e5dca270771",
+    "heard": "First time in the box. No pressure. Only everybody watching.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.rookie.4": {
+    "sha": "58cf2b5e3220",
+    "heard": "Rookies, everybody be nice for now.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.rookie.5": {
+    "sha": "ac28d26f59c4",
+    "heard": "I love a rookie. So much hope. So many loose bolts.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.saw.1": {
+    "sha": "ecb1b92c0e0b",
+    "heard": "The Killsaws say hello.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.saw.2": {
+    "sha": "e1821b6d0494",
+    "heard": "And the floor bites back.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.saw.3": {
+    "sha": "171048578e9e",
+    "heard": "Ooh, the saw's got a taste!",
+    "score": 0.98,
+    "issues": []
+  },
+  "dale.saw.4": {
+    "sha": "bbaed6e2b74a",
+    "heard": "Sparks! The Killsaws are hungry!",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.smoke.1": {
+    "sha": "be8f9272e407",
+    "heard": "And now we have smoke. Love that.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.smoke.2": {
+    "sha": "01e1e0c328c9",
+    "heard": "I see smoke. Not a great sign.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.smoke.3": {
+    "sha": "8cf0c02fadde",
+    "heard": "It's smoking. It should really quit.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.smoke.4": {
+    "sha": "c33ce11ed024",
+    "heard": "Smoke signals. It's asking for help.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.spikes.1": {
+    "sha": "354413180f3c",
+    "heard": "Into the spikes. That's a no for me.",
+    "score": 0.957,
+    "issues": []
+  },
+  "dale.spikes.2": {
+    "sha": "bca5bc299912",
+    "heard": "Pinned on the spike strip. Ouch.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.spikes.3": {
+    "sha": "e93cbb1f60d0",
+    "heard": "That wall has teeth, folks.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.spikes.4": {
+    "sha": "d2ff86e91edf",
+    "heard": "Spikes. Nobody wants spikes.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.spinup.1": {
+    "sha": "f5cfdc9cc0a8",
+    "heard": "Hear that? That's the sound of trouble.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.spinup.2": {
+    "sha": "2f68ae98bec6",
+    "heard": "And the spinner's winding up. Uh-oh.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.spinup.3": {
+    "sha": "16b933d425b7",
+    "heard": "That wine means somebody's going to cry.",
+    "score": 0.987,
+    "issues": []
+  },
+  "dale.spinup.4": {
+    "sha": "f8ae8e1491c2",
+    "heard": "Here comes the spin. Hide.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.start.1": {
+    "sha": "615239883386",
+    "heard": "And we're off, mostly.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.start.2": {
+    "sha": "fe099de9cb0a",
+    "heard": "Here we go. Try not to blink.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.start.3": {
+    "sha": "26c379c30b22",
+    "heard": "And they're moving. That's step one.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.start.4": {
+    "sha": "5f424b8e3636",
+    "heard": "Okay, robots, do your thing.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.start.5": {
+    "sha": "2734d42167b0",
+    "heard": "And the fight is on. Finally.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.timelow.1": {
+    "sha": "3d7acda933a7",
+    "heard": "30 seconds left. Do something.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.timelow.2": {
+    "sha": "1cae52b88320",
+    "heard": "Half a minute to go. Make it count.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.timelow.3": {
+    "sha": "4db29156cd36",
+    "heard": "30 seconds, panic time.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.timelow.4": {
+    "sha": "2791b6252105",
+    "heard": "Clock's ticking. 30 left.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.upset.1": {
+    "sha": "5ad435c820b9",
+    "heard": "Wait, is the underdog winning?",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.upset.2": {
+    "sha": "08d26f8587f3",
+    "heard": "Upset alert. I did not see this coming.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.upset.3": {
+    "sha": "4b5fbd11d774",
+    "heard": "Folks, this was not in the script.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.upset.4": {
+    "sha": "3ea971a25158",
+    "heard": "The little guy's doing it.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.wall.1": {
+    "sha": "4f9afb905252",
+    "heard": "And into the wall. Walls win again.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.wall.2": {
+    "sha": "52f5cead121d",
+    "heard": "The wall remains undefeated.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.wall.3": {
+    "sha": "d45b701eef68",
+    "heard": "Boom. Say hi to the wall.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.wall.4": {
+    "sha": "cf5ac9cde581",
+    "heard": "Parked it right in the wall.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.weapondown.1": {
+    "sha": "7dc20abc3a85",
+    "heard": "And the weapon just quit. Relatable.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.weapondown.2": {
+    "sha": "a8e4127d49ef",
+    "heard": "Weapons down. Now it's a very angry box.",
+    "score": 0.987,
+    "issues": []
+  },
+  "dale.weapondown.3": {
+    "sha": "2884ca2e45cf",
+    "heard": "The weapon stopped. Awkward.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.weapondown.4": {
+    "sha": "0e42ca0f7f71",
+    "heard": "No more weapon. Time for plan B.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.wheel.1": {
+    "sha": "ea4f58a9c132",
+    "heard": "And that's a wheel, a loose wheel.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.wheel.2": {
+    "sha": "6dd74f2331e1",
+    "heard": "Wheels gone. Long drive home.",
+    "score": 0.982,
+    "issues": []
+  },
+  "dale.wheel.3": {
+    "sha": "078e85fd6138",
+    "heard": "There goes a tire. Literally.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.wheel.4": {
+    "sha": "ff4f5d56c32a",
+    "heard": "One wheel down. Nobody panic.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.whiff.1": {
+    "sha": "bded5b206418",
+    "heard": "And a swing and a miss.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.whiff.2": {
+    "sha": "80f4260bbfb7",
+    "heard": "Missed by a mile.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.whiff.3": {
+    "sha": "e8d79430328f",
+    "heard": "That was a very aggressive nothing.",
+    "score": 1.0,
+    "issues": []
+  },
+  "dale.whiff.4": {
+    "sha": "ed88af12e8d1",
+    "heard": "Swinging at the air, bold strategy.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.champ.1": {
+    "sha": "5e09708dd1b4",
+    "heard": "You did it! You won the giant nut! How does it feel?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.champ.2": {
+    "sha": "c6b0f787372e",
+    "heard": "Bot Box champions! Oh my gosh! Say something!",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.champ.3": {
+    "sha": "30ad9ad93bae",
+    "heard": "Champions! Can you guys even lift that thing?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.final.1": {
+    "sha": "c75e5008b447",
+    "heard": "This is it, the final! How are you feeling right now?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.final.2": {
+    "sha": "15072f8d5f24",
+    "heard": "One more fight for the giant nut! Are you nervous?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.final.3": {
+    "sha": "761fc4c5b13e",
+    "heard": "It's the final guys! Any last words before you go in?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.lose.1": {
+    "sha": "470426ee7f04",
+    "heard": "Tough loss. What happened out there?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.lose.2": {
+    "sha": "33715c2eccc5",
+    "heard": "Aww, I'm so sorry guys, what went wrong?",
+    "score": 0.986,
+    "issues": []
+  },
+  "jenna.lose.3": {
+    "sha": "7c844ee0465e",
+    "heard": "That was rough. Are you going to rebuild?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.lose.4": {
+    "sha": "4ccf6c029ca2",
+    "heard": "You fought hard out there. What's next for the team?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.pits.1": {
+    "sha": "da5ceb7d673e",
+    "heard": "I'm down in the pits where the rookie team is scrambling to get this thing ready.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.pits.2": {
+    "sha": "b7fe493cce02",
+    "heard": "Hey Dale, I'm in the pits and there are tools everywhere. Like everywhere.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.pits.3": {
+    "sha": "b2b02b4f16de",
+    "heard": "I'm here with our rookies. They've got duct tape, a drill, and about four minutes.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.pits.4": {
+    "sha": "913caae36c1b",
+    "heard": "Down here in the pits, you can smell the solder. It is so exciting.",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.win.1": {
+    "sha": "74f301d309a8",
+    "heard": "I'm here with the winners. How does it feel?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.win.2": {
+    "sha": "0823ae51c392",
+    "heard": "Oh my gosh, you guys did it! Tell me everything!",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.win.3": {
+    "sha": "6303f7cbffc0",
+    "heard": "What a fight! Was that the plan all along?",
+    "score": 1.0,
+    "issues": []
+  },
+  "jenna.win.4": {
+    "sha": "e711ed6ee90c",
+    "heard": "Congratulations! Did you think you could win that one?",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.blue": {
+    "sha": "4fa5c27fed48",
+    "heard": "And in the blue square!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.bot.blenderella": {
+    "sha": "165bc9e925a0",
+    "heard": "From Orlando, Florida, a 120-pound pink shell spinner, Blenderella.",
+    "score": 0.978,
+    "issues": []
+  },
+  "vic.bot.blue-screen": {
+    "sha": "26e4944e6630",
+    "heard": "From Seattle, Washington, a 60-pound flipper. Press any key, blue screen.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.bot.buzzkill": {
+    "sha": "8dd124ac1a71",
+    "heard": "From Gainesville, Florida, a 120-pound horizontal spinner that ends the party buzzkill.",
+    "score": 0.983,
+    "issues": []
+  },
+  "vic.bot.ctrl-alt-defeat": {
+    "sha": "d67ff61d7d6a",
+    "heard": "From Redmond, Washington, Tech Support's 120-pound drum spinner, Control-Alt-Defeat!",
+    "score": 0.982,
+    "issues": []
+  },
+  "vic.bot.dial-up": {
+    "sha": "3735997fdfa5",
+    "heard": "From Columbus, Ohio, a 60-pound drum spinner that takes forever to connect. Dial up.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.bot.flapjack": {
+    "sha": "98edf9264cfd",
+    "heard": "From Portland, Oregon, a 220-pound flipper. Breakfast is served Flapjack.",
+    "score": 0.98,
+    "issues": []
+  },
+  "vic.bot.frisbee-of-doom": {
+    "sha": "0e24f4f84039",
+    "heard": "From Boulder, Colorado, a 340-pound shell spinner. Heads up, Frisbee of Doom!",
+    "score": 0.98,
+    "issues": []
+  },
+  "vic.bot.general-discontent": {
+    "sha": "3bed5178464c",
+    "heard": "From Detroit, Michigan, a 220-pound horizontal spinner with a complaint. General discontent.",
+    "score": 0.983,
+    "issues": []
+  },
+  "vic.bot.gigawatt": {
+    "sha": "2c461c9e3e11",
+    "heard": "From Phoenix, Arizona, a 340-pound drum spinner that dims the lights gigawatt!",
+    "score": 0.981,
+    "issues": []
+  },
+  "vic.bot.homewrecker": {
+    "sha": "979b661d3fcf",
+    "heard": "From Bakersfield, California, a 220-pound spinning steel shell homewrecker.",
+    "score": 0.981,
+    "issues": []
+  },
+  "vic.bot.knuckle-sandwich": {
+    "sha": "56fa82f203cd",
+    "heard": "From Pittsburgh, Pennsylvania, 340 pounds of rammer, today's special knuckle sandwich.",
+    "score": 0.983,
+    "issues": []
+  },
+  "vic.bot.lunchbox": {
+    "sha": "4176b6fdd9f0",
+    "heard": "From Madison, Wisconsin, five sophomores and a 60-pound wedge, Lunchbox!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.bot.meatloaf": {
+    "sha": "5244eecf6fbb",
+    "heard": "From Omaha, Nebraska, a 340-pound flipper. Seconds, anyone? Meatloaf!",
+    "score": 0.978,
+    "issues": []
+  },
+  "vic.bot.megahurtz": {
+    "sha": "2f62f07157cc",
+    "heard": "From Sunnyvale, California, a 220-pound vertical spinner, no warranty included, megahertz.",
+    "score": 0.983,
+    "issues": []
+  },
+  "vic.bot.nervous-wreck": {
+    "sha": "58d0bcd7b2f2",
+    "heard": "From Cambridge, Massachusetts, a 120-pound vertical spinner that can't drive straight, Nervous Rec!",
+    "score": 0.974,
+    "issues": []
+  },
+  "vic.bot.paperweight": {
+    "sha": "a97f0fb3c18d",
+    "heard": "From Scranton, Pennsylvania, a 60-pound lifter made from a three-hole punch, paperweight.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.bot.prune-juice": {
+    "sha": "8455efefcd62",
+    "heard": "From Sun City, Arizona, a 120-pound axe that keeps things moving, Prune Juice!",
+    "score": 0.98,
+    "issues": []
+  },
+  "vic.bot.red-tape": {
+    "sha": "527aa7ee17a2",
+    "heard": "From Arlington, Virginia, a 340-pound lifter, please take a number. Red tape.",
+    "score": 0.98,
+    "issues": []
+  },
+  "vic.bot.shrapnel-sam": {
+    "sha": "2b786e619965",
+    "heard": "From Mobile, Alabama, a 60-pound steel shell spinner built by father and son, Shrapnel Sam.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.bot.snowplow": {
+    "sha": "1b3b635f27f4",
+    "heard": "From Buffalo, New York, 220 pounds of steel, wedge, and bad weather, snowplow!",
+    "score": 0.98,
+    "issues": []
+  },
+  "vic.bot.soccer-mom": {
+    "sha": "5349495fd95a",
+    "heard": "From Naperville, Illinois, a 120-pound lifter shaped like a minivan, Soccer Mom.",
+    "score": 0.981,
+    "issues": []
+  },
+  "vic.bot.spatula": {
+    "sha": "43d0474b9d26",
+    "heard": "From Austin, Texas, a diner cook's 120-pound flipper. Order up. Spatula.",
+    "score": 0.979,
+    "issues": []
+  },
+  "vic.bot.tax-audit": {
+    "sha": "9bb0b4c49b65",
+    "heard": "From Hartford, Connecticut, an accountant's 220-pound pneumatic axe. Tax audit!",
+    "score": 0.981,
+    "issues": []
+  },
+  "vic.bot.the-contractor": {
+    "sha": "4b0bec3cd3ac",
+    "heard": "From Las Vegas, Nevada, a 340-pound axe that shows up late, the contractor.",
+    "score": 0.98,
+    "issues": []
+  },
+  "vic.bot.tooth-fairy": {
+    "sha": "54ef5b452b3d",
+    "heard": "From Asheville, North Carolina, a dentist, 60-pound, horizontal spinner, Tooth Fairy!",
+    "score": 0.988,
+    "issues": []
+  },
+  "vic.bot.undertow": {
+    "sha": "33ba903e5e31",
+    "heard": "From Pensacola, Florida, a 220-pound lifter that drags you under, undertow.",
+    "score": 0.98,
+    "issues": []
+  },
+  "vic.bot.wreckoning": {
+    "sha": "8c8b4ae96e33",
+    "heard": "From Tulsa, Oklahoma, a 340-pound vertical spinner. Pray it misses. Reckoning!",
+    "score": 0.974,
+    "issues": []
+  },
+  "vic.bot.y2kill": {
+    "sha": "c7d4efda0b56",
+    "heard": "From San Jose, California, a 60-pound vertical spinner. The world didn't end, but you will Y2Kill.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.byscore": {
+    "sha": "73dfef41ccac",
+    "heard": "By a score of...",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.champion": {
+    "sha": "257c7f971812",
+    "heard": "Ladies and gentlemen, your Bot Box champion and the winner of the giant nut.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.class.heavy": {
+    "sha": "55574bf9c6aa",
+    "heard": "Heavyweight division.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.class.light": {
+    "sha": "5aca78503767",
+    "heard": "Lightweight division.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.class.middle": {
+    "sha": "430d5f99011b",
+    "heard": "Middleweight division.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.class.super": {
+    "sha": "9bf989005f4a",
+    "heard": "Super Heavyweight Division!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.1": {
+    "sha": "52f9e491a71b",
+    "heard": "ONE!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.10": {
+    "sha": "5f0580b78ffe",
+    "heard": "10.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.2": {
+    "sha": "5b9f908d564b",
+    "heard": "Two!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.3": {
+    "sha": "6e52794d636d",
+    "heard": "Three!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.4": {
+    "sha": "6e3aa4792aa4",
+    "heard": "Four!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.5": {
+    "sha": "797667c1158a",
+    "heard": "Five!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.6": {
+    "sha": "7408775c1466",
+    "heard": "Six!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.7": {
+    "sha": "9aaabcca9917",
+    "heard": "Seven.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.8": {
+    "sha": "7fc8e2f6fcb2",
+    "heard": "Eight!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.count.9": {
+    "sha": "82773ff50a9f",
+    "heard": "Nine!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.decision": {
+    "sha": "cd0d038706c8",
+    "heard": "Ladies and gentlemen, we go to the judges.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.go.1": {
+    "sha": "04e31ea6c07a",
+    "heard": "Unleash the Steel!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.go.2": {
+    "sha": "cd57e6d96494",
+    "heard": "Turn them loose!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.go.3": {
+    "sha": "71961ca2e7ea",
+    "heard": "Let the metal fly!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.go.4": {
+    "sha": "37f9bc06293f",
+    "heard": "Steel on Steel!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.green": {
+    "sha": "30492657f10a",
+    "heard": "In the Green Square!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.ko.1": {
+    "sha": "251b34e5d5be",
+    "heard": "It's a knockout!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.ko.2": {
+    "sha": "0a323af3b277",
+    "heard": "Down and out! It's a knockout!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.ko.3": {
+    "sha": "67be820d24a5",
+    "heard": "That robot is done. Knockout.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.ko.4": {
+    "sha": "f01fdb710485",
+    "heard": "Lights out! It's a knockout!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.lastbot": {
+    "sha": "c03597659517",
+    "heard": "The last robot moving. And your Rumble winner.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.blenderella": {
+    "sha": "ac6928b9030e",
+    "heard": "Blender-ella!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.blue-screen": {
+    "sha": "9ad02e4c8b09",
+    "heard": "Blue screen!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.buzzkill": {
+    "sha": "22cd53466a72",
+    "heard": "Buzzkill!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.ctrl-alt-defeat": {
+    "sha": "fe1757d8c28c",
+    "heard": "Control! Halt! Defeat!",
+    "score": 0.973,
+    "issues": []
+  },
+  "vic.name.dial-up": {
+    "sha": "78c27cd05f7b",
+    "heard": "Dial up",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.flapjack": {
+    "sha": "8d72ed10c6d1",
+    "heard": "FLAP JACK!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.frisbee-of-doom": {
+    "sha": "9150445cee34",
+    "heard": "Frisbee of doom!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.general-discontent": {
+    "sha": "ff4ad09e721e",
+    "heard": "General discontent!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.gigawatt": {
+    "sha": "2bbc4f8d85a2",
+    "heard": "Gigawatt!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.homewrecker": {
+    "sha": "d2962739a7cb",
+    "heard": "Homewrecker!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.knuckle-sandwich": {
+    "sha": "fca683ef0542",
+    "heard": "Knuckle sandwich.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.lunchbox": {
+    "sha": "a441090f5571",
+    "heard": "Lunchbox!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.meatloaf": {
+    "sha": "de49a7f113a5",
+    "heard": "Meatloaf!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.megahurtz": {
+    "sha": "b2b7b475093e",
+    "heard": "Megahertz!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.nervous-wreck": {
+    "sha": "999d911acc6d",
+    "heard": "Nervous wreck.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.paperweight": {
+    "sha": "dc5a14d8aa95",
+    "heard": "Paperweight!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.prune-juice": {
+    "sha": "2c96973b9f21",
+    "heard": "PRUNE JUICE!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.red-tape": {
+    "sha": "a2d3a8b8997f",
+    "heard": "Red tape.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.shrapnel-sam": {
+    "sha": "15bc10dde572",
+    "heard": "Shrapnel Sam!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.snowplow": {
+    "sha": "6fa7b0927b33",
+    "heard": "Snowplow!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.soccer-mom": {
+    "sha": "99ca7f2e4073",
+    "heard": "Soccer mom!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.spatula": {
+    "sha": "077e32c475b2",
+    "heard": "SPATULA!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.tax-audit": {
+    "sha": "0c4e30eff1ef",
+    "heard": "Tax Audit!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.the-contractor": {
+    "sha": "6acfabfb6c2c",
+    "heard": "The contractor!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.tooth-fairy": {
+    "sha": "0553cfdc025b",
+    "heard": "Tooth Fairy!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.undertow": {
+    "sha": "7264ec7c507c",
+    "heard": "Undertow!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.name.wreckoning": {
+    "sha": "e2ba702d418b",
+    "heard": "Reckoning!",
+    "score": 0.947,
+    "issues": [
+      "accepted: Whisper writes the homophone Reckoning"
+    ]
+  },
+  "vic.name.y2kill": {
+    "sha": "2726af341cdd",
+    "heard": "Why to kill?",
+    "score": 0.957,
+    "issues": [
+      "accepted: Whisper writes Why to kill (and adds a question mark after Why) on every seed"
+    ]
+  },
+  "vic.num.0": {
+    "sha": "88635e691045",
+    "heard": "Zero.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.1": {
+    "sha": "8665c3bce3b2",
+    "heard": "One.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.10": {
+    "sha": "7129eb0ee0ca",
+    "heard": "Ten!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.11": {
+    "sha": "a581947e8495",
+    "heard": "Eleven!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.12": {
+    "sha": "6bcd41409b6c",
+    "heard": "12.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.13": {
+    "sha": "d15a2d91a36b",
+    "heard": "13",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.14": {
+    "sha": "b2b2caf15e34",
+    "heard": "14.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.15": {
+    "sha": "a4603999f87c",
+    "heard": "Fifteen.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.16": {
+    "sha": "06092b921348",
+    "heard": "16.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.17": {
+    "sha": "f5bd3c546e0a",
+    "heard": "Seventeen!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.18": {
+    "sha": "1073d1238d96",
+    "heard": "18.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.19": {
+    "sha": "4a69b1d410d9",
+    "heard": "19.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.2": {
+    "sha": "2201031c0b25",
+    "heard": "Two.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.20": {
+    "sha": "d0b42e262beb",
+    "heard": "20.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.21": {
+    "sha": "8601f278fbee",
+    "heard": "21.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.22": {
+    "sha": "78d42d24e767",
+    "heard": "22.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.23": {
+    "sha": "af4ca0c701b9",
+    "heard": "23.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.24": {
+    "sha": "08ea5585f1fe",
+    "heard": "24.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.25": {
+    "sha": "3d5e701ab29f",
+    "heard": "25.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.26": {
+    "sha": "d11f275ce9c5",
+    "heard": "26.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.27": {
+    "sha": "dfee0a870d05",
+    "heard": "27.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.28": {
+    "sha": "f0725c043cc9",
+    "heard": "28.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.29": {
+    "sha": "5c85ad121e52",
+    "heard": "29.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.3": {
+    "sha": "523f9033ac46",
+    "heard": "three",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.30": {
+    "sha": "0609bcd88a13",
+    "heard": "30.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.31": {
+    "sha": "81cdd972a4ae",
+    "heard": "31.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.32": {
+    "sha": "67f5a44745fd",
+    "heard": "32.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.33": {
+    "sha": "9319b95117d0",
+    "heard": "33.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.34": {
+    "sha": "2e1c75f2c5ef",
+    "heard": "34.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.35": {
+    "sha": "9f1b7c24c5f8",
+    "heard": "35.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.36": {
+    "sha": "ed6bf0886708",
+    "heard": "36",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.37": {
+    "sha": "1a293fb3e8ed",
+    "heard": "37.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.38": {
+    "sha": "e25cc0ccfc29",
+    "heard": "38.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.39": {
+    "sha": "62be2564ed69",
+    "heard": "39.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.4": {
+    "sha": "09ccde04eb11",
+    "heard": "Four.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.40": {
+    "sha": "a86499f245d6",
+    "heard": "40.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.41": {
+    "sha": "ff21bb105bd1",
+    "heard": "41.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.42": {
+    "sha": "db224faa7823",
+    "heard": "42.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.43": {
+    "sha": "ccbe6536cdc0",
+    "heard": "43.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.44": {
+    "sha": "2d3d1f5d9324",
+    "heard": "44.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.45": {
+    "sha": "f58ce8d06b04",
+    "heard": "45.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.5": {
+    "sha": "0db264d736fb",
+    "heard": "Five.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.6": {
+    "sha": "e036a8ce501d",
+    "heard": "Six.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.7": {
+    "sha": "d0b2bf2fedff",
+    "heard": "Seven.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.8": {
+    "sha": "61ee77fd7313",
+    "heard": "Eight.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.num.9": {
+    "sha": "828c27522f58",
+    "heard": "Nine!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.open.1": {
+    "sha": "a9887612465e",
+    "heard": "From Treasure Island in San Francisco, this is Bot Box.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.open.2": {
+    "sha": "951d949f2ea8",
+    "heard": "Live from the Steel Cage on Treasure Island, welcome to Bot Box!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.open.3": {
+    "sha": "e067bede41bf",
+    "heard": "Eight robots, one box, one giant nut. From San Francisco, this is Bot Box.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.open.4": {
+    "sha": "8797a851148e",
+    "heard": "Sparks will fly, steel will bend. From Treasure Island, this is Bot Box.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.brickhouse": {
+    "sha": "45c0d5c219fb",
+    "heard": "Brick House!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.bulldozer": {
+    "sha": "c5c1b6f75273",
+    "heard": "Bulldozer!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.chaos-theory": {
+    "sha": "b669b5284b09",
+    "heard": "Chaos Theory!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.crowbar": {
+    "sha": "50d885d2dbc2",
+    "heard": "Crowbar!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.deadbolt": {
+    "sha": "e8576b5e1687",
+    "heard": "Deadbolt.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.gearhead": {
+    "sha": "7dd464b43503",
+    "heard": "Gearhead!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.havoc": {
+    "sha": "fc8d0f27d5e9",
+    "heard": "Havoc!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.hot-rod": {
+    "sha": "c2c579442384",
+    "heard": "Hot Rod!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.intro.1": {
+    "sha": "492ae62b5c2f",
+    "heard": "A rookie team straight out of the garage making their very first trip into the box.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.intro.2": {
+    "sha": "4aa1965085af",
+    "heard": "Built on a kitchen table, held together with hope and hex bolts, the rookies bring you...",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.intro.3": {
+    "sha": "7ff6a1efd296",
+    "heard": "They've never been in the box before, but they did not come here to lose.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.intro.4": {
+    "sha": "db9dfea97a52",
+    "heard": "Fresh off the trailer and hungry for metal, please welcome the Rookie Robot.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.juggernaut": {
+    "sha": "f5c6cde68769",
+    "heard": "Juggernaut!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.mayhem": {
+    "sha": "2e394f34087c",
+    "heard": "Mayhem!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.monkey-wrench": {
+    "sha": "40e95dddd66e",
+    "heard": "Monkey Wrench!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.nitro": {
+    "sha": "460b28f7141b",
+    "heard": "Nitro!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.payload": {
+    "sha": "1301bda9f184",
+    "heard": "Payload!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.pit-bull": {
+    "sha": "de963b72516d",
+    "heard": "Pitbull!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.ratchet": {
+    "sha": "ccf3cb341833",
+    "heard": "Ratchet!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.road-rash": {
+    "sha": "e2fb82151943",
+    "heard": "Road Rash!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.rock-bottom": {
+    "sha": "e524f6a178e4",
+    "heard": "Rock bottom.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.rookie": {
+    "sha": "3fd67f5658d1",
+    "heard": "The Rookie!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.rust-bucket": {
+    "sha": "c8762f894892",
+    "heard": "Rust bucket!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.scrapper": {
+    "sha": "75dc12244bd8",
+    "heard": "Scrapper!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.sledge": {
+    "sha": "81295db2c910",
+    "heard": "Sledge!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.sparky": {
+    "sha": "092e017bead4",
+    "heard": "Sparky!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.tin-man": {
+    "sha": "a8234f93badb",
+    "heard": "Tin Man!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.player.torque": {
+    "sha": "c77fb732787e",
+    "heard": "TORQ!",
+    "score": 0.8,
+    "issues": [
+      "accepted: Whisper writes TORQ, the right sound"
+    ]
+  },
+  "vic.player.wrecking-ball": {
+    "sha": "9e42a5ab5c7f",
+    "heard": "Wrecking Ball!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.ready": {
+    "sha": "22d2e52bcd3f",
+    "heard": "Builders, ready?",
+    "score": 1.0,
+    "issues": [
+      "accepted: the long dramatic pause is the point"
+    ]
+  },
+  "vic.red": {
+    "sha": "894c555d5e51",
+    "heard": "In the red square.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.release": {
+    "sha": "2a030519015f",
+    "heard": "Release! Release!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.round.exhibition": {
+    "sha": "aa00622253be",
+    "heard": "Exhibition match!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.round.final": {
+    "sha": "0af13012a305",
+    "heard": "This is the final.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.round.quarter": {
+    "sha": "42d2fdb5f420",
+    "heard": "Quarterfinal action!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.round.rumble": {
+    "sha": "bd2de43c92dc",
+    "heard": "It's a Robot Rumble!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.round.semi": {
+    "sha": "29fe170e010e",
+    "heard": "It's the semifinals!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.tapout": {
+    "sha": "661068600094",
+    "heard": "They've tapped out. It's over.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.time": {
+    "sha": "161966e717ed",
+    "heard": "That's time!",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.to": {
+    "sha": "80b5a28faa6c",
+    "heard": "To...",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.tonight.1": {
+    "sha": "d50bc06ea157",
+    "heard": "Tonight on Bot Box, a rookie team rolls into the box for the very first time.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.tonight.2": {
+    "sha": "3d3337b185b8",
+    "heard": "Tonight on Bot Box, saws, hammers, and one very nervous rookie.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.tonight.3": {
+    "sha": "3214291a07fd",
+    "heard": "Tonight on Bot Box, steel meets steel, and only one walks away with the nut.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.winner.1": {
+    "sha": "a6f67488a20a",
+    "heard": "And your winner...",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.winner.2": {
+    "sha": "efd9caabc7f0",
+    "heard": "Ladies and gentlemen, your winner...",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.winner.3": {
+    "sha": "42a510408ae9",
+    "heard": "The winner of this fight.",
+    "score": 1.0,
+    "issues": []
+  },
+  "vic.yellow": {
+    "sha": "18c923009259",
+    "heard": "And in the yellow square.",
+    "score": 1.0,
+    "issues": []
+  }
+}

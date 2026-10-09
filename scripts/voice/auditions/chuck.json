@@ -1,0 +1,45 @@
+{
+  "who": "Chuck",
+  "chars": 198,
+  "previews": [
+    {
+      "n": 1,
+      "generated_voice_id": "E3FvvHQE4kZkwNZopNlO",
+      "file": "chuck-1.mp3",
+      "pitch_hz": 308,
+      "range_st": 6.6,
+      "energy_db_sd": 7.4,
+      "dur": 16.1,
+      "match": 1.0,
+      "heard": "That is a sack. You do not see hits like that outside of a playoff game. That robot came off the line low and hard, just like we drilled it in camp. Fundamentals, Dale. It is all about fundamentals.",
+      "aperiodicity": 0.083,
+      "centroid_hz": 2096
+    },
+    {
+      "n": 2,
+      "generated_voice_id": "XE8jfQ6PvTYbRoNOpPdl",
+      "file": "chuck-2.mp3",
+      "pitch_hz": 200,
+      "range_st": 5.4,
+      "energy_db_sd": 7.3,
+      "dur": 13.0,
+      "match": 1.0,
+      "heard": "That is a sack. You do not see hits like that outside of a playoff game. That robot came off the line low and hard, just like we drilled it in camp. Fundamentals, Dale. It is all about fundamentals.",
+      "aperiodicity": 0.12,
+      "centroid_hz": 1773
+    },
+    {
+      "n": 3,
+      "generated_voice_id": "BAbAr2PgAbC3PyBAEpF6",
+      "file": "chuck-3.mp3",
+      "pitch_hz": 246,
+      "range_st": 7.7,
+      "energy_db_sd": 7.1,
+      "dur": 17.6,
+      "match": 1.0,
+      "heard": "That is a sack. You do not see hits like that outside of a playoff game. That robot came off the line low and hard, just like we drilled it in camp. Fundamentals, Dale. It is all about fundamentals.",
+      "aperiodicity": 0.064,
+      "centroid_hz": 1371
+    }
+  ]
+}
