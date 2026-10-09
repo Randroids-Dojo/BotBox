@@ -83,7 +83,7 @@ void main() {
   float d = length(vWorld.xz);
   float spill = max(0.0, dot(n, toBox)) * exp(-max(0.0, vWorld.y - 1.0) * 0.22) * (9.0 / (d + 1.0));
   float top = max(0.0, n.y) * 0.05;
-  float l = (0.012 + spill * 0.075 + top) * uLight;
+  float l = (0.014 + spill * 0.1 + top) * uLight;
   gl_FragColor = vec4(vColor * l, 1.0);
 }`;
 
