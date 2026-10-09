@@ -242,7 +242,7 @@ async function theFinal(g: Game): Promise<() => void> {
   stage.shot({ kind: 'winner', bot: NEMESIS.id, duration: 8 });
   await atLeast(3, g.say(['vic.pro.ko.2'], 6));
   ui.banner('winner', NEMESIS.card.name);
-  await g.wait(2.6, false);
+  await g.wait(3.6, false);
   ui.bug(false);
   stage.shot({ kind: 'loser', bot: PLAYER, duration: 8 });
 
@@ -289,7 +289,8 @@ async function clip(g: Game, mine: Loadout, foeId: string, style: 'launch' | 'fl
     t += dt;
     if (hitAt < 0 && (apart(jug, them) < 1.25 || t > 1.5)) {
       hitAt = t;
-      m.finisher(foe.id, 'juggernaut', style, { fire: style === 'launch' });
+      // Clips stay in frame: a smaller throw than the real thing.
+      m.finisher(foe.id, 'juggernaut', style, { fire: style === 'launch', power: style === 'launch' ? 0.62 : 1 });
       m.setAiScript(foe.id, 'passive');
       m.timeScale = 0.25;
       stage.shake(0.8);
@@ -343,7 +344,7 @@ async function theFall(g: Game, teardown: () => void): Promise<void> {
     () => clip(g, tired, 'flapjack', 'flip', 4.2, wear(0.8)),
   );
   if (!g.skipAll) garageBeat(g, tired, wear(0.45, 0.6), 2);
-  await beat({ kind: 'rank', title: 'Heavyweight rankings', rank: { from: 1, to: 3 }, sec: 2.6 }, g.pickId('dale.fall.'));
+  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 1, to: 3 }, sec: 2.6 }, g.pickId('dale.fall.'));
   await beat({ kind: 'headline', title: 'SPONSORS PULL OUT', sub: 'Team Juggernaut loses its backing.', sec: 3.6 }, 'jenna.fall.2');
   await beat(
     { kind: 'result', title: 'Round one, again.', result: { opponent: 'Snowplow', method: 'Shoved into the saws' }, sec: 4.4 },
@@ -351,17 +352,17 @@ async function theFall(g: Game, teardown: () => void): Promise<void> {
     () => clip(g, worn, 'snowplow', 'slam', 4.2, wear(0.7)),
   );
   if (!g.skipAll) garageBeat(g, worn, wear(0.35, 0.5), 1);
-  await beat({ kind: 'rank', title: 'Heavyweight rankings', rank: { from: 3, to: 11 }, sec: 2.6 }, null);
+  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 3, to: 11 }, sec: 2.6 }, null);
   await beat(
     { kind: 'result', title: 'A regional, this time.', result: { opponent: 'Homewrecker', method: 'Torn apart in 0:41' }, sec: 4.4 },
     g.pickId('dale.fall.'),
     () => clip(g, worn, 'homewrecker', 'launch', 4.2, wear(0.6)),
   );
   if (!g.skipAll) garageBeat(g, worn, wear(0.3, 0.45), 1);
-  await beat({ kind: 'rank', title: 'Heavyweight rankings', rank: { from: 11, to: 38 }, sec: 2.6 }, 'jenna.fall.3');
+  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 11, to: 38 }, sec: 2.6 }, 'jenna.fall.3');
   if (!g.skipAll) garageBeat(g, { ...worn, weapon: 'none' }, wear(0.3, 0.45), 0, ['weapon']);
   await beat({ kind: 'headline', title: 'THE DISK IS SOLD', sub: 'Juggernaut parts with its weapon to pay the bills.', sec: 3.8 }, 'jenna.fall.4');
-  await beat({ kind: 'rank', title: 'Heavyweight rankings', rank: { from: 38, to: null }, sec: 2.8 }, g.pickId('chuck.fall.'));
+  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 38, to: null }, sec: 2.8 }, g.pickId('chuck.fall.'));
   audio.stopVoice();
   ui.caption(null);
   g.setSkippable(false);

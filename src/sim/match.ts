@@ -214,11 +214,11 @@ export class Match implements SimHost {
    * over, or slammed sideways), loses armor and parts, and catches fire. Uses the same damage
    * and impulse paths as a real hit, so every effect, sound and camera beat follows.
    */
-  finisher(attackerId: string, victimId: string, style: 'launch' | 'flip' | 'slam', opts: { fire?: boolean; kill?: boolean } = {}): void {
+  finisher(attackerId: string, victimId: string, style: 'launch' | 'flip' | 'slam', opts: { fire?: boolean; kill?: boolean; power?: number } = {}): void {
     const a = this.bot(attackerId);
     const v = this.bot(victimId);
     if (!a || !v) return;
-    const m = v.spec.massKg;
+    const m = v.spec.massKg * (opts.power ?? 1);
     const ap = a.pos;
     const vp = v.pos;
     let dir = norm(vec(vp.x - ap.x, 0, vp.z - ap.z));
