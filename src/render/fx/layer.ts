@@ -315,7 +315,8 @@ export class Fx implements FxLayer {
     // Flash: light pulse and a glow sprite.
     if (e.energy > 150) {
       const col = mat === 'titanium' ? '#e9f0ff' : '#ffcf8a';
-      this.lights.flash({ x: p.x, y: p.y + 0.35, z: p.z }, (10 + 70 * e01 * e01) * (factor > 0 ? 1 : 0.4), col, 0.05 + 0.05 * big);
+      // Bright enough to pop, not so bright the robot vanishes in a white blob under bloom.
+      this.lights.flash({ x: p.x, y: p.y + 0.5, z: p.z }, (8 + 34 * e01 * e01) * (factor > 0 ? 1 : 0.4), col, 0.05 + 0.04 * big);
       const g = factor > 0 ? 1 : 0.35;
       this.glow.emit({ x: p.x, y: p.y, z: p.z, vx: 0, vy: 0, vz: 0, life: 0.09 + 0.06 * big, size0: 0.06 + 0.16 * e01, size1: 0.12 + 0.32 * e01, c0: [5 * g, 4.2 * g, 3.2 * g], c1: [2 * g, 0.8 * g, 0.2 * g], alpha: 1, cell: 3, rot: 0, spin: 0, fadeIn: 0.01 });
     }

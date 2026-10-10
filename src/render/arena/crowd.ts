@@ -79,7 +79,7 @@ varying vec3 vColor;
 varying vec3 vN;
 varying vec3 vWorld;
 void main() {
-  vec3 n = normalize(vN);
+  vec3 n = normalize(vN + vec3(0.0, 1e-4, 0.0));
   // Spill from the lit Box: comes from the arena center, fades with height and distance.
   vec3 toBox = normalize(vec3(-vWorld.x, 2.5 - vWorld.y, -vWorld.z));
   float d = length(vWorld.xz);
@@ -142,7 +142,9 @@ void main() {
   float on = step(hash(slot * 13.7 + seed * 91.1), chance);
   vB = on * exp(-ph * 26.0);
   vec4 mv = viewMatrix * vec4(position, 1.0);
-  gl_PointSize = vB > 0.002 ? uScale * 0.7 / -mv.z : 0.0;
+  // Behind the camera or right on top of it a point size goes negative or enormous; some mobile
+  // GPUs draw garbage for either.
+  gl_PointSize = vB > 0.002 && mv.z < -0.5 ? min(uScale * 0.7 / -mv.z, 96.0) : 0.0;
   gl_Position = projectionMatrix * mv;
 }`;
 
