@@ -580,6 +580,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
     const fill = (c: GarageCategory) => {
       if (!isEmpty(c)) return;
       filled.add(c);
+      preview();
       const next = missing()[0];
       // Walk straight on to the next empty slot, or to Done.
       window.setTimeout(() => {
@@ -633,7 +634,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       ctx.sfx.ui('move');
       renderAll(null);
       body.scrollTop = 0;
-      const first = body.querySelector<HTMLElement>('.nav');
+      const first = body.querySelector<HTMLElement>('.keep-name') ?? body.querySelector<HTMLElement>('.nav');
       const tabEl = byKey(`tab:${t}`);
       scope.refresh(focusBody ? first ?? tabEl : tabEl);
       tabEl?.scrollIntoView({ inline: 'center', block: 'nearest' });
@@ -650,7 +651,7 @@ export function garage(ctx: UiCtx, g: GarageContext): Promise<GarageResult | nul
       if (tab === 'paint') return renderPaint();
       if (tab === 'name') return renderName();
       const opts = optsFor(tab).map(decorate);
-      if (tab === 'chassis' && !g.classLocked && !pits) body.append(classRow());
+      if (tab === 'chassis' && !g.classLocked && !pits && !careerMode) body.append(classRow());
       const list = el('div.opt-list' + (tab === 'armor' ? '.armor' : ''));
       if (tab === 'armor') {
         list.append(el('div.opt-sub.kicker', 'Thickness'));
