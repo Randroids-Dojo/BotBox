@@ -48,6 +48,8 @@ export interface FightOutcome {
   playerWon: boolean;
   carried: Entrant['carried'];
   quit: boolean;
+  /** Why the player lost, in a few words ("Flipped and counted out."), or null. */
+  cause: string | null;
 }
 
 const CORNER_LINE: Record<Corner, string> = { red: 'vic.red', blue: 'vic.blue', green: 'vic.green', yellow: 'vic.yellow' };
@@ -58,6 +60,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   const match = new Match(g.R, { entrants: simEntrants, length: setup.length, seed: (Math.random() * 1e9) | 0 });
   const rec = new Recorder();
   const booth = new Commentary(audio, ui, () => g.save.settings);
+  booth.hold = () => g.saying;
+  g.current = match;
   const player = setup.playerId ? match.bot(setup.playerId) ?? null : null;
   const cls = setup.entrants[0].spec.loadout.cls;
   const show = setup.presentation ?? 'broadcast';
@@ -260,7 +264,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   crowd(0.75);
   // Wait for green.
   while (match.phase === 'countdown') await g.frame();
-  if (!minimal) void g.say([g.pickId('vic.go.')]);
+  if (!minimal) void g.say([g.pickId('vic.go.')], 30, 1.5);
   ui.banner('fight');
   stage.shot({ kind: 'live' });
   audio.music('fight', 1);
@@ -271,7 +275,26 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   if (player) ui.touchControls(touchOpts());
 
   // ---------------------------------------------------------------- fight
-  while (match.phase === 'fight' && !quit) await g.frame();
+  // Flipped: tell the player how to get back up (or that they cannot).
+  let upsideDown = 0;
+  let prompted: 'right' | 'stuck' | null = null;
+  let flippedAtEnd = false;
+  while (match.phase === 'fight' && !quit) {
+    const before = clock;
+    await g.frame();
+    if (!player || g.autopilot) continue;
+    upsideDown = player.helpless && !player.disabled ? upsideDown + (clock - before) : 0;
+    const canRight = player.spec.selfRight && !player.spec.invertible;
+    if (upsideDown > 0.6 && !prompted) {
+      prompted = canRight ? 'right' : 'stuck';
+      ui.coach(canRight ? 'Flipped! Self-right' : 'Flipped, and no srimech to get back up', canRight ? 'selfRight' : undefined);
+    } else if (upsideDown === 0 && prompted) {
+      prompted = null;
+      ui.coach(null);
+    }
+    flippedAtEnd = upsideDown > 0;
+  }
+  ui.coach(null);
   ui.touchControls(null);
   if (quit) {
     unsubAction();
@@ -282,16 +305,15 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     audio.setWorldActive(false);
     match.dispose();
     g.onCalm(true);
-    return { result: match.result ?? fallbackResult(match), playerWon: false, carried: player?.carried(), quit: true };
+    return { result: match.result ?? fallbackResult(match), playerWon: false, carried: player?.carried(), quit: true, cause: null };
   }
 
   // Let the end breathe: the robots keep coasting for a moment.
   const result = match.result!;
+  // The booth stops picking new lines; whatever it is saying finishes, then Vic makes the call.
   booth.enabled = false;
-  audio.stopVoice();
-  ui.caption(null);
   const call = (ids: string[]) => {
-    if (!minimal) void g.say(ids);
+    if (!minimal) void g.say(ids, 30, 3.5);
   };
   if (result.method === 'decision') {
     audio.stinger('time');
@@ -414,7 +436,15 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   g.save.fights++;
   g.persist();
   g.onCalm(true);
-  return { result, playerWon, carried, quit: false };
+  let cause: string | null = null;
+  if (player && !playerWon) {
+    if (result.method === 'decision') cause = 'Lost on the judges\' cards.';
+    else if (result.method === 'tapout') cause = 'Tapped out.';
+    else if (flippedAtEnd || player.helpless) cause = player.spec.selfRight && !player.spec.invertible ? 'Flipped and counted out. Hit self-right as soon as you land.' : 'Flipped and counted out. A srimech gets you back up.';
+    else if (!player.driveCapable) cause = 'Lost drive and was counted out.';
+    else cause = 'Counted out.';
+  }
+  return { result, playerWon, carried, quit: false, cause };
 
   function introLines(e: Entrant): string[] {
     if (e.control === 'ai' || careerRivalById(e.id)) return [`vic.bot.${e.card.voiceId ?? e.id}`];

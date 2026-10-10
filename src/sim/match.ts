@@ -62,6 +62,8 @@ export class Match implements SimHost {
   lights: 0 | 1 | 2 | 3 | 4 = 0;
   timeScale = 1;
   result: MatchResult | null = null;
+  /** Scripted scenes switch the arena hazards off so the script cannot be derailed. */
+  hazardsOn = true;
 
   private events: MatchEvent[] = [];
   private queue: EventQueue;
@@ -313,7 +315,7 @@ export class Match implements SimHost {
       // Button presses are edges: one step consumes them, even when a frame runs several steps.
       if (b.control === 'player' && b.cmd.weaponPressed) b.cmd = { ...b.cmd, weaponPressed: false };
     }
-    this.hazards.step(dt, fighting);
+    this.hazards.step(dt, fighting && this.hazardsOn);
 
     this.world.step(this.queue);
 
@@ -575,7 +577,9 @@ export class Match implements SimHost {
     // Trying to drive but not going anywhere (high-centered, wedged on a wall).
     const commanding = Math.abs(b.cmd.throttle) > 0.3 || Math.abs(b.cmd.turn) > 0.3 || b.control === 'ai';
     const speed = len(b.body.linvel());
-    if (!immobile && commanding && speed < 0.06 && Math.abs(b.body.angvel().y) < 0.15) {
+    // Shoving nose to nose is fighting, not being stuck: only count a stall with nobody to push.
+    const engaged = this.bots.some((o) => o !== b && !o.disabled && this.isTouching(o, b));
+    if (!immobile && commanding && !engaged && speed < 0.06 && Math.abs(b.body.angvel().y) < 0.15) {
       b.stuckTime += dt;
       if (b.stuckTime > 3) immobile = true;
     } else if (speed > 0.2) b.stuckTime = 0;

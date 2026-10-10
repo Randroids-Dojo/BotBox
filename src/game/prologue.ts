@@ -69,13 +69,17 @@ async function theFinal(g: Game): Promise<() => void> {
     seed: 7,
     positions: { [PLAYER]: { ...pAt, yaw: face(pAt, nAt) }, [NEMESIS.id]: { ...nAt, yaw: face(nAt, pAt) + 1.1 } },
   });
+  // A floor trap must not decide this fight: the script owns it.
+  match.hazardsOn = false;
   match.setAiScript(NEMESIS.id, 'passive');
   if (auto) match.setAiScript(PLAYER, 'charge');
   const me = match.bot(PLAYER)!;
   const tv = match.bot(NEMESIS.id)!;
+  g.current = match;
   // Scripted lines only, but Vic still counts the knockout.
   const booth = new Commentary(audio, ui, () => g.save.settings);
   booth.enabled = false;
+  booth.hold = () => g.saying;
 
   /** A beat that lasts at least `sec`, longer if its voice line runs over. */
   const atLeast = (sec: number, p: Promise<unknown>) => Promise.all([p, g.wait(sec, false)]);
@@ -98,6 +102,7 @@ async function theFinal(g: Game): Promise<() => void> {
   let slowScale = 1;
   let easeRate = 2.5;
   let moveT = 0;
+  let flippedT = 0;
   let hits = 0;
   let lastHitT = -99;
   let struck = -99;
@@ -116,7 +121,13 @@ async function theFinal(g: Game): Promise<() => void> {
   g.setTick((dt) => {
     clock += dt;
     if (running) {
-      if (!auto) match.setCommand(PLAYER, control ? input.command(stage.controlYaw(), yawOf(me.quat), me.inverted) : IDLE);
+      flippedT = me.helpless && !downed ? flippedT + dt : 0;
+      if (!auto) {
+        const cmd = control ? input.command(stage.controlYaw(), yawOf(me.quat), me.inverted) : { ...IDLE };
+        // The champion's crew hits the srimech for you if you have not found the button yet.
+        if (flippedT > 2.2) cmd.selfRight = true;
+        match.setCommand(PLAYER, cmd);
+      }
       if (control && (Math.abs(me.cmd.throttle) > 0.3 || Math.abs(me.cmd.turn) > 0.5)) moveT += dt;
       if (clock < slowUntil) match.timeScale = slowScale;
       else match.timeScale = Math.min(1, match.timeScale + dt * easeRate);
@@ -166,14 +177,24 @@ async function theFinal(g: Game): Promise<() => void> {
   running = true;
   control = true;
   ui.banner('fight');
-  if (!auto) ui.touchControls({ weaponLabel: 'SPIN', selfRight: false });
+  if (!auto) ui.touchControls({ weaponLabel: 'SPIN', selfRight: true });
   ui.coach('Drive at Terminal Velocity', 'drive');
   const tasteStart = clock;
   let step = 0;
   let said = 0;
+  let righting = false;
   for (;;) {
     await g.frame();
     const t = clock - tasteStart;
+    // Flipped: say how to get back up, then carry on where the coaching left off.
+    if (flippedT > 0.4 && !righting) {
+      righting = true;
+      ui.coach('Flipped! Self-right', 'selfRight');
+    } else if (righting && flippedT === 0) {
+      righting = false;
+      ui.coach(step === 0 ? 'Drive at Terminal Velocity' : step === 1 ? 'Spin up the disk' : 'Hit it!', step === 0 ? 'drive' : step === 1 ? 'weapon' : undefined);
+    }
+    if (righting) continue;
     if (step === 0 && (moveT > 0.7 || t > 5 || auto)) {
       step = 1;
       ui.coach('Spin up the disk', 'weapon');
@@ -186,10 +207,11 @@ async function theFinal(g: Game): Promise<() => void> {
     }
     if (hits > said || (said === 0 && t > 7)) {
       said = Math.max(said + 1, hits);
-      void g.say([g.pickId(said % 2 ? 'chuck.pro.taste.' : 'dale.pro.taste.')], 5);
+      if (!g.saying) void g.say([g.pickId(said % 2 ? 'chuck.pro.taste.' : 'dale.pro.taste.')], 30, 1.5);
       if (step === 2) ui.coach(hits === 1 ? 'Again!' : null);
     }
-    if ((hits >= 2 && clock - lastHitT > 0.8) || t > 17 || match.phase !== 'fight') break;
+    // Never take control away while the robot is upside down.
+    if (((hits >= 2 && clock - lastHitT > 0.8) || t > 17 || match.phase !== 'fight') && !me.helpless) break;
   }
 
   // ---- the turn: control is gone, Terminal Velocity winds all the way up
@@ -198,17 +220,36 @@ async function theFinal(g: Game): Promise<() => void> {
   ui.touchControls(null);
   if (auto) match.setAiScript(PLAYER, 'passive');
   match.setAiScript(NEMESIS.id, 'windup');
-  audio.stopVoice();
   stage.shot({ kind: 'bot_intro', bot: NEMESIS.id, duration: 3.4 });
   g.crowd(0.9);
-  void g.say([g.pickId('chuck.pro.turn.'), g.pickId('dale.pro.turn.')], 7);
+  const turnLine = g.say([g.pickId(Math.random() < 0.5 ? 'chuck.pro.turn.' : 'dale.pro.turn.')], 30, 2);
   const turnStart = clock;
-  while ((tv.spin01 < 0.9 || clock - turnStart < 2.2) && clock - turnStart < 3.6) await g.frame();
+  // Wind up until the bar is screaming and the booth has said so.
+  let turnDone = false;
+  void turnLine.then(() => (turnDone = true));
+  while ((tv.spin01 < 0.9 || clock - turnStart < 2.2 || !turnDone) && clock - turnStart < 5) await g.frame();
   tv.omega = Math.max(tv.omega, tv.omegaMax * 0.95);
-  match.setAiScript(NEMESIS.id, 'charge');
-  stage.shot({ kind: 'faceoff', duration: 2.6 });
-  const chargeStart = clock;
-  while (struck < chargeStart && apart(me, tv) > 1.25 && clock - chargeStart < 4) await g.frame();
+
+  // ---- the charge. It has to really connect: the hit only lands on contact.
+  const charge = async (limit: number) => {
+    match.setAiScript(NEMESIS.id, 'charge');
+    stage.shot({ kind: 'faceoff', duration: 2.6 });
+    const from = clock;
+    while (struck < from && apart(me, tv) > 1.05 && clock - from < limit) await g.frame();
+    return struck >= from || apart(me, tv) <= 1.05;
+  };
+  if (!(await charge(5))) {
+    // Stuck somewhere: cut away and line Terminal Velocity up for another run. The cut hides it.
+    stage.shot({ kind: 'loser', bot: PLAYER, duration: 1 });
+    await g.frame();
+    const back = { x: me.pos.x - Math.sign(me.pos.x || 1) * 1.8, z: me.pos.z - Math.sign(me.pos.z || 1) * 0.4 };
+    tv.body.setTranslation({ x: back.x, y: tv.pos.y + 0.05, z: back.z }, true);
+    tv.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    tv.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    const yaw = face(back, me.pos);
+    tv.body.setRotation({ x: 0, y: Math.sin(yaw / 2), z: 0, w: Math.cos(yaw / 2) }, true);
+    await charge(4);
+  }
 
   // ---- the hit
   match.finisher(NEMESIS.id, PLAYER, 'launch', { fire: true, kill: true });
@@ -219,12 +260,11 @@ async function theFinal(g: Game): Promise<() => void> {
   easeRate = 0.45;
   stage.shake(1);
   stage.shot({ kind: 'replay', point: me.pos, bots: [PLAYER], duration: 4.2, seed: 0 });
-  audio.stopVoice();
   audio.stinger('heartbreak');
   g.crowd(1);
   await g.wait(1.0, false);
-  // Vic's count cuts in when it lands, so one line of shock is all there is room for.
-  void g.say([g.pickId(Math.random() < 0.5 ? 'chuck.pro.down.' : 'dale.pro.down.')], 5);
+  // One line of shock; Vic picks the count up when it finishes.
+  void g.say([g.pickId(Math.random() < 0.5 ? 'chuck.pro.down.' : 'dale.pro.down.')], 30, 2);
   const flight = clock;
   while ((me.airborne || clock - flight < 2.4) && clock - flight < 5.5) await g.frame();
 
@@ -232,15 +272,15 @@ async function theFinal(g: Game): Promise<() => void> {
   stage.shot({ kind: 'loser', bot: PLAYER, duration: 5 });
   g.crowd(0.5);
   await g.wait(2.6, false);
+  await g.quiet(4);
   match.forceKo(PLAYER);
-  audio.stopVoice();
   audio.stinger('ko');
   ui.banner('ko');
   g.crowd(1);
-  await atLeast(2.4, g.say(['vic.pro.ko.1'], 4));
+  await atLeast(2.4, g.say(['vic.pro.ko.1']));
   ui.hud(null);
   stage.shot({ kind: 'winner', bot: NEMESIS.id, duration: 8 });
-  await atLeast(3, g.say(['vic.pro.ko.2'], 6));
+  await atLeast(3, g.say(['vic.pro.ko.2']));
   ui.banner('winner', NEMESIS.card.name);
   await g.wait(3.6, false);
   ui.bug(false);
@@ -259,8 +299,9 @@ async function theFinal(g: Game): Promise<() => void> {
 async function clip(g: Game, mine: Loadout, foeId: string, style: 'launch' | 'flip' | 'slam', sec: number, carried: Damage): Promise<void> {
   const { stage, audio } = g;
   const foe = careerRivalById(foeId)!;
-  const a = { x: -1.2, z: 0.7 };
-  const b = { x: 1.3, z: -0.6 };
+  // Close enough that the charge lands in the first second of the clip.
+  const a = { x: -0.75, z: 0.45 };
+  const b = { x: 0.85, z: -0.4 };
   const entrants: Entrant[] = [
     { id: 'juggernaut', corner: 'red', spec: buildSpec(mine), card: CHAMP_CARD, control: 'ai', skill: 0.4, carried },
     { id: foe.id, corner: 'blue', spec: buildSpec(foe.loadout), card: foe.card, control: 'ai', skill: 0.9 },
@@ -285,9 +326,11 @@ async function clip(g: Game, mine: Loadout, foeId: string, style: 'launch' | 'fl
   stage.shot({ kind: 'faceoff', duration: 2 });
   let t = 0;
   let hitAt = -1;
+  let touched = false;
   g.setTick((dt) => {
     t += dt;
-    if (hitAt < 0 && (apart(jug, them) < 1.25 || t > 1.5)) {
+    // The throw lands on contact, never from across the floor.
+    if (hitAt < 0 && (touched || apart(jug, them) < 1.05 || t > 2.5)) {
       hitAt = t;
       // Clips stay in frame: a smaller throw than the real thing.
       m.finisher(foe.id, 'juggernaut', style, { fire: style === 'launch', power: style === 'launch' ? 0.62 : 1 });
@@ -301,6 +344,7 @@ async function clip(g: Game, mine: Loadout, foeId: string, style: 'launch' | 'fl
     audio.setTimeScale(m.timeScale);
     m.advance(dt);
     const events = m.drainEvents();
+    for (const e of events) if (e.type === 'hit' && e.attacker === foe.id && e.victim === 'juggernaut') touched = true;
     const world = m.frame();
     stage.render(world, events, dt);
     audio.frame(world, events, stage.listener(), dt);
@@ -329,10 +373,12 @@ async function theFall(g: Game, teardown: () => void): Promise<void> {
   audio.music('montage', 2.5);
   const tired: Loadout = { ...JUGGERNAUT_PRIME, armor: { material: 'steel', grade: 1 }, paint: { ...JUGGERNAUT_PRIME.paint, finish: 'matte' } };
   const worn: Loadout = { ...tired, drive: 'drill2', power: 'sla', extras: [], paint: { ...tired.paint, decal: 'JUG' } };
+  // Each beat lasts as long as its line: nobody gets cut off by the next headline.
   const beat = async (card: MontageCard, voice: string | null, scene?: () => Promise<void>) => {
     if (g.skipAll) return;
-    if (voice) void g.say([voice], card.sec + 1.5);
-    await g.wait(Promise.all([ui.montage(card), scene?.()]));
+    const dur = voice ? (g.audio.voiceLine(voice)?.dur ?? 0) : 0;
+    const said = voice ? g.say([voice], 30, 2) : Promise.resolve();
+    await g.wait(Promise.all([ui.montage({ ...card, sec: Math.max(card.sec, dur + 0.5) }), scene?.(), said]));
   };
 
   // The wreck, still burning.
@@ -363,7 +409,7 @@ async function theFall(g: Game, teardown: () => void): Promise<void> {
   if (!g.skipAll) garageBeat(g, { ...worn, weapon: 'none' }, wear(0.3, 0.45), 0, ['weapon']);
   await beat({ kind: 'headline', title: 'THE DISK IS SOLD', sub: 'Juggernaut parts with its weapon to pay the bills.', sec: 3.8 }, 'jenna.fall.4');
   await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 38, to: null }, sec: 2.8 }, g.pickId('chuck.fall.'));
-  audio.stopVoice();
+  await g.quiet(5);
   ui.caption(null);
   g.setSkippable(false);
   g.skipAll = false;

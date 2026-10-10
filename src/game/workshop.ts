@@ -110,6 +110,7 @@ async function fight(g: Game, c: CareerSave, f: CampaignFight | null, gig: SideG
     result: resultText(out.result.method, out.result.time, out.result.totals, out.result.winner),
     damage: out.carried ?? null,
   });
+  if (!won && out.cause) view.note = `${out.cause} Rematch whenever you are ready.`;
   g.persist();
 
   if (won && final) {

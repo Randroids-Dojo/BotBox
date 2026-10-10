@@ -32,8 +32,11 @@ export class Commentary {
   private lastEvent = 0;
   private pendingWhiff = new Map<string, number>();
   private busyUntil = 0;
-  private counting = false;
+  private counting: string | null = null;
   private lastComeback = -99;
+  private lastCount = -99;
+  /** The director's scripted lines take priority: the booth waits while this is true. */
+  hold: () => boolean = () => false;
   enabled = true;
   /** Career: the fallen champion's id. Its big hits get "the old champ still has it" lines. */
   comeback: string | null = null;
@@ -49,7 +52,7 @@ export class Commentary {
     this.lastLine = this.now;
     this.spoke.clear();
     this.pendingWhiff.clear();
-    this.counting = false;
+    this.counting = null;
   }
 
   /** Ids available for a voice prefix like "chuck.huge.". */
@@ -108,10 +111,13 @@ export class Commentary {
           else if (e.component === 'driveL' || e.component === 'driveR') this.queue('drivedown');
           break;
         case 'ko_count':
-          this.count(e.n, e.n === 10);
+          this.count(e.bot, e.n);
           break;
         case 'ko_clear':
-          this.counting = false;
+          if (e.bot === this.counting) this.counting = null;
+          break;
+        case 'ko':
+          if (e.bot === this.counting) this.counting = null;
           break;
         case 'righted':
           this.queue('righted');
@@ -145,24 +151,30 @@ export class Commentary {
     void playerId;
   }
 
-  private count(n: number, first: boolean): void {
-    if (first) {
-      this.counting = true;
+  /** Vic counts one robot at a time; a second count running alongside stays on the HUD. */
+  private count(bot: string, n: number): void {
+    if (n === 10 && this.counting === null) {
+      this.counting = bot;
       this.queue('count');
     }
-    if (!this.counting) return;
+    if (this.counting !== bot) return;
     const id = `vic.count.${n}`;
-    if (this.audio.voiceLine(id)) {
-      void this.audio.voice(id, { interrupt: true });
-      this.busyUntil = this.now + 0.8;
-    }
+    if (!this.audio.voiceLine(id)) return;
+    // Vic picks the count up when the booth finishes its sentence instead of talking over it.
+    // Only his own previous number (under a second long) may be cut.
+    if (this.audio.voiceBusy() && this.now - this.lastCount > 1.05) return;
+    this.lastCount = this.now;
+    void this.audio.voice(id, { interrupt: true });
+    this.busyUntil = this.now + 0.8;
   }
 
   /** Vic over the top of everything. */
   announce(id: string): void {
     if (!this.audio.voiceLine(id)) return;
     this.caption('Vic', id);
-    void this.audio.voice(id, { interrupt: true }).then(() => this.ui.caption(null));
+    void this.audio.voice(id, { interrupt: true }).then((ok) => {
+      if (ok) this.ui.caption(null);
+    });
     this.busyUntil = this.now + (this.audio.voiceLine(id)?.dur ?? 1);
   }
 
@@ -172,7 +184,7 @@ export class Commentary {
       this.pending = null;
       return;
     }
-    if (this.audio.voiceBusy() || this.now < this.busyUntil) return;
+    if (this.audio.voiceBusy() || this.now < this.busyUntil || this.hold()) return;
     if (!this.pending && this.now - this.lastLine > 9 && this.now - this.lastEvent > 3) this.queue('idle');
     const p = this.pending;
     if (!p) return;
@@ -199,6 +211,8 @@ export class Commentary {
       ids = this.variants(`${speaker}.${cat}.`);
     }
     if (!ids.length) return false;
+    // Never talk over a line in progress.
+    if (this.audio.voiceBusy()) return false;
     const fresh = ids.filter((id) => !this.recent.includes(id));
     const pool = fresh.length ? fresh : ids;
     const id = pool[Math.floor(Math.random() * pool.length)];
@@ -208,7 +222,9 @@ export class Commentary {
     this.lastLine = this.now;
     if (cat !== 'desk' && cat !== 'bumper') this.spoke.add(cat as Category);
     this.caption(speaker === 'dale' ? 'Dale' : 'Chuck', id);
-    void this.audio.voice(id).then(() => this.ui.caption(null));
+    void this.audio.voice(id).then((ok) => {
+      if (ok) this.ui.caption(null);
+    });
     return true;
   }
 

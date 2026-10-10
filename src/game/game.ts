@@ -47,6 +47,8 @@ export class Game {
   readonly speed = Math.max(1, Number(params.get('speed') ?? 1));
   skipped = false;
   skipAll = false;
+  /** The match on screen, for tests and dev tools (window.botbox.game.current). */
+  current: import('../sim/match').Match | null = null;
   /** Told when it is (or stops being) a good moment to offer a refresh. */
   onCalm: (calm: boolean) => void = () => {};
   private skippableNow = false;
@@ -63,17 +65,13 @@ export class Game {
     readonly input: Input,
   ) {
     input.onAction((a) => {
-      if (a === 'skip') {
-        this.skipped = true;
-        this.skipAll = true;
-      }
+      if (a === 'skip') this.skip();
     });
     // On touch screens a tap anywhere skips a cinematic, not just the small skip button.
     window.addEventListener('pointerup', (e) => {
       if (!this.skippableNow || e.pointerType !== 'touch') return;
       if ((e.target as HTMLElement | null)?.closest('button, input, .nav')) return;
-      this.skipped = true;
-      this.skipAll = true;
+      this.skip();
     });
     this.applySettings();
     requestAnimationFrame(this.loop);
@@ -133,11 +131,50 @@ export class Game {
     }
   }
 
-  /** Play voice lines in order with captions. Missing lines are skipped. */
-  async say(ids: string[], maxSec = 12): Promise<void> {
-    const start = performance.now();
-    this.skipped = false;
+  private skip(): void {
+    this.skipped = true;
+    this.skipAll = true;
+    this.skipGen++;
+  }
+
+  /** Bumped by every skip, so a queued line knows the moment it belonged to was skipped. */
+  private skipGen = 0;
+  private sayQueue: Promise<void> = Promise.resolve();
+  private sayPending = 0;
+
+  /** True while scripted lines are playing or waiting their turn (the booth stays quiet). */
+  get saying(): boolean {
+    return this.sayPending > 0;
+  }
+
+  /**
+   * Play voice lines in order with captions. Scripted lines queue behind each other and wait for
+   * whoever is talking to finish: a line that has started is only ever cut by a skip.
+   * `maxSec` stops new lines from starting after that long; `late` drops the whole call if it
+   * cannot start within that many seconds (a reaction that would land after its moment).
+   */
+  say(ids: string[], maxSec = 30, late = 6): Promise<void> {
+    const called = performance.now();
+    const gen = this.skipGen;
+    this.sayPending++;
+    const run = this.sayQueue.then(async () => {
+      try {
+        await this.sayNow(ids, called, gen, maxSec, late);
+      } finally {
+        this.sayPending--;
+      }
+    });
+    this.sayQueue = run.catch(() => undefined);
+    return run;
+  }
+
+  private async sayNow(ids: string[], called: number, gen: number, maxSec: number, late: number): Promise<void> {
+    const age = () => (performance.now() - called) / 1000;
+    // Let the booth finish its sentence.
+    while (this.audio.voiceBusy() && age() < late && this.skipGen === gen) await this.frame();
+    if (this.skipGen !== gen || age() >= late) return;
     for (const id of ids) {
+      if (age() > maxSec || this.skipGen !== gen) break;
       const line = this.audio.voiceLine(id);
       if (!line) continue;
       const who = SPEAKER[id.split('.')[0]] ?? 'Vic';
@@ -145,13 +182,19 @@ export class Game {
       const p = this.audio.voice(id, { interrupt: true });
       let done = false;
       void p.then(() => (done = true));
-      while (!done && !this.skipped && (performance.now() - start) / 1000 < maxSec) await this.frame();
-      if (this.skipped) {
+      while (!done && this.skipGen === gen) await this.frame();
+      if (this.skipGen !== gen) {
         this.audio.stopVoice();
         break;
       }
     }
     this.ui.caption(null);
+  }
+
+  /** Wait until nobody is talking (up to `maxSec`). */
+  async quiet(maxSec = 8): Promise<void> {
+    const t0 = performance.now();
+    while ((this.saying || this.audio.voiceBusy()) && (performance.now() - t0) / 1000 < maxSec) await this.frame();
   }
 
   pickId(prefix: string): string {
@@ -363,7 +406,7 @@ export class Game {
       if (!out.playerWon) {
         s.done = true;
         this.persist();
-        await this.ui.result({ won: false, headline: `${rival.card.name} wins`, detail: `Your season ends in the ${round === 'final' ? 'final' : round + 'finals'}.`, result: out.result });
+        await this.ui.result({ won: false, headline: `${rival.card.name} wins`, detail: `${out.cause ? out.cause + ' ' : ''}Your season ends in the ${round === 'final' ? 'final' : round + 'finals'}.`, result: out.result });
         await this.ui.eliminated(this.playerCard(s.loadout), round);
         break;
       }
