@@ -118,7 +118,7 @@ export function mainMenu(ctx: UiCtx, save: SaveSummary): Promise<MainMenuChoice>
     [...list.children].forEach((b, i) => ((b as HTMLElement).style.animationDelay = `${i * 45}ms`));
 
     const node = el('div.screen.main-menu.calm', [
-      el('div.mm-left', [el('div.mm-brand', [el('span.mm-logo.logo-type.chrome-text', 'BOTBOX'), el('span.mm-season.kicker', 'Season 2001')]), list]),
+      el('div.mm-left', [list]),
       el('div.mm-hints.hint-row', [el('span', [...key('Enter', 'A'), 'Select']), el('span', [...key('↑↓', '✛'), 'Move'])]),
     ]);
     ctx.layers.screen.append(node);
