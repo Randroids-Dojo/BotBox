@@ -2,7 +2,8 @@
 //   Lineup and carousel of every roster robot plus odd player builds on turntables, damage and
 //   debris tests, an fx bench and a mock fight. Driven by buttons, arrow keys, or window.__lab
 //   for scripted screenshots. Query: mode=lineup|carousel|fx|mock, sel=<id or index>,
-//   q=high|medium|low, cam=close|broadcast|top|front|side.
+//   q=high|medium|low, cam=close|broadcast|top|front|side, missing=drive,power,armor,weapon
+//   (rebuild parts left off, as in the garage).
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -26,7 +27,7 @@ import { ROSTER } from '../data/roster';
 import { KILLSAWS, PULVERIZERS } from '../data/arena';
 import { buildSpec } from '../sim/spec';
 import { MockWorld } from './mock';
-import { createBotView } from '../render/bots';
+import { createBotView, setMissingParts, type MissingPart } from '../render/bots';
 import { createDebrisLayer, createFxLayer } from '../render/fx';
 import { createNutTrophy } from '../render/props/nut';
 import type { BotView, DebrisLayer, FxLayer, Quality } from '../render/types';
@@ -37,6 +38,7 @@ type Mode = 'lineup' | 'carousel' | 'fx' | 'mock' | 'nut';
 const params = new URLSearchParams(location.search);
 let quality: Quality = (params.get('q') as Quality) ?? 'high';
 let mode: Mode = (params.get('mode') as Mode) ?? 'carousel';
+let missing = (params.get('missing') ?? '').split(',').filter(Boolean) as MissingPart[];
 
 // ------------------------------------------------------------------------------------ builds
 
@@ -278,6 +280,7 @@ function buildSlots(): void {
   const list = mode === 'fx' ? [ENTRIES.find((e) => e.id === (params.get('sel') ?? 'megahurtz')) ?? ENTRIES[0]] : ENTRIES;
   list.forEach((entry, i) => {
     const view = createBotView(entry.spec, { envMap: env, quality });
+    if (missing.length) setMissingParts(view, missing, false);
     const pos = layoutPos(i);
     const tt = new THREE.Group();
     const disc = new THREE.Mesh(turntableGeo, turntableMat);
@@ -897,6 +900,11 @@ window.__lab = {
     flying = false;
   },
   mode: (m: Mode) => setMode(m),
+  /** Leave rebuild parts off every robot on show; parts that come back pop on. */
+  missing: (parts: MissingPart[]) => {
+    missing = parts;
+    for (const s of slots) setMissingParts(s.view, parts, true);
+  },
   hit: (facet?: Facet, energy?: number, kind?: HitKind) => hitSelected({ facet, energy, kind }),
   knock: (facet?: Facet) => knockPanel(facet),
   smoke: (v: number) => setSmoke(v),

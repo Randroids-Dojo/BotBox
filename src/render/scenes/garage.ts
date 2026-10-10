@@ -162,17 +162,17 @@ export class GarageScene {
       this.view.dispose();
       this.view = null;
     }
+    const missing = opts?.missing ?? [];
+    // Only a rebuild in progress needs the split robot; a normal garage keeps the merged one.
+    const rebuild = missing.length > 0 || this.missing.size > 0;
     if (!this.view) {
       this.view = createBotView(spec, { envMap: this.env, quality: this.quality() });
       this.turntable.add(this.view.root);
       // A rebuilt view starts from what was missing before, so new parts still pop on.
-      setMissingParts(this.view, [...this.missing], false);
-      this.shadows(this.view.root);
+      if (rebuild) setMissingParts(this.view, [...this.missing], false);
     }
-    const missing = opts?.missing ?? [];
-    setMissingParts(this.view, missing, true);
-    // The garage's split internals are new meshes: give them shadows too.
-    if (fresh) this.shadows(this.view.root);
+    if (rebuild) setMissingParts(this.view, missing, true);
+    if (fresh || rebuild) this.shadows(this.view.root);
     this.missing = new Set(missing);
     this.frame = restingFrame(spec, { x: 0, y: 0.23, z: 0 }, 0);
     if (damage) {
