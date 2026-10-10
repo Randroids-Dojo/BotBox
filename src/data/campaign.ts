@@ -7,7 +7,7 @@ import { ROSTER, type Rival } from './roster';
 export const PLAYER_TEAM = {
   team: 'Team Juggernaut',
   hometown: 'Oakland, California',
-  builders: 'You, and whoever still returns your calls',
+  builders: 'you and whoever still returns your calls',
 };
 
 /** Juggernaut at its peak: the three-time champion you play in the prologue. */
@@ -34,7 +34,7 @@ export const SCRAP_LOADOUT: Loadout = {
   weapon: 'none',
   armor: { material: 'aluminum', grade: 1 },
   extras: ['wedgeplate', 'srimech'],
-  paint: { primary: '#5a5148', secondary: '#2a2a2a', accent: '#d4a017', pattern: 'solid', finish: 'raw', decal: 'JUG' },
+  paint: { primary: '#5a5148', secondary: '#2a2a2a', accent: '#d4a017', pattern: 'solid', finish: 'matte', decal: 'JUG' },
 };
 
 /** Parts the player owns at the start of the climb. */

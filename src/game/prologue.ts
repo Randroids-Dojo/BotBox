@@ -20,7 +20,7 @@ export const CHAMP_CARD: BotCard = {
   name: 'Juggernaut',
   team: PLAYER_TEAM.team,
   hometown: PLAYER_TEAM.hometown,
-  builders: 'You and a crew of six',
+  builders: 'you and a crew of six',
   blurb: 'Two Giant Nuts. Going for three.',
   record: '31-0',
 };
