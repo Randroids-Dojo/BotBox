@@ -93,6 +93,9 @@ export class BotSim {
   private readonly fStallSide: number;
   private readonly vFree: number;
   private readonly turnGain: number;
+  private yawInertia = 1;
+  /** Track half width, for the turning torque the motors can make. */
+  private trackHalf = 0.3;
   private readonly chargeMax: number;
 
   // ---- state
@@ -255,6 +258,7 @@ export class BotSim {
       z: (m / 12) * (W * W + H * H),
     };
     this.body.setAdditionalMassProperties(m, { x: 0, y: this.comY, z: comZ }, inertia, { x: 0, y: 0, z: 0, w: 1 }, true);
+    this.yawInertia = inertia.y;
 
     // Supports: wheels plus a front caster for 2WD robots.
     const dr = DRIVES[l.drive];
@@ -270,6 +274,7 @@ export class BotSim {
     this.fStallSide = (dr.force * this.mScale) / 2;
     this.vFree = spec.stats.topSpeed;
     this.turnGain = clamp(0.95 / Math.sqrt(dr.scrub), 0.55, 1);
+    this.trackHalf = Math.max(0.12, ...spec.wheels.map((w) => Math.abs(w.pos.x)));
 
     const pw = POWER[l.power];
     this.chargeMax = pw.capacityKJ * 1000 * this.mScale;
@@ -504,8 +509,11 @@ export class BotSim {
       if (s.wheel >= 0) {
         this.wheelContact[s.wheel] = true;
         const perWheel = this.fStallSide / Math.max(1, nSide[s.side]);
-        // Brushed DC motor under PWM: force falls off linearly toward free speed.
-        const drive = hpSide > 0 ? clamp(cmdSide * p - vLong / this.vFree, -1, 1) : 0;
+        // Brushed DC motor under PWM: force falls off linearly toward free speed. With the stick
+        // centred the speed controller brakes hard (shorted windings), so robots stop instead of
+        // coasting across the Box.
+        const brake = Math.abs(cmdSide) < 0.08 ? 4 : 1;
+        const drive = hpSide > 0 ? clamp(cmdSide * p - (brake * vLong) / this.vFree, -1, 1) : 0;
         fLong = perWheel * hpSide * drive;
         if (hpSide <= 0) fLong = -vLong * massShare * 0.6; // dead side drags
         fLat = clamp(-vLat * (massShare / dt) * 0.35, -MU_LAT * fn, MU_LAT * fn);
@@ -526,6 +534,32 @@ export class BotSim {
       body.applyImpulseAtPoint(imp, contact, true);
       if (other) other.body.applyImpulseAtPoint(scale(imp, -1), contact, true);
     }
+    this.yawAssist(dt, clamp(cmd.turn, -1, 1) * (1 - 0.25 * Math.abs(throttle)), upW);
+  }
+
+  /**
+   * The driver's hands on the sticks: chase a yaw rate set by the turn command so a turn starts
+   * crisply and stops where it was let go, instead of fighting tyre scrub on the way in and
+   * sliding on the way out. Limited to what the motors could plausibly do, so big hits still
+   * spin a robot around.
+   */
+  private yawAssist(dt: number, turn: number, upW: Vec3): void {
+    const down = this.wheelsDown;
+    if (down === 0 || this.disabled) return;
+    const hp = (this.parts.driveL > 0 ? 0.5 : 0) + (this.parts.driveR > 0 ? 0.5 : 0);
+    if (hp <= 0) return;
+    const grounded = down / Math.max(1, this.spec.wheels.length);
+    const sign = upW.y >= 0 ? 1 : -1;
+    // Turning right spins clockwise seen from above, the right way up or not (the wheel commands
+    // are already swapped for an upside-down robot).
+    const maxRate = 2.4 + 2.2 * this.turnGain;
+    const want = -turn * maxRate * Math.min(1, this.power + 0.25);
+    const have = dot(this.body.angvel(), upW) * sign;
+    // A robot spun by a hit spins: the driver cannot catch that, so the assist lets it go.
+    if (Math.abs(have) > maxRate * 1.3) return;
+    const tauMax = this.fStallSide * 2 * this.trackHalf * 3 * hp * grounded;
+    const tau = clamp(this.yawInertia * 22 * (want - have), -tauMax, tauMax);
+    this.body.applyTorqueImpulse(scale(upW, tau * sign * dt), true);
   }
 
   // ------------------------------------------------------------------ weapons

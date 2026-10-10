@@ -173,16 +173,30 @@ export class Input {
    * @param robotYaw the robot's heading (0 faces -Z), used by camera-relative drive
    * @param inverted robot is upside down (camera-relative steering flips)
    */
+  private turnKey = 0;
+  private turnKeySince = 0;
+
   command(controlYaw: number, robotYaw: number, inverted = false): DriveCommand {
     const typing = isTyping();
     const k = (c: string) => !typing && this.keys.has(c);
     const kx = (k('KeyD') || k('ArrowRight') ? 1 : 0) - (k('KeyA') || k('ArrowLeft') ? 1 : 0);
     const ky = (k('KeyW') || k('ArrowUp') ? 1 : 0) - (k('KeyS') || k('ArrowDown') ? 1 : 0);
 
-    let x = kx + this.padStick.lx + this.touch.x;
+    // Keys are all or nothing, so a held turn key eases in: a tap nudges the aim a few degrees,
+    // holding it swings round at full rate. Sticks get a gentle curve for fine aim near centre.
+    const now = performance.now();
+    if (kx !== this.turnKey) {
+      this.turnKey = kx;
+      this.turnKeySince = now;
+    }
+    const keyTurn = kx * Math.min(1, 0.35 + 0.65 * ((now - this.turnKeySince) / 260));
+    const ax = this.padStick.lx + this.touch.x;
+    let x = keyTurn + Math.sign(ax) * Math.pow(Math.min(1, Math.abs(ax)), 1.5);
     let y = ky + this.padStick.ly + this.touch.y;
     x = Math.max(-1, Math.min(1, x));
     y = Math.max(-1, Math.min(1, y));
+    // Camera-relative steering reads the stick's true angle.
+    const sx = Math.max(-1, Math.min(1, ax));
 
     let throttle = y;
     let turn = x;
@@ -193,10 +207,10 @@ export class Input {
       throttle = (left + right) / 2;
       turn = (left - right) / 2;
     } else if (this.driveMode === 'camera' && !usingKeys) {
-      const mag = Math.min(1, Math.hypot(x, y));
+      const mag = Math.min(1, Math.hypot(sx, y));
       if (mag > 0.05) {
         // Desired heading in world: stick up is the camera's forward.
-        const want = controlYaw + Math.atan2(-x, y);
+        const want = controlYaw + Math.atan2(-sx, y);
         let err = wrap(want - robotYaw);
         if (inverted) err = -err;
         if (Math.abs(err) > 2.2) {

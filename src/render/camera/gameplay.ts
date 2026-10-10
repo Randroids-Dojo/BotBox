@@ -8,7 +8,11 @@ const _v = new THREE.Vector3();
 const _w = new THREE.Vector3();
 const _mid = new THREE.Vector3();
 
-/** Behind and above the player, keeping the opponent framed, like a fighting game camera. */
+/**
+ * Behind the player's robot, following its heading like a third-person driving camera, so
+ * forward on the stick is always into the screen. It leans a little toward the opponent so the
+ * fight stays in view, but never swings off the heading to chase it.
+ */
 export class ChaseCam {
   private yaw = 0;
   private sep = 3;
@@ -24,49 +28,56 @@ export class ChaseCam {
     const me = ctx.player();
     if (!me) return this.spectate(ctx, dt, aspect);
     const foe = nearestFoe(ctx.bots, me);
-    let desiredYaw = this.yaw;
+    let desiredYaw = me.yaw;
     let sep = 0;
+    let off = Math.PI;
     if (foe) {
       _v.subVectors(foe.pos, me.pos);
       _v.y = 0;
       sep = _v.length();
-      // Too close and the bearing is unstable as robots circle: hold the current heading.
-      if (sep > 1.1) desiredYaw = Math.atan2(-_v.x, -_v.z);
-    } else {
-      desiredYaw = me.yaw;
+      if (sep > 0.8) {
+        off = wrap(Math.atan2(-_v.x, -_v.z) - me.yaw);
+        // Lean toward an opponent off to one side, at most about 25 degrees.
+        if (Math.abs(off) < 2.1) desiredYaw = me.yaw + clamp(off * 0.35, -0.45, 0.45);
+      }
     }
     if (!this.init) {
-      this.yaw = foe ? desiredYaw : me.yaw;
+      this.yaw = desiredYaw;
       this.sep = sep;
     }
-    // Limited turn rate plus easing: never whips around.
-    let dy = desiredYaw - this.yaw;
-    dy = Math.atan2(Math.sin(dy), Math.cos(dy));
-    const ease = dy * (1 - Math.exp(-2.4 * dt));
-    const maxStep = 1.7 * dt;
-    this.yaw += clamp(ease, -maxStep, maxStep);
+    // Quick enough to stay behind a robot turning on the spot, never a whip pan.
+    const dy = wrap(desiredYaw - this.yaw);
+    const maxStep = 2.8 * dt;
+    this.yaw += clamp(dy * (1 - Math.exp(-5 * dt)), -maxStep, maxStep);
     this.sep += (sep - this.sep) * (1 - Math.exp(-2 * dt));
 
     const s = this.sep;
-    const dist = clamp(3.4 + s * 0.5, 3.8, 8.5) * (0.8 + me.scale * 0.2);
-    const height = clamp(1.9 + s * 0.26, 2.1, 4.4) * (0.85 + me.scale * 0.15);
+    let dist = clamp(3.3 + s * 0.35, 3.6, 6) * (0.8 + me.scale * 0.2);
+    let height = clamp(1.8 + s * 0.18, 2, 3) * (0.85 + me.scale * 0.15);
     const fx = -Math.sin(this.yaw);
     const fz = -Math.cos(this.yaw);
+    // Backed up against a wall: shorten the boom and raise it instead of sliding the camera
+    // sideways, which would twist the view off the robot's heading.
+    const room = boomRoom(me.pos.x, me.pos.z, -fx, -fz, ARENA_HALF - 0.45);
+    if (dist > room) {
+      height += (dist - Math.max(1.3, room)) * 0.65;
+      dist = Math.max(1.3, room);
+    }
     const w = this.want;
     w.pos.set(me.pos.x - fx * dist, height, me.pos.z - fz * dist);
-    if (foe) w.target.lerpVectors(me.pos, foe.pos, 0.4);
-    else w.target.set(me.pos.x + fx * 1.5, 0, me.pos.z + fz * 1.5);
-    w.target.y = 0.25;
+    // Look past the robot, drawn toward the opponent when it is in front.
+    w.target.set(me.pos.x + fx * 1.4, 0.25, me.pos.z + fz * 1.4);
+    const ahead = foe && sep > 0.8 && Math.abs(off) < 1.3;
+    if (ahead) w.target.lerp(_w.set(foe.pos.x, 0.25, foe.pos.z), 0.3);
     clampInside(w.pos);
-    // Fit both robots horizontally.
     const camDist = w.pos.distanceTo(w.target);
-    w.fov = clamp(fovForWidth(Math.max(1.6, s * 0.62 + 1.0), camDist, aspect), 46, 68);
+    w.fov = clamp(fovForWidth(ahead ? Math.max(1.8, s * 0.6 + 1.1) : 2.2, camDist, aspect), 48, 68);
     w.roll = 0;
     if (!this.init) {
       this.pose.copy(w);
       this.init = true;
     }
-    this.pose.damp(w, 4.5, 6, 3, dt);
+    this.pose.damp(w, 6, 7, 3, dt);
     return this.pose;
   }
 
@@ -137,6 +148,18 @@ export function nearestFoe(bots: CamBot[], me: CamBot): CamBot | undefined {
     }
   }
   return best;
+}
+
+const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+
+/** How far a camera can back away from (x, z) along (dx, dz) before leaving the square. */
+function boomRoom(x: number, z: number, dx: number, dz: number, lim: number): number {
+  let t = Infinity;
+  if (dx > 1e-4) t = Math.min(t, (lim - x) / dx);
+  else if (dx < -1e-4) t = Math.min(t, (-lim - x) / dx);
+  if (dz > 1e-4) t = Math.min(t, (lim - z) / dz);
+  else if (dz < -1e-4) t = Math.min(t, (-lim - z) / dz);
+  return Math.max(0, t);
 }
 
 /** Keep a camera inside the Box, off the walls and under the ceiling. */

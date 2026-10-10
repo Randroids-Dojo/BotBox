@@ -138,9 +138,15 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
         if (e.severity > 0.5) stage.shake(Math.min(1, e.severity));
         if (e.severity >= 0.78 && g.save.settings.cinematicHits && clock - lastCinematic > 6 && simRunning) {
           lastCinematic = clock;
-          slowUntil = clock + 0.45;
-          cinematicUntil = clock + 1.1;
-          stage.shot({ kind: 'impact', point: e.point, bots: [e.victim, ...(e.attacker ? [e.attacker] : [])], duration: 1.1 });
+          if (player) {
+            // Never take the view away from someone driving: a short hit-stop and the shake
+            // sell it, and Bot Replay shows the angle afterwards.
+            slowUntil = clock + 0.16;
+          } else {
+            slowUntil = clock + 0.45;
+            cinematicUntil = clock + 1.1;
+            stage.shot({ kind: 'impact', point: e.point, bots: [e.victim, ...(e.attacker ? [e.attacker] : [])], duration: 1.1 });
+          }
         }
         crowdFor(e.severity);
         break;
