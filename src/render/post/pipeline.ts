@@ -56,7 +56,7 @@ export class PostPipeline {
     this.bloom = new BloomEffect({
       mipmapBlur: false,
       kernelSize: KernelSize.HUGE,
-      luminanceThreshold: 1.7,
+      luminanceThreshold: 2.4,
       luminanceSmoothing: 0.35,
       intensity: 1.35,
       resolutionScale: 0.5,
