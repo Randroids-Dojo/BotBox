@@ -1,4 +1,4 @@
-// Settings, the career and the season in progress, kept in localStorage.
+// Settings, the career save slots and the season in progress, kept in localStorage.
 
 import type { Component, Facet, Loadout, WeightClass } from '../contract';
 import type { Settings } from '../ui/types';
@@ -29,8 +29,14 @@ export interface SaveData {
   settings: Settings;
   robot: Loadout | null;
   season: SeasonSave | null;
-  /** The comeback career. null until the first launch starts it. */
+  /** Career save slots (always SLOTS long; null is empty). */
+  slots: (CareerSave | null)[];
+  /** The slot being played. */
+  slot: number;
+  /** The career being played: `slots[slot]`, kept in step by the director. Not stored twice. */
   career: CareerSave | null;
+  /** The championship prologue has been seen at least once (a new game may skip it). */
+  seenIntro: boolean;
   nuts: Partial<Record<WeightClass, number>>;
   fights: number;
 }
@@ -50,17 +56,34 @@ export function defaultSettings(): Settings {
   };
 }
 
+export const SLOTS = 3;
+
+type Stored = Partial<SaveData> & { career?: CareerSave | null };
+
+/** Bring any stored shape up to date: a single pre-slots career moves into slot 1. */
+export function migrate(d: Stored): Pick<SaveData, 'slots' | 'slot' | 'career' | 'seenIntro'> {
+  const slots: (CareerSave | null)[] = Array.from({ length: SLOTS }, (_, i) => d.slots?.[i] ?? null);
+  if (!d.slots && d.career) slots[0] = d.career;
+  const slot = Math.max(0, Math.min(SLOTS - 1, Math.floor(d.slot ?? 0)));
+  return {
+    slots,
+    slot,
+    career: slots[slot],
+    seenIntro: d.seenIntro ?? slots.some((c) => !!c?.prologueDone),
+  };
+}
+
 export function load(): SaveData {
-  const fresh: SaveData = { settings: defaultSettings(), robot: null, season: null, career: null, nuts: {}, fights: 0 };
+  const fresh: SaveData = { settings: defaultSettings(), robot: null, season: null, ...migrate({}), nuts: {}, fights: 0 };
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return fresh;
-    const d = JSON.parse(raw) as Partial<SaveData>;
+    const d = JSON.parse(raw) as Stored;
     return {
       settings: { ...fresh.settings, ...(d.settings ?? {}), volumes: { ...fresh.settings.volumes, ...(d.settings?.volumes ?? {}) } },
       robot: d.robot ?? null,
       season: d.season ?? null,
-      career: d.career ?? null,
+      ...migrate(d),
       nuts: d.nuts ?? {},
       fights: d.fights ?? 0,
     };
@@ -71,7 +94,8 @@ export function load(): SaveData {
 
 export function store(d: SaveData): void {
   try {
-    localStorage.setItem(KEY, JSON.stringify(d));
+    // The active career lives in its slot; storing it twice would let the copies drift.
+    localStorage.setItem(KEY, JSON.stringify({ ...d, career: undefined }));
   } catch {
     // Private mode or full storage: the game still runs, it just forgets.
   }

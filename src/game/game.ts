@@ -11,9 +11,9 @@ import type { Stage } from '../render/types';
 import type { Rapier } from '../sim/rapier';
 import { buildSpec } from '../sim/spec';
 import type { BroadcastUI, Damage, RivalSummary, Speaker } from '../ui/types';
-import { careerSummary, newCareer } from './career';
+import { careerSummary, latestCareer, newCareer, slotView, type CareerSave } from './career';
 import { runFight, nameLines, type RoundId } from './fight';
-import { prologue } from './prologue';
+import { prologue, skipToStorage } from './prologue';
 import { load, store, type SaveData } from './save';
 import { PLAYER, ROUND_IDS, bracketView, describeSeason, newSeason, nextFight, record, resultText, simulateRound } from './season';
 import { starterLoadout, toClass } from './starter';
@@ -217,6 +217,11 @@ export class Game {
   }
 
   persist(): void {
+    const c = this.save.career;
+    if (c) {
+      c.savedAt = Date.now();
+      this.save.slots[this.save.slot] = c;
+    }
     store(this.save);
   }
 
@@ -230,24 +235,31 @@ export class Game {
     this.audio.stinger('logo');
     const jump = params.get('career');
     if (jump !== null) {
-      this.save.career ??= newCareer();
-      jumpTo(this.save.career, Number(jump) || 0);
+      this.useSlot(this.save.slot, this.save.career ?? newCareer());
+      jumpTo(this.save.career!, Number(jump) || 0);
       this.persist();
     }
-    // First launch: straight into the last seconds of a championship final. The dev jump goes
-    // straight to the workshop too.
-    if (!this.save.career?.prologueDone || jump !== null) await this.guarded(() => this.career());
+    // First launch: straight into the last seconds of a championship final, in slot 1 (or the
+    // slot whose opening was left unfinished). The dev jump goes straight to the workshop too.
+    const started = this.save.slots.some((c) => c?.prologueDone);
+    if (!started || jump !== null) {
+      if (!this.save.career) {
+        const open = this.save.slots.findIndex((c) => !!c);
+        this.useSlot(open >= 0 ? open : 0, this.save.slots[open] ?? newCareer());
+      }
+      await this.guarded(() => this.career());
+    }
     for (;;) {
       this.stage.setScene('title');
       this.audio.music('menu', 1);
       const choice = await this.ui.mainMenu({
-        career: careerSummary(this.save.career),
+        career: careerSummary(latestCareer(this.save.slots)),
         season: this.save.season && !this.save.season.done ? describeSeason(this.save.season) : null,
         nuts: this.save.nuts,
         robot: this.save.robot,
       });
       await this.guarded(async () => {
-        if (choice === 'career') await this.career();
+        if (choice === 'career') await this.careerSlots();
         else if (choice === 'quick') await this.exhibition();
         else if (choice === 'continue') await this.season(true);
         else if (choice === 'season') await this.season(false);
@@ -279,6 +291,40 @@ export class Game {
     this.audio.setWorldActive(false);
     this.stage.setDressing('normal');
     this.onCalm(true);
+  }
+
+  /** Make a slot the one being played. */
+  private useSlot(slot: number, c: CareerSave): void {
+    this.save.slot = slot;
+    this.save.slots[slot] = c;
+    this.save.career = c;
+  }
+
+  /** The slot picker: continue a career, start a new one, or clear a slot. */
+  private async careerSlots(): Promise<void> {
+    for (;;) {
+      this.stage.setScene('title');
+      const pick = await this.ui.saves(this.save.slots.map((c, i) => slotView(c, i)), this.save.seenIntro);
+      if (!pick) return;
+      if (pick.action === 'delete') {
+        this.save.slots[pick.slot] = null;
+        if (this.save.slot === pick.slot) this.save.career = null;
+        this.persist();
+        continue;
+      }
+      if (pick.action === 'new') {
+        this.useSlot(pick.slot, newCareer());
+        this.persist();
+        if (pick.skipIntro) await skipToStorage(this);
+      } else {
+        const c = this.save.slots[pick.slot];
+        if (!c) continue;
+        this.useSlot(pick.slot, c);
+        this.persist();
+      }
+      await this.career();
+      return;
+    }
   }
 
   /** The comeback career: the prologue the first time, then the workshop. */

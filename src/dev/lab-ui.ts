@@ -17,7 +17,7 @@ import { createNutTrophy } from '../render/props/nut';
 import type { BotView } from '../render/types';
 import { buildSpec } from '../sim/spec';
 import { createBroadcastUI } from '../ui';
-import type { BracketView, CareerShop, CareerView, Damage, DecisionView, GarageCategory, HudEntrant, MontageCard, RewardsView, RivalSummary, Settings, WorkshopView } from '../ui/types';
+import type { BracketView, CareerShop, CareerView, Damage, DecisionView, GarageCategory, HudEntrant, MontageCard, RewardsView, RivalSummary, SaveSlotView, Settings, WorkshopView } from '../ui/types';
 import { MockWorld } from './mock';
 
 // ------------------------------------------------------------------------------------------
@@ -746,6 +746,24 @@ const ITEMS: Record<string, { group: string; label: string; run: () => unknown }
     group: 'Career',
     label: 'Garage: guided rebuild',
     run: () => careerGarage({ tier: 0, funds: 0, owned: [...STARTING_OWNED], repairPer10: 5, guided: ['drive', 'power', 'armor', 'name'], loadout: SCRAP_LOADOUT }),
+  },
+  saves: {
+    group: 'Career',
+    label: 'Save slots: mixed',
+    run: () => {
+      const now = Date.now();
+      const slot = (i: number, c: Partial<NonNullable<SaveSlotView['career']>> | null): SaveSlotView => ({
+        slot: i,
+        career: c && { name: 'Juggernaut', act: 'Act II. Regionals', rank: 31, funds: 1250, record: { w: 5, l: 2 }, progress: { won: 5, total: 13 }, champion: false, savedAt: now - 3600000, fresh: false, ...c },
+      });
+      return ui.saves([slot(0, {}), slot(1, null), slot(2, { name: 'The Comeback Kid Mk II', act: 'Act IV. The Championship', rank: 1, funds: 41200, record: { w: 19, l: 6 }, progress: { won: 13, total: 13 }, champion: true, savedAt: now - 3 * 86400000 })], true).then((c) => log(`saves: ${JSON.stringify(c)}`));
+    },
+  },
+  saves0: { group: 'Career', label: 'Save slots: all empty', run: () => ui.saves([0, 1, 2].map((slot) => ({ slot, career: null })), false).then((c) => log(`saves: ${JSON.stringify(c)}`)) },
+  saves1: {
+    group: 'Career',
+    label: 'Save slots: one fresh',
+    run: () => ui.saves([{ slot: 0, career: { name: 'Juggernaut', act: 'Act I. The Scrapyard Circuit', rank: null, funds: 0, record: { w: 0, l: 0 }, progress: { won: 0, total: 13 }, champion: false, savedAt: Date.now() - 60000, fresh: true } }, { slot: 1, career: null }, { slot: 2, career: null }], true).then((c) => log(`saves: ${JSON.stringify(c)}`)),
   },
   ladder1: { group: 'Career', label: 'Career ladder (early)', run: () => (stage.setMode('garage'), ui.career(careerView(1)).then(() => log('ladder done'))) },
   ladder2: { group: 'Career', label: 'Career ladder (late)', run: () => (stage.setMode('garage'), ui.career(careerView(10)).then(() => log('ladder done'))) },

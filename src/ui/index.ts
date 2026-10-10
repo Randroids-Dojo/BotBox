@@ -17,7 +17,7 @@ import { Nav, Sfx, el } from './core';
 import type { UiCtx } from './fx';
 import { Broadcast } from './broadcast';
 import { bracket } from './bracket';
-import { careerLadder, rewards, workshop } from './career';
+import { careerLadder, rewards, saves, workshop } from './career';
 import { Cinema } from './cinema';
 import { exhibition } from './exhibition';
 import { garage } from './garage';
@@ -107,6 +107,7 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
     touchControls: (o) => touch?.set(o),
     skippable: (on) => bc?.skippable(on),
 
+    saves: (slots, seenIntro) => saves(need(), slots, seenIntro),
     workshop: (v) => workshop(need(), v),
     career: (v) => careerLadder(need(), v),
     rewards: (v) => rewards(need(), v),

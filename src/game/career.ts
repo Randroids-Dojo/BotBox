@@ -18,7 +18,7 @@ import {
 } from '../data/campaign';
 import { ARMOR, CHASSIS, DRIVES, EXTRAS, POWER, WEAPONS } from '../data/parts';
 import { buildSpec } from '../sim/spec';
-import type { CareerShop, CareerView, Damage, RewardsView, RivalSummary, WorkshopView } from '../ui/types';
+import type { CareerShop, CareerView, Damage, RewardsView, RivalSummary, SaveSlotView, WorkshopView } from '../ui/types';
 
 export interface CareerSave {
   /** The prologue and the montage have been seen. */
@@ -39,6 +39,8 @@ export interface CareerSave {
   results: Record<string, string>;
   /** Store tier whose unlocks the player has been told about. */
   toldTier: number;
+  /** Last played, ms since the epoch. */
+  savedAt?: number;
 }
 
 export function newCareer(): CareerSave {
@@ -282,6 +284,35 @@ export function settle(
         : 'Spend it wisely.'
       : 'Rematch whenever you are ready. Patch it up first.',
   };
+}
+
+const ROMAN = ['I', 'II', 'III', 'IV'];
+
+/** A slot as the slot picker shows it. */
+export function slotView(c: CareerSave | null, slot: number): SaveSlotView {
+  if (!c) return { slot, career: null };
+  const act = currentAct(c);
+  return {
+    slot,
+    career: {
+      name: c.loadout.name,
+      act: `Act ${ROMAN[ACTS.indexOf(act)] ?? ''}. ${act.title}`,
+      rank: c.rank,
+      funds: c.funds,
+      record: { w: c.w, l: c.l },
+      progress: { won: Math.min(c.next, FIGHTS.length), total: FIGHTS.length },
+      champion: c.next >= FIGHTS.length,
+      savedAt: c.savedAt ?? null,
+      fresh: !c.prologueDone || !c.rebuilt,
+    },
+  };
+}
+
+/** The most recently played career, for the main menu. */
+export function latestCareer(slots: (CareerSave | null)[]): CareerSave | null {
+  let best: CareerSave | null = null;
+  for (const c of slots) if (c && c.prologueDone && (!best || (c.savedAt ?? 0) > (best.savedAt ?? 0))) best = c;
+  return best;
 }
 
 export function careerSummary(c: CareerSave | null): string | null {

@@ -2,7 +2,7 @@
 // Quieter than fight night: one obvious action per screen, the rest tucked underneath.
 
 import { key } from './hints';
-import type { CareerView, RewardsView, WorkshopChoice, WorkshopView } from './types';
+import type { CareerView, RewardsView, SaveSlotView, SlotChoice, WorkshopChoice, WorkshopView } from './types';
 import { append, el, exit, item, replay, sleep } from './core';
 import { slamFx, type UiCtx } from './fx';
 import { countUp, money, rankText } from './money';
@@ -74,6 +74,129 @@ export function workshop(ctx: UiCtx, v: WorkshopView): Promise<WorkshopChoice> {
     ctx.layers.screen.append(node);
     const scope = ctx.nav.push({ root: node, back: () => finish('menu'), initial: primary });
     slamFx(node, primary, 'right', 12);
+  });
+}
+
+// ------------------------------------------------------------------------------------------
+// Save slots
+
+function lastPlayed(ms: number | null): string {
+  if (!ms) return '';
+  const d = new Date(ms);
+  const day = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const diff = Math.round((day(new Date()) - day(d)) / 86400000);
+  const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  if (diff === 0) return `Today, ${time}`;
+  if (diff === 1) return `Yesterday, ${time}`;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+export function saves(ctx: UiCtx, slots: SaveSlotView[], seenIntro: boolean): Promise<SlotChoice | null> {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = (c: SlotChoice | null) => {
+      if (done) return;
+      done = true;
+      ctx.sfx.ui(c ? 'select' : 'back');
+      if (c && c.action !== 'delete') ctx.sfx.sting('whoosh');
+      ctx.nav.pop(scope);
+      void exit(node, 240).then(() => resolve(c));
+    };
+
+    // A question over the slots: two buttons, Esc or a tap outside backs out.
+    const ask = (kicker: string, q: string, detail: string | null, yes: string, no: string, onYes: () => void, onNo?: () => void, danger = false) => {
+      let closed = false;
+      const close = (ok: boolean) => {
+        if (closed) return;
+        closed = true;
+        ctx.nav.pop(sub);
+        box.remove();
+        scope.refresh();
+        if (ok) onYes();
+        else if (onNo) onNo();
+        else ctx.sfx.ui('back');
+      };
+      const yesBtn = button(yes, { cls: `small primary${danger ? ' danger' : ''}`, activate: () => close(true) });
+      const noBtn = button(no, { cls: 'small', activate: () => close(false) });
+      const box = el('div.sv-confirm', [
+        el('div.gc-card', [el('div.kicker', kicker), el('div.gc-q', q), detail ? el('div.gc-after', detail) : null, el('div.gc-btns', [yesBtn, noBtn])]),
+      ]);
+      box.addEventListener('click', (e) => {
+        if (e.target === box) close(false);
+      });
+      node.append(box);
+      ctx.sfx.ui('tick');
+      const sub = ctx.nav.push({ root: box, back: () => close(false), initial: danger ? noBtn : yesBtn });
+    };
+
+    const startNew = (slot: number) => {
+      if (!seenIntro) return finish({ slot, action: 'new', skipIntro: false });
+      ask(
+        'New game',
+        'Watch the championship and the fall again?',
+        'Or start in the storage unit with a box of scrap.',
+        'Skip ahead',
+        'Watch it',
+        () => finish({ slot, action: 'new', skipIntro: true }),
+        () => finish({ slot, action: 'new', skipIntro: false }),
+      );
+    };
+
+    let initial: HTMLElement | null = null;
+    let newest = -1;
+    const cards = slots.map((sv) => {
+      const c = sv.career;
+      const label = `Slot ${sv.slot + 1}`;
+      if (!c) {
+        const go = button('New game', { cls: 'primary sv-go', activate: () => startNew(sv.slot) });
+        initial ??= go;
+        return el('div.sv-card.empty', [
+          el('div.sv-top', [el('span.kicker', label)]),
+          el('div.sv-empty.wide', 'Empty'),
+          el('div.sv-blurb', 'A fresh comeback, from a box of scrap.'),
+          el('div.sv-btns', [go]),
+        ]);
+      }
+      const who = `${c.name}, ${c.fresh ? 'still in the storage unit' : `${c.act.split('. ')[1] ?? c.act}, ${rankText(c.rank).toLowerCase()}`}`;
+      const cont = button('Continue', { cls: 'primary sv-go', activate: () => finish({ slot: sv.slot, action: 'continue' }) });
+      const fresh = button('New game', {
+        cls: 'small',
+        activate: () => ask('Start over', `Start a new game in slot ${sv.slot + 1}?`, `${who} will be gone for good.`, 'Start over', 'Cancel', () => startNew(sv.slot), undefined, true),
+      });
+      const del = button('Delete', {
+        cls: 'small',
+        activate: () => ask('Delete', `Delete slot ${sv.slot + 1}?`, `${who} will be gone for good.`, 'Delete', 'Cancel', () => finish({ slot: sv.slot, action: 'delete' }), undefined, true),
+      });
+      if ((c.savedAt ?? 0) > newest) {
+        newest = c.savedAt ?? 0;
+        initial = cont;
+      }
+      const pct = c.progress.total ? c.progress.won / c.progress.total : 0;
+      return el(`div.sv-card${c.champion ? '.champ' : ''}`, [
+        el('div.sv-top', [el('span.kicker', label), el('span.sv-when', lastPlayed(c.savedAt))]),
+        el('div.sv-name.wide.chrome-text', c.name),
+        el('div.sv-act', c.fresh ? 'The opening' : c.champion ? 'Champion again' : c.act),
+        el('div.sv-stats', [
+          el(`span.sv-rank${c.rank === null ? '.none' : ''}`, rankText(c.rank)),
+          el('span.sv-money.cond', money(c.funds)),
+          el('span.sv-rec.cond', `${c.record.w}-${c.record.l}`),
+        ]),
+        el('div.sv-prog', [el('div.sv-bar', [el('div.sv-fill', { style: `width:${(pct * 100).toFixed(1)}%` })]), el('span.sv-prog-t.cond', `${c.progress.won} of ${c.progress.total} fights`)]),
+        el('div.sv-btns', [cont, el('div.sv-small', [fresh, del])]),
+      ]);
+    });
+
+    const back = button('Back', { cls: 'small', activate: () => finish(null) });
+    const node = el('div.screen.saves', [
+      el('div.dim-bg'),
+      el('div.sv-wrap', [
+        el('div.sv-head', [el('div.kicker', 'Career'), el('h1.screen-title.wide.chrome-text', 'Save slots')]),
+        el('div.sv-cards', cards),
+        el('div.sv-foot', [back, el('div.hint-row', [el('span', [...key('Enter', 'A'), 'Select']), el('span', [...key('Esc', 'B'), 'Back'])])]),
+      ]),
+    ]);
+    ctx.layers.screen.append(node);
+    const scope = ctx.nav.push({ root: node, back: () => finish(null), initial: initial ?? back });
   });
 }
 

@@ -450,11 +450,21 @@ export async function firstRebuild(g: Game): Promise<void> {
 }
 
 /** First launch: the final, the fall, two seasons later, the rebuild. */
+/** A new game for someone who has seen the opening: straight to the storage unit. */
+export async function skipToStorage(g: Game): Promise<void> {
+  g.save.career!.prologueDone = true;
+  g.persist();
+  g.stage.setScene('title');
+  g.audio.music('none', 1);
+  await g.ui.story(['Juggernaut lost the final. Then it lost everything else.', 'Two seasons later.', 'A rented storage unit in Oakland.'], 6.5);
+}
+
 export async function prologue(g: Game): Promise<void> {
   if (!g.save.career) g.save.career = newCareer();
   const teardown = await theFinal(g);
   await theFall(g, teardown);
   g.save.career.prologueDone = true;
+  g.save.seenIntro = true;
   g.persist();
   g.audio.music('none', 4);
   await g.ui.story(['Two seasons later.', 'A rented storage unit in Oakland.'], 5);

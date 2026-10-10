@@ -180,6 +180,37 @@ export interface RewardsView {
   note: string | null;
 }
 
+/** One career save slot on the slot picker. */
+export interface SaveSlotView {
+  /** 0, 1 or 2. */
+  slot: number;
+  /** null: an empty slot. */
+  career: {
+    name: string;
+    /** "Act II. Regionals" */
+    act: string;
+    /** null is unranked. */
+    rank: number | null;
+    funds: number;
+    record: { w: number; l: number };
+    /** Campaign fights won of the total ("4 of 13"). */
+    progress: { won: number; total: number };
+    champion: boolean;
+    /** Last played, ms since the epoch, or null if unknown. */
+    savedAt: number | null;
+    /** Still in the opening (the prologue or the first rebuild). */
+    fresh: boolean;
+  } | null;
+}
+
+/** What the player picked on the slot picker. Overwriting or deleting a filled slot is
+ *  confirmed by the UI before it resolves. `skipIntro`: start at the storage unit instead of
+ *  replaying the championship and the fall (only offered once the intro has been seen). */
+export type SlotChoice =
+  | { slot: number; action: 'continue' }
+  | { slot: number; action: 'new'; skipIntro: boolean }
+  | { slot: number; action: 'delete' };
+
 /** One beat of the prologue montage: TV graphics over the 3D shot the director sets up. */
 export interface MontageCard {
   /** headline: a newspaper or TV news banner. result: a loss on the scoreboard ticker. rank: the
@@ -289,6 +320,9 @@ export interface BroadcastUI {
   skippable(on: boolean): void;
 
   // ---- career
+  /** Pick a career save slot: continue it, start a new game in it, or delete it. Resolves null
+   *  on back. `seenIntro` offers skipping the opening on a new game. */
+  saves(slots: SaveSlotView[], seenIntro: boolean): Promise<SlotChoice | null>;
   workshop(view: WorkshopView): Promise<WorkshopChoice>;
   career(view: CareerView): Promise<void>;
   rewards(view: RewardsView): Promise<void>;

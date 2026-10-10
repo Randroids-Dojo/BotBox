@@ -1434,3 +1434,226 @@
     bottom: calc(var(--pad-b) + var(--u) * 10);
   }
 }
+
+/* ---- save slots */
+.bx .saves .dim-bg {
+  background: rgba(4, 5, 7, 0.86);
+}
+.bx .sv-wrap {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--u) * 1.4);
+  max-width: calc(var(--u) * 86);
+  margin: 0 auto;
+  animation: bx-fade 0.3s ease-out both;
+}
+.bx .saves.out .sv-wrap {
+  animation: bx-out-zoom 0.24s ease-in forwards;
+}
+.bx .sv-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: calc(var(--u) * 1.2);
+  min-height: 0;
+}
+.bx .sv-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  min-width: 0;
+  padding: 1em 1.1em 1.1em;
+  background: #14171c;
+  border-left: 4px solid #3a414b;
+  box-shadow: 0 1em 3em rgba(0, 0, 0, 0.55);
+  pointer-events: auto;
+  animation: bx-slam-up 0.32s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+.bx .sv-card:nth-child(2) {
+  animation-delay: 50ms;
+}
+.bx .sv-card:nth-child(3) {
+  animation-delay: 100ms;
+}
+.bx .sv-card:focus-within,
+.bx .sv-card:has(.is-focus) {
+  border-left-color: var(--orange);
+}
+.bx .sv-card.champ {
+  border-left-color: #d4a017;
+  background: linear-gradient(160deg, #1f1a0c 0%, #14171c 45%);
+}
+.bx .sv-card.empty {
+  background: rgba(20, 23, 28, 0.6);
+  border-left-style: dashed;
+}
+.bx .sv-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6em;
+}
+.bx .sv-when {
+  font-size: calc(var(--u) * 1);
+  color: var(--dim);
+  white-space: nowrap;
+}
+.bx .sv-name {
+  font-size: calc(var(--u) * 2.4);
+  line-height: 1;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.bx .sv-act {
+  font-size: calc(var(--u) * 1.2);
+  font-weight: 700;
+  color: var(--orange-hi);
+}
+.bx .sv-card.champ .sv-act {
+  color: #f2c94c;
+}
+.bx .sv-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em 1em;
+  align-items: baseline;
+  font-size: calc(var(--u) * 1.25);
+}
+.bx .sv-rank {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.bx .sv-rank.none {
+  color: var(--dim);
+}
+.bx .sv-money {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+.bx .sv-rec {
+  color: var(--dim);
+}
+.bx .sv-rec::before {
+  content: 'W-L ';
+  font-size: 0.8em;
+}
+.bx .sv-prog {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+}
+.bx .sv-bar {
+  flex: 1;
+  height: 0.4em;
+  background: #2a3038;
+}
+.bx .sv-fill {
+  height: 100%;
+  background: var(--orange);
+}
+.bx .sv-card.champ .sv-fill {
+  background: #d4a017;
+}
+.bx .sv-prog-t {
+  font-size: calc(var(--u) * 1);
+  color: var(--dim);
+  white-space: nowrap;
+}
+.bx .sv-empty {
+  font-size: calc(var(--u) * 2.4);
+  line-height: 1;
+  color: #5d6672;
+}
+.bx .sv-blurb {
+  font-size: calc(var(--u) * 1.15);
+  color: var(--dim);
+  flex: 1;
+}
+.bx .sv-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45em;
+  margin-top: auto;
+  padding-top: 0.4em;
+}
+.bx .sv-small {
+  display: flex;
+  gap: 0.45em;
+}
+.bx .sv-small .btn {
+  flex: 1;
+  padding-right: 1.4em;
+}
+/* New game sits nearer the middle, so Down from Continue lands on it rather than on Delete. */
+.bx .sv-small .btn:first-child {
+  flex: 2;
+}
+.bx .btn.danger.is-focus {
+  background: linear-gradient(180deg, #ff6b6b 0%, #e22121 50%, #ff4a4a 100%);
+}
+.bx .sv-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+.bx .sv-confirm .gc-card {
+  width: min(100%, calc(var(--u) * 36));
+}
+.bx .sv-confirm .btn {
+  white-space: nowrap;
+}
+.bx .sv-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 1.2em;
+  background: rgba(3, 4, 6, 0.72);
+  pointer-events: auto;
+  animation: bx-fade 0.14s ease-out both;
+}
+@media (max-height: 520px) {
+  .bx .sv-wrap {
+    gap: calc(var(--u) * 0.8);
+  }
+  .bx .sv-head .screen-title {
+    font-size: calc(var(--u) * 2.4);
+  }
+  .bx .sv-card {
+    padding: 0.7em 0.8em 0.8em;
+    gap: 0.35em;
+  }
+  .bx .sv-name,
+  .bx .sv-empty {
+    font-size: calc(var(--u) * 1.9);
+  }
+  .bx .sv-foot .hint-row {
+    display: none;
+  }
+}
+@media (orientation: portrait) {
+  .bx .sv-wrap {
+    justify-content: flex-start;
+    overflow-y: auto;
+    pointer-events: auto;
+  }
+  .bx .sv-cards {
+    grid-template-columns: 1fr;
+  }
+  .bx .sv-name,
+  .bx .sv-empty {
+    font-size: min(calc(var(--u) * 2.6), 8vw);
+  }
+  .bx .sv-card.empty .sv-blurb {
+    display: none;
+  }
+  .bx .sv-foot .hint-row {
+    display: none;
+  }
+}
