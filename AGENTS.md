@@ -27,3 +27,20 @@ npm run typecheck
 npm test
 npm run build
 ```
+
+## QA before calling it done
+
+Screenshots miss timing, audio and feel. These scripts measure them (dev server on :5240, one at a time):
+
+```bash
+npx tsx scripts/qa/voices.ts 'http://localhost:5240/?autopilot' 110          # every voice line: how much played, who cut it (target 0 cut)
+npx tsx scripts/qa/voices.ts 'http://localhost:5240/?autopilot&career=8' 230 1 # same over a full prime-time fight
+npx tsx scripts/qa/camera.ts 'http://localhost:5240/?autopilot&career=8' 60   # framing, swing speed, view against heading, cutaways
+npx tsx scripts/qa/handling.ts                                                # acceleration, stopping, turn-in, overshoot per robot
+npx tsx scripts/qa/prologue-flip.ts                                           # flipped in the prologue: prompt, assist, hit on contact
+npx tsx scripts/qa/badpixels.ts 'http://localhost:5240/?autopilot&nan' 45     # NaN (magenta) and overflow (cyan) pixels per frame
+npx tsx scripts/qa/ladder.ts 8 0.8                                            # career win rates per rung
+```
+
+Scripted scenes must survive a player doing the wrong thing (flipped, stuck, idle): test that, not just the happy path. `?nan` on a phone shows whether black squares come from bad pixels.
+
