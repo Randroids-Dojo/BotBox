@@ -21,7 +21,7 @@ export const CHAMP_CARD: BotCard = {
   team: PLAYER_TEAM.team,
   hometown: PLAYER_TEAM.hometown,
   builders: 'you and a crew of six',
-  blurb: 'Two Giant Nuts. Going for three.',
+  blurb: 'Three Giant Nuts. Going for four.',
   record: '31-0',
 };
 
@@ -150,7 +150,7 @@ async function theFinal(g: Game): Promise<() => void> {
   g.setSkippable(true);
   stage.shot({ kind: 'flyover', duration: 5 });
   void g.say(['vic.pro.open'], 9);
-  await g.wait(ui.slate('THE FINAL', '45 seconds left. Juggernaut is going for three.', 3.4));
+  await g.wait(ui.slate('THE FINAL', '45 seconds left. Juggernaut is going for four.', 3.4));
   if (!g.skipAll) {
     stage.shot({ kind: 'bot_intro', bot: PLAYER, duration: 3.4 });
     ui.lowerThird({ corner: 'red', card: CHAMP_CARD, stats: entrants[0].spec.stats, weaponShort: WEAPONS.vdisk.short, classLabel: CLASS_LABEL.heavy });
@@ -336,7 +336,7 @@ async function theFall(g: Game, teardown: () => void): Promise<void> {
   };
 
   // The wreck, still burning.
-  await beat({ kind: 'headline', title: 'THE CHAMPION FALLS', sub: 'One hit from Terminal Velocity ends a two year reign.', sec: 4.2 }, null);
+  await beat({ kind: 'headline', title: 'THE CHAMPION FALLS', sub: 'One hit from Terminal Velocity ends a three year reign.', sec: 4.2 }, null);
   teardown();
   await beat(
     { kind: 'result', title: 'Next season. Round one.', result: { opponent: 'Flapjack', method: 'Flipped and counted out' }, sec: 4.4 },

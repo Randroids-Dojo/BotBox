@@ -5,7 +5,7 @@ BotBox opens on a story, not a menu. The first time you play you are the champio
 ## First launch
 
 1. **Press start.** The title over the dark Box: logo and PRESS START, nothing else. It is the audio unlock.
-2. **Prologue: the championship final, 0:45 left.** No menus, no intros. You are JUGGERNAUT, the two-time heavyweight champion going for a third Giant Nut, a titanium box with a 19 kJ vertical disk, rank #1. Both robots are already scuffed. The crowd is on its feet.
+2. **Prologue: the championship final, 0:45 left.** No menus, no intros. You are JUGGERNAUT, the three-time heavyweight champion going for a fourth Giant Nut, a titanium box with a 19 kJ vertical disk, rank #1. Both robots are already scuffed. The crowd is on its feet.
    - **Taste (about 15 seconds, you drive).** Short coach prompts teach the only three things you need: drive, spin up the disk, hit. The challenger, TERMINAL VELOCITY, mostly circles and lets you land a couple of big, satisfying hits. Commentary is ecstatic.
    - **Takeover.** After two hits or 15 seconds, control is taken away. Terminal Velocity's bar screams up to speed and it charges. One catastrophic hit in slow motion: Juggernaut is launched into the Lexan ceiling, armor panels flying, disk torn out, battery on fire. It lands upside down. The count. KNOCKOUT. A new champion.
 3. **Montage: the fall.** Quick cuts, about 30 seconds, sad and fast. Juggernaut, patched up and never the same, loses again and again (short slow-motion clips), with TV headlines and a rankings ticker sliding down: #1, #3, #11, #38, unranked. Sponsors leave. The team sells what it can.

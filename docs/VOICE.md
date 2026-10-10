@@ -110,7 +110,7 @@ The player's robot is JUGGERNAUT (the name call `vic.player.juggernaut` already 
 | `vic.act.regionals`, `vic.act.show`, `vic.act.championship` | 1 each | Vic | Act openers: the regional broadcast, prime time on BotBox, the championship. |
 | `vic.final.open` | 1 | Vic | The rematch: the robot that fell against the robot that broke it. |
 | `vic.comeback` | 1 | Vic | After the final win: the comeback is complete. |
-| `dale.pro.taste.N`, `chuck.pro.taste.N` | 3 each | Dale, Chuck | Prologue, while the champion dominates: seconds from a third straight Giant Nut. |
+| `dale.pro.taste.N`, `chuck.pro.taste.N` | 3 each | Dale, Chuck | Prologue, while the champion dominates: seconds from a fourth straight Giant Nut (lines stay count-free). |
 | `dale.pro.turn.N`, `chuck.pro.turn.N` | 2 each | Dale, Chuck | Prologue: something is wrong, Terminal Velocity's bar is screaming up to speed. |
 | `dale.pro.down.N`, `chuck.pro.down.N` | 2 each | Dale, Chuck | Prologue: the champion is launched and goes down. Shock. |
 | `jenna.fall.N` | 4 | Jenna | Montage, TV news style, played in order: 1 crashes out in the first round; 2 sponsors pull out; 3 falls out of the rankings; 4 the team sells the disk. |
