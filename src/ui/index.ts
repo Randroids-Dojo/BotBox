@@ -114,6 +114,8 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
     montage: (card) => cinema!.montage(card),
     story: (lines, sec) => cinema!.story(lines, sec),
     coach: (text, action) => cinema?.coach(text, action),
+    letterbox: (on) => cinema?.letterbox(on),
+    markers: (list) => cinema?.markers(list),
 
     debug: {
       get ctx() {

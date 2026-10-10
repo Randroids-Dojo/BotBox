@@ -43,8 +43,9 @@ export class BotAi {
     this.circleDir = rng.chance(0.5) ? 1 : -1;
   }
 
-  /** Cinematic override: 'passive' keeps its distance with the weapon off, 'windup' keeps its
-   *  distance while the weapon comes up to speed, 'charge' goes straight for the target. */
+  /** Cinematic override: 'passive' keeps its distance with the weapon off, 'windup' turns to
+   *  face the target and holds still while the weapon comes up to speed, 'charge' goes
+   *  straight for the target. */
   script: AiScript | null = null;
 
   update(dt: number, bots: BotSim[]): DriveCommand {
@@ -230,12 +231,23 @@ export class BotAi {
     const foe = bots.find((b) => b !== me && !b.disabled);
     const pos = me.pos;
     const yaw = yawOf(me.quat);
+    // Scripted or not, a robot on its back rights itself first.
+    if (me.helpless) {
+      cmd.selfRight = true;
+      return cmd;
+    }
     const wantArmed = this.script !== 'passive' && me.parts.weapon > 0;
     if (me.spinnerSpec && me.armed !== wantArmed) cmd.weaponPressed = true;
     if (!foe) return cmd;
     const fp = foe.pos;
     if (this.script === 'charge') {
       this.steer(cmd, pos, yaw, vec(fp.x, 0, fp.z), 1, false);
+      return cmd;
+    }
+    if (this.script === 'windup') {
+      // Sit and stare while the weapon comes up to speed.
+      this.steer(cmd, pos, yaw, vec(fp.x, 0, fp.z), 0, false);
+      cmd.throttle = 0;
       return cmd;
     }
     // Passive: a slow, wide orbit around the middle, never closing in. Easy to catch.

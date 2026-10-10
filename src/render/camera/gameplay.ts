@@ -1,7 +1,7 @@
 // Gameplay cameras: chase (default) and the driver station view.
 
 import * as THREE from 'three';
-import { ARENA_HALF, DRIVER_STATIONS, LEXAN_TOP } from '../../data/arena';
+import { ARENA_HALF, DRIVER_STATIONS, LEXAN_TOP, PULVERIZERS } from '../../data/arena';
 import { actionOf, clamp, fovForWidth, Pose, type CamBot, type CamCtx } from './types';
 
 const _v = new THREE.Vector3();
@@ -41,6 +41,22 @@ export class ChaseCam {
         if (Math.abs(off) < 2.1) desiredYaw = me.yaw + clamp(off * 0.35, -0.45, 0.45);
       }
     }
+    // Backed into a corner or a hammer: swing round to where there is room behind the robot,
+    // as little as possible, rather than burying the camera in the corner.
+    const want = clamp(3.3 + sep * 0.35, 3.6, 6) * (0.8 + me.scale * 0.2);
+    if (boomRoom(me.pos.x, me.pos.z, desiredYaw) < want * 0.75) {
+      let best = desiredYaw;
+      let bestRoom = boomRoom(me.pos.x, me.pos.z, desiredYaw);
+      for (const off of [0.35, -0.35, 0.7, -0.7, 1.05, -1.05]) {
+        const r = boomRoom(me.pos.x, me.pos.z, desiredYaw + off);
+        if (r > bestRoom + 0.4) {
+          best = desiredYaw + off;
+          bestRoom = r;
+        }
+        if (bestRoom >= want * 0.75) break;
+      }
+      desiredYaw = best;
+    }
     if (!this.init) {
       this.yaw = desiredYaw;
       this.sep = sep;
@@ -58,9 +74,9 @@ export class ChaseCam {
     const fz = -Math.cos(this.yaw);
     // Backed up against a wall: shorten the boom and raise it instead of sliding the camera
     // sideways, which would twist the view off the robot's heading.
-    const room = boomRoom(me.pos.x, me.pos.z, -fx, -fz, ARENA_HALF - 0.45);
+    const room = boomRoom(me.pos.x, me.pos.z, this.yaw);
     if (dist > room) {
-      height += (dist - Math.max(1.3, room)) * 0.65;
+      height += Math.min(1.1, (dist - Math.max(1.3, room)) * 0.5);
       dist = Math.max(1.3, room);
     }
     const w = this.want;
@@ -152,14 +168,20 @@ export function nearestFoe(bots: CamBot[], me: CamBot): CamBot | undefined {
 
 const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 
-/** How far a camera can back away from (x, z) along (dx, dz) before leaving the square. */
-function boomRoom(x: number, z: number, dx: number, dz: number, lim: number): number {
-  let t = Infinity;
-  if (dx > 1e-4) t = Math.min(t, (lim - x) / dx);
-  else if (dx < -1e-4) t = Math.min(t, (-lim - x) / dx);
-  if (dz > 1e-4) t = Math.min(t, (lim - z) / dz);
-  else if (dz < -1e-4) t = Math.min(t, (-lim - z) / dz);
-  return Math.max(0, t);
+/** How far a chase camera can back away behind a robot at (x, z) facing `yaw` before it
+ *  leaves the Box or runs into a hammer's corner (whose frame would fill the shot). */
+function boomRoom(x: number, z: number, yaw: number): number {
+  const dx = Math.sin(yaw);
+  const dz = Math.cos(yaw);
+  const lim = ARENA_HALF - 0.45;
+  let t = 0;
+  for (; t < 6; t += 0.2) {
+    const px = x + dx * (t + 0.2);
+    const pz = z + dz * (t + 0.2);
+    if (Math.abs(px) > lim || Math.abs(pz) > lim) break;
+    if (PULVERIZERS.some((p) => Math.hypot(px - p.center.x, pz - p.center.z) < p.radius + 0.6)) break;
+  }
+  return t;
 }
 
 /** Keep a camera inside the Box, off the walls and under the ceiling. */

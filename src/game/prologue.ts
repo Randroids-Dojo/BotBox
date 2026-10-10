@@ -25,6 +25,13 @@ export const CHAMP_CARD: BotCard = {
   record: '31-0',
 };
 
+/** Terminal Velocity as the crowd knows it before the hit. */
+const RIVAL_CARD: BotCard = {
+  ...NEMESIS.card,
+  blurb: 'Undefeated rookie. A titanium bar spinning at highway speed.',
+  record: '18-0',
+};
+
 /** Every facet and part at one health fraction. */
 export function wear(facets: number, parts = facets): Damage {
   return {
@@ -132,9 +139,8 @@ async function theFinal(g: Game): Promise<() => void> {
       if (clock < slowUntil) match.timeScale = slowScale;
       else match.timeScale = Math.min(1, match.timeScale + dt * easeRate);
       audio.setTimeScale(match.timeScale);
-      // Nobody gets counted out by accident (robots shoving nose to nose read as stuck to
-      // the rules). Terminal Velocity never is; Juggernaut only once it has been hit.
-      for (const b of downed ? [tv] : [me, tv]) {
+      // Nobody gets counted out: the script ends this fight, not the ten count.
+      for (const b of [me, tv]) {
         b.koCount = null;
         b.immobileTime = 0;
         b.stuckTime = 0;
@@ -149,88 +155,166 @@ async function theFinal(g: Game): Promise<() => void> {
     stage.render(world, events, dt);
     audio.frame(world, events, stage.listener(), dt);
     ui.hudFrame(world);
+    showMarks();
   });
 
-  // ---- open: the final, forty-five seconds left
+  // Floating labels over the robots while the player is learning who is who.
+  let marks: { id: string; label: string; tone: 'you' | 'target'; bot: typeof me }[] = [];
+  let markShown = false;
+  const showMarks = () => {
+    if (!marks.length) {
+      if (markShown) ui.markers([]);
+      markShown = false;
+      return;
+    }
+    markShown = true;
+    ui.markers(marks.map((m) => ({ id: m.id, label: m.label, tone: m.tone, ...stage.project({ x: m.bot.pos.x, y: m.bot.pos.y + 0.75, z: m.bot.pos.z }) })));
+  };
+  const cutscene = (on: boolean) => {
+    ui.letterbox(on);
+    if (on) {
+      ui.coach(null);
+      ui.touchControls(null);
+      ui.hud(null);
+      marks = [];
+    }
+  };
+  const hud = () => ui.hud(entrants.map((e) => ({ id: e.id, name: e.card.name, corner: e.corner, spec: e.spec, player: e.id === PLAYER })));
+  const l3 = (e: Entrant, card: BotCard) =>
+    ui.lowerThird({ corner: e.corner, card, stats: e.spec.stats, weaponShort: WEAPONS[e.spec.loadout.weapon].short, classLabel: CLASS_LABEL.heavy });
+
+  // ---- open: who is who, and what is at stake
   g.skipped = false;
   g.skipAll = false;
   ui.bug(true);
   audio.music('prologue', 0.4);
   g.crowd(1);
-  ui.hud(entrants.map((e) => ({ id: e.id, name: e.card.name, corner: e.corner, spec: e.spec, player: e.id === PLAYER })));
+  cutscene(true);
   g.setSkippable(true);
-  stage.shot({ kind: 'flyover', duration: 5 });
-  void g.say(['vic.pro.open'], 9);
-  await g.wait(ui.slate('THE FINAL', '45 seconds left. Juggernaut is going for four.', 3.4));
+  stage.shot({ kind: 'flyover', duration: 4.5 });
+  const open = g.say(['vic.pro.open']);
+  await g.wait(ui.slate('CHAMPIONSHIP FINAL', '45 seconds left', 3.6));
   if (!g.skipAll) {
-    stage.shot({ kind: 'bot_intro', bot: PLAYER, duration: 3.4 });
-    ui.lowerThird({ corner: 'red', card: CHAMP_CARD, stats: entrants[0].spec.stats, weaponShort: WEAPONS.vdisk.short, classLabel: CLASS_LABEL.heavy });
-    await g.wait(2.8);
+    stage.shot({ kind: 'bot_intro', bot: PLAYER, duration: 4 });
+    l3(entrants[0], CHAMP_CARD);
+    await g.wait(3.6);
+    ui.lowerThird(null);
+  }
+  if (!g.skipAll) {
+    await g.wait(open);
+    stage.shot({ kind: 'bot_intro', bot: NEMESIS.id, duration: 4 });
+    l3(entrants[1], RIVAL_CARD);
+    await g.wait(Promise.all([g.say(['vic.name.terminal-velocity']), g.wait(3.2)]));
     ui.lowerThird(null);
   }
   g.setSkippable(false);
   g.skipAll = false;
+  ui.caption(null);
 
-  // ---- the taste: the champion in full flight
+  // ---- the taste: the champion in full flight, at the player's pace
+  cutscene(false);
+  hud();
   stage.shot({ kind: 'live' });
   match.startFight();
   running = true;
   control = true;
   ui.banner('fight');
   if (!auto) ui.touchControls({ weaponLabel: 'SPIN', selfRight: true });
-  ui.coach('Drive at Terminal Velocity', 'drive');
-  const tasteStart = clock;
+  marks = [
+    { id: 'you', label: 'You', tone: 'you', bot: me },
+    { id: 'tv', label: 'Terminal Velocity', tone: 'target', bot: tv },
+  ];
+  const steps = [
+    { text: 'Drive at Terminal Velocity', action: 'drive' as const },
+    { text: 'Spin up your disk', action: 'weapon' as const },
+    { text: 'Hit it! 3 hits to go', action: undefined },
+  ];
   let step = 0;
-  let said = 0;
+  let stepAt = clock;
+  const setStep = (n: number) => {
+    step = n;
+    stepAt = clock;
+    const st = steps[Math.min(n, steps.length - 1)];
+    ui.coach(st.text, st.action);
+  };
+  setStep(0);
+  const tasteStart = clock;
+  let counted = 0;
   let righting = false;
+  let doneAt = -1;
   for (;;) {
     await g.frame();
     const t = clock - tasteStart;
+    const inStep = clock - stepAt;
+    if (clock - tasteStart > 4 && marks.length === 2) marks = marks.filter((m) => m.id !== 'you');
     // Flipped: say how to get back up, then carry on where the coaching left off.
     if (flippedT > 0.4 && !righting) {
       righting = true;
       ui.coach('Flipped! Self-right', 'selfRight');
     } else if (righting && flippedT === 0) {
       righting = false;
-      ui.coach(step === 0 ? 'Drive at Terminal Velocity' : step === 1 ? 'Spin up the disk' : 'Hit it!', step === 0 ? 'drive' : step === 1 ? 'weapon' : undefined);
+      setStep(step);
+    }
+    // Still stuck after the crew's srimech (wedged on its side): set it back on its wheels. The
+    // script must never wait on a robot that cannot get up.
+    if (flippedT > 6) {
+      const p = me.pos;
+      const yaw0 = yawOf(me.quat);
+      me.body.setTranslation({ x: p.x, y: p.y + 0.25, z: p.z }, true);
+      me.body.setRotation({ x: 0, y: Math.sin(yaw0 / 2), z: 0, w: Math.cos(yaw0 / 2) }, true);
+      me.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
     }
     if (righting) continue;
-    if (step === 0 && (moveT > 0.7 || t > 5 || auto)) {
-      step = 1;
-      ui.coach('Spin up the disk', 'weapon');
-    }
-    if (step === 1 && (me.armed || t > 9)) {
+    if (step === 0 && inStep > 2 && (apart(me, tv) < 2.4 || inStep > 7 || auto)) setStep(1);
+    else if (step === 1 && inStep > 1.2 && (me.armed || inStep > 6)) {
       // A champion never forgets to arm the weapon.
       if (!me.armed) me.armed = true;
-      step = 2;
-      ui.coach('Hit it!');
+      setStep(2);
     }
-    if (hits > said || (said === 0 && t > 7)) {
-      said = Math.max(said + 1, hits);
-      if (!g.saying) void g.say([g.pickId(said % 2 ? 'chuck.pro.taste.' : 'dale.pro.taste.')], 30, 1.5);
-      if (step === 2) ui.coach(hits === 1 ? 'Again!' : null);
+    // Hits land big: the champion is in control, and the crowd and the booth say so.
+    if (step === 2 && hits > counted) {
+      counted = hits;
+      const d = { x: tv.pos.x - me.pos.x, z: tv.pos.z - me.pos.z };
+      const n = Math.hypot(d.x, d.z) || 1;
+      const m = tv.spec.massKg;
+      tv.body.applyImpulse({ x: (d.x / n) * m * 2.4, y: m * 1.4, z: (d.z / n) * m * 2.4 }, true);
+      stage.shake(0.5);
+      g.crowd(1);
+      // Three reactions at most, so the last one is done before the cutscene starts.
+      if (!g.saying && counted <= 3) void g.say([g.pickId(counted % 2 ? 'chuck.pro.taste.' : 'dale.pro.taste.')], 30, 1.5);
+      if (counted === 3) {
+        ui.coach('That is the champ! Keep going');
+        doneAt = clock;
+      } else if (counted < 3) ui.coach(counted === 2 ? 'One more!' : 'Again! 2 hits to go');
     }
-    // Never take control away while the robot is upside down.
-    if (((hits >= 2 && clock - lastHitT > 0.8) || t > 17 || match.phase !== 'fight') && !me.helpless) break;
+    // At least a dozen seconds at the sticks, then the script takes over (never while upside down).
+    const finished = (doneAt > 0 && clock - doneAt > 1.4 && t > 12) || t > 24 || match.phase !== 'fight';
+    if (finished && !me.helpless) break;
   }
 
-  // ---- the turn: control is gone, Terminal Velocity winds all the way up
+  // ---- the turn: bars drop, the HUD goes, and the film takes over
   control = false;
-  ui.coach(null);
-  ui.touchControls(null);
+  cutscene(true);
   if (auto) match.setAiScript(PLAYER, 'passive');
+  // Line Terminal Velocity up a short run away, facing the champion. The cut hides the move.
+  const room = { x: -Math.sign(me.pos.x || 1), z: -Math.sign(me.pos.z || 1) };
+  const rn = Math.hypot(room.x, room.z);
+  const at = { x: me.pos.x + (room.x / rn) * 2.6, z: me.pos.z + (room.z / rn) * 2.6 };
+  tv.body.setTranslation({ x: at.x, y: tv.pos.y + 0.03, z: at.z }, true);
+  tv.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+  tv.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+  const yaw = face(at, me.pos);
+  tv.body.setRotation({ x: 0, y: Math.sin(yaw / 2), z: 0, w: Math.cos(yaw / 2) }, true);
   match.setAiScript(NEMESIS.id, 'windup');
-  stage.shot({ kind: 'bot_intro', bot: NEMESIS.id, duration: 3.4 });
-  g.crowd(0.9);
-  const turnLine = g.say([g.pickId(Math.random() < 0.5 ? 'chuck.pro.turn.' : 'dale.pro.turn.')], 30, 2);
+  stage.shot({ kind: 'bot_intro', bot: NEMESIS.id, duration: 4 });
+  g.crowd(0.7);
+  await g.say(['dale.pro.turn.1']);
   const turnStart = clock;
-  // Wind up until the bar is screaming and the booth has said so.
-  let turnDone = false;
-  void turnLine.then(() => (turnDone = true));
-  while ((tv.spin01 < 0.9 || clock - turnStart < 2.2 || !turnDone) && clock - turnStart < 5) await g.frame();
+  while (tv.spin01 < 0.9 && clock - turnStart < 1.5) await g.frame();
   tv.omega = Math.max(tv.omega, tv.omegaMax * 0.95);
-
-  // ---- the charge. It has to really connect: the hit only lands on contact.
+  // Over the champion's shoulder as it comes.
+  const warn = g.say(['chuck.pro.turn.2']);
+  await g.wait(0.6, false);
   const charge = async (limit: number) => {
     match.setAiScript(NEMESIS.id, 'charge');
     stage.shot({ kind: 'faceoff', duration: 2.6 });
@@ -238,51 +322,51 @@ async function theFinal(g: Game): Promise<() => void> {
     while (struck < from && apart(me, tv) > 1.05 && clock - from < limit) await g.frame();
     return struck >= from || apart(me, tv) <= 1.05;
   };
-  if (!(await charge(5))) {
-    // Stuck somewhere: cut away and line Terminal Velocity up for another run. The cut hides it.
+  if (!(await charge(4))) {
+    // Stuck somewhere: cut away and line it up again closer. The cut hides it.
     stage.shot({ kind: 'loser', bot: PLAYER, duration: 1 });
     await g.frame();
-    const back = { x: me.pos.x - Math.sign(me.pos.x || 1) * 1.8, z: me.pos.z - Math.sign(me.pos.z || 1) * 0.4 };
-    tv.body.setTranslation({ x: back.x, y: tv.pos.y + 0.05, z: back.z }, true);
+    const back = { x: me.pos.x + (room.x / rn) * 1.6, z: me.pos.z + (room.z / rn) * 1.6 };
+    tv.body.setTranslation({ x: back.x, y: tv.pos.y + 0.03, z: back.z }, true);
     tv.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-    tv.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
-    const yaw = face(back, me.pos);
-    tv.body.setRotation({ x: 0, y: Math.sin(yaw / 2), z: 0, w: Math.cos(yaw / 2) }, true);
+    const y2 = face(back, me.pos);
+    tv.body.setRotation({ x: 0, y: Math.sin(y2 / 2), z: 0, w: Math.cos(y2 / 2) }, true);
     await charge(4);
   }
 
   // ---- the hit
-  match.finisher(NEMESIS.id, PLAYER, 'launch', { fire: true, kill: true });
+  // High enough to gasp at, low enough to stay in the shot.
+  match.finisher(NEMESIS.id, PLAYER, 'launch', { fire: true, kill: true, power: 0.82 });
   downed = true;
   match.setAiScript(NEMESIS.id, 'passive');
-  slowScale = 0.14;
-  slowUntil = clock + 1.6;
+  slowScale = 0.12;
+  slowUntil = clock + 1.8;
   easeRate = 0.45;
   stage.shake(1);
-  stage.shot({ kind: 'replay', point: me.pos, bots: [PLAYER], duration: 4.2, seed: 0 });
+  stage.shot({ kind: 'follow', bot: PLAYER, from: NEMESIS.id, duration: 5 });
   audio.stinger('heartbreak');
   g.crowd(1);
-  await g.wait(1.0, false);
-  // One line of shock; Vic picks the count up when it finishes.
-  void g.say([g.pickId(Math.random() < 0.5 ? 'chuck.pro.down.' : 'dale.pro.down.')], 30, 2);
+  await warn;
+  await g.wait(0.4, false);
+  void g.say(['chuck.pro.down.1'], 30, 3);
   const flight = clock;
-  while ((me.airborne || clock - flight < 2.4) && clock - flight < 5.5) await g.frame();
+  while ((me.airborne || clock - flight < 2.6) && clock - flight < 5.5) await g.frame();
 
-  // ---- the count, and a new champion
-  stage.shot({ kind: 'loser', bot: PLAYER, duration: 5 });
-  g.crowd(0.5);
-  await g.wait(2.6, false);
+  // ---- down and out, and a new champion
+  stage.shot({ kind: 'loser', bot: PLAYER, duration: 6 });
+  g.crowd(0.4);
   await g.quiet(4);
   match.forceKo(PLAYER);
   audio.stinger('ko');
   ui.banner('ko');
   g.crowd(1);
-  await atLeast(2.4, g.say(['vic.pro.ko.1']));
-  ui.hud(null);
-  stage.shot({ kind: 'winner', bot: NEMESIS.id, duration: 8 });
-  await atLeast(3, g.say(['vic.pro.ko.2']));
+  await atLeast(2.8, g.say(['vic.pro.ko.1']));
+  stage.shot({ kind: 'winner', bot: NEMESIS.id, duration: 10 });
+  const crowned = g.say(['vic.pro.ko.2']);
+  // The banner lands with the name, at the end of the line.
+  await g.wait(Math.max(0.5, (audio.voiceLine('vic.pro.ko.2')?.dur ?? 6) - 3), false);
   ui.banner('winner', NEMESIS.card.name);
-  await g.wait(3.6, false);
+  await g.wait(Promise.all([crowned, g.wait(3.2, false)]));
   ui.bug(false);
   stage.shot({ kind: 'loser', bot: PLAYER, duration: 8 });
 
@@ -467,6 +551,7 @@ export async function prologue(g: Game): Promise<void> {
   g.save.seenIntro = true;
   g.persist();
   g.audio.music('none', 4);
+  g.ui.letterbox(false);
   await g.ui.story(['Two seasons later.', 'A rented storage unit in Oakland.'], 5);
   await firstRebuild(g);
 }

@@ -41,6 +41,9 @@ export type ShotRequest =
   | { kind: 'replay'; point: Vec3; bots: string[]; duration: number; seed: number }
   /** Slow orbit around the winner. */
   | { kind: 'winner'; bot: string; duration: number }
+  /** Side-on, mid-distance view that tracks a robot through the air (a launch): the camera holds
+   *  beside the line from `from` to `bot` and keeps the robot centered, height and all. */
+  | { kind: 'follow'; bot: string; from: string; duration: number }
   /** Hold on a beaten robot (smoke, fire, count). */
   | { kind: 'loser'; bot: string; duration: number }
   /** High wide from the announcer booth. */
@@ -81,6 +84,10 @@ export interface Stage {
   controlYaw(): number;
   /** Camera pose for the audio listener. */
   listener(): { pos: Vec3; quat: Quat };
+  /** Where a world point lands on screen this frame: x and y as fractions of the viewport (0,0
+   *  top left). `onScreen` is false when it is outside the frame or behind the camera; x and y
+   *  then point toward it (for edge arrows). */
+  project(p: Vec3): { x: number; y: number; onScreen: boolean };
   /** Garage scene: show this robot on the turntable, with optional damage fractions.
    *  `tier` styles the workshop: 0 a rented storage unit (bare bulb, junk, a box of scrap), 1 a
    *  real garage, 2 a sponsored shop, 3 a pro facility with trophies. `missing` hides parts not

@@ -1001,3 +1001,13 @@
   width: auto;
   margin: 0;
 }
+
+/* Portrait: long robot names wrap onto two lines instead of losing their end. */
+@media (orientation: portrait) {
+  .bx .l3-name {
+    white-space: normal;
+    text-overflow: clip;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+}

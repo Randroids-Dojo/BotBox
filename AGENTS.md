@@ -38,6 +38,7 @@ npx tsx scripts/qa/voices.ts 'http://localhost:5240/?autopilot&career=8' 230 1 #
 npx tsx scripts/qa/camera.ts 'http://localhost:5240/?autopilot&career=8' 60   # framing, swing speed, view against heading, cutaways
 npx tsx scripts/qa/handling.ts                                                # acceleration, stopping, turn-in, overshoot per robot
 npx tsx scripts/qa/prologue-flip.ts                                           # flipped in the prologue: prompt, assist, hit on contact
+npx tsx scripts/qa/prologue-timeline.ts                                       # the prologue as a player sees it: captions, prompts, shots, frames in /tmp/pt-*.png
 npx tsx scripts/qa/badpixels.ts 'http://localhost:5240/?autopilot&nan' 45     # NaN (magenta) and overflow (cyan) pixels per frame
 npx tsx scripts/qa/ladder.ts 8 0.8                                            # career win rates per rung
 ```

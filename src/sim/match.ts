@@ -240,9 +240,10 @@ export class Match implements SimHost {
     const energy = 30000 * v.mScale;
     const facing = v.facetAt(point);
     v.damage({ amount: v.spec.facetHp[facing] * 3, facet: facing, kind: style === 'flip' ? 'flip' : 'spinner', attacker: a, point, dir, energy, threat: 'spinner', severity: 1 });
-    v.damage({ amount: v.spec.facetHp.top * 2, facet: 'top', kind: 'spinner', attacker: a, point: vec(vp.x, vp.y + v.half.y * 2, vp.z), dir, energy: energy * 0.4, threat: 'spinner', severity: 0.6 });
+    // The follow-on damage is quiet: one impact flash, not three stacked into a white-out.
+    v.damage({ amount: v.spec.facetHp.top * 2, facet: 'top', kind: 'spinner', attacker: a, point: vec(vp.x, vp.y + v.half.y * 2, vp.z), dir, energy: 120, threat: 'spinner', severity: 0.3 });
     const flank: Facet = this.rng.chance(0.5) ? 'left' : 'right';
-    v.damage({ amount: v.spec.facetHp[flank] * 2, facet: flank, kind: 'spinner', attacker: a, point, dir, energy: energy * 0.3, threat: 'spinner', severity: 0.5 });
+    v.damage({ amount: v.spec.facetHp[flank] * 2, facet: flank, kind: 'spinner', attacker: a, point, dir, energy: 120, threat: 'spinner', severity: 0.3 });
     if (opts.kill) {
       v.damagePart('weapon', 1e6, a);
       v.damagePart('electronics', 1e6, a);

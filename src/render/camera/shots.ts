@@ -72,6 +72,21 @@ export function startShot(req: Exclude<ShotRequest, { kind: 'live' }>, ctx: CamC
     if (Math.abs(_c.x) > ARENA_HALF - 0.4 || Math.abs(_c.z) > ARENA_HALF - 0.4) s.dir.negate();
     s.angle = Math.atan2(s.dir.x, s.dir.z);
   }
+  if (req.kind === 'follow') {
+    const b = ctx.get(req.bot);
+    const a = ctx.get(req.from);
+    if (b) s.base.copy(b.pos).setY(0);
+    if (a && b) _a.subVectors(b.pos, a.pos).setY(0);
+    else _a.set(1, 0, 0);
+    if (_a.lengthSq() < 1e-4) _a.set(1, 0, 0);
+    _a.normalize();
+    // Side on to the hit, a little behind the victim's flight, on the side with room.
+    s.dir.set(-_a.z, 0, _a.x).addScaledVector(_a, 0.35).normalize();
+    _b.subVectors(cam.pos, s.base).setY(0);
+    if (s.dir.dot(_b) < 0) s.dir.negate();
+    _c.copy(s.base).addScaledVector(s.dir, 5.2);
+    if (Math.abs(_c.x) > ARENA_HALF - 0.5 || Math.abs(_c.z) > ARENA_HALF - 0.5) s.dir.negate();
+  }
   if (req.kind === 'winner' || req.kind === 'loser' || req.kind === 'bot_intro') {
     const b = ctx.get(req.bot);
     if (b) s.base.copy(b.pos);
@@ -207,6 +222,20 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
         out.fov = clamp(fovForWidth(spread + 1.5, 8, aspect), 22, 50);
         out.roll = elapsed * 0.05;
       }
+      break;
+    }
+    case 'follow': {
+      const b = ctx.get(req.bot);
+      out.pos.copy(s.base).addScaledVector(s.dir, 5.2).setY(1.3);
+      clampInside(out.pos, 0.5);
+      if (b) {
+        _a.copy(b.pos);
+        _a.y = Math.max(0.3, _a.y);
+        if (ctx.time - s.start < 0.05) out.target.copy(_a);
+        else out.target.lerp(_a, 1 - Math.exp(-7 * dt));
+      }
+      // Widen as it climbs so the whole arc stays in frame.
+      out.fov = clamp(48 + (b ? b.pos.y : 0) * 6, 48, 66);
       break;
     }
     case 'winner': {

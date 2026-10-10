@@ -224,6 +224,17 @@ export interface MontageCard {
   sec: number;
 }
 
+/** A floating label over a robot. Off-screen markers pin to the nearest edge with an arrow. */
+export interface ScreenMarker {
+  id: string;
+  label: string;
+  /** you: the player's robot. target: the robot to go after. */
+  tone: 'you' | 'target';
+  x: number;
+  y: number;
+  onScreen: boolean;
+}
+
 export interface BracketSlot {
   id: string;
   name: string;
@@ -330,6 +341,11 @@ export interface BroadcastUI {
   montage(card: MontageCard): Promise<void>;
   /** Story text on black ("Two seasons later."), resolves after sec. */
   story(lines: string[], sec: number): Promise<void>;
+  /** Cinema bars top and bottom: the player is watching, not driving. Captions sit on the bars. */
+  letterbox(on: boolean): void;
+  /** Labels that float over robots (screen fractions from Stage.project). Replaces the set; call
+   *  every frame while they should show, or with [] to clear. */
+  markers(list: ScreenMarker[]): void;
   /** A coach prompt for the prologue and first rebuild: short text plus a device-aware key or
    *  button hint (action names: 'drive', 'weapon', 'selfRight', 'camera'), or null to clear. */
   coach(text: string | null, action?: 'drive' | 'weapon' | 'selfRight' | 'camera'): void;

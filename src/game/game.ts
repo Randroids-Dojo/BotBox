@@ -286,6 +286,8 @@ export class Game {
     this.ui.touchControls(null);
     this.ui.caption(null);
     this.ui.coach(null);
+    this.ui.letterbox(false);
+    this.ui.markers([]);
     this.ui.lowerThird(null);
     this.ui.bug(false);
     this.audio.setWorldActive(false);

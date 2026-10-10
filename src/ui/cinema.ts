@@ -4,7 +4,7 @@
 import { JUGGERNAUT_PRIME } from '../data/campaign';
 import { el, exit, sleep } from './core';
 import { slamFx, type UiCtx } from './fx';
-import type { MontageCard } from './types';
+import type { MontageCard, ScreenMarker } from './types';
 
 type CoachAction = 'drive' | 'weapon' | 'selfRight' | 'camera';
 
@@ -154,10 +154,53 @@ export class Cinema {
     }
   }
 
+  // ---- letterbox
+  private bars: HTMLElement | null = null;
+  letterbox(on: boolean): void {
+    if (!this.bars) {
+      this.bars = el('div.lbox', [el('div.lbox-t'), el('div.lbox-b')]);
+      // Under the captions and graphics: subtitles sit on the black bars like a film.
+      this.ctx.layers.hud.append(this.bars);
+    }
+    this.bars.classList.toggle('on', on);
+  }
+
+  // ---- markers
+  private marks = new Map<string, HTMLElement>();
+  markers(list: ScreenMarker[]): void {
+    const keep = new Set<string>();
+    for (const m of list) {
+      keep.add(m.id);
+      let node = this.marks.get(m.id);
+      if (!node) {
+        node = el(`div.mk.mk-${m.tone}`, [el('span.mk-l'), el('span.mk-a')]);
+        this.ctx.layers.gfx.append(node);
+        this.marks.set(m.id, node);
+      }
+      (node.firstChild as HTMLElement).textContent = m.label;
+      // Off screen: pin to the edge, arrow pointing toward the robot.
+      const edge = !m.onScreen;
+      const x = Math.min(0.94, Math.max(0.06, m.x));
+      const y = Math.min(0.86, Math.max(0.12, m.y));
+      node.classList.toggle('edge', edge);
+      node.style.left = `${x * 100}%`;
+      node.style.top = `${y * 100}%`;
+      if (edge) node.style.setProperty('--ang', `${Math.atan2(m.y - 0.5, m.x - 0.5)}rad`);
+    }
+    for (const [id, node] of this.marks) {
+      if (keep.has(id)) continue;
+      node.remove();
+      this.marks.delete(id);
+    }
+  }
+
   /** Drop every card and the coach (debug resets). */
   clear(): void {
     for (const c of this.cards.splice(0)) c.remove();
     this.coachEl?.remove();
     this.coachEl = null;
+    this.bars?.remove();
+    this.bars = null;
+    this.markers([]);
   }
 }

@@ -362,6 +362,16 @@ class StageImpl implements Stage, StageExtras {
     return this.cams.listener(this.camera, this.listenerOut);
   }
 
+  private projV = new THREE.Vector3();
+  project(p: Vec3): { x: number; y: number; onScreen: boolean } {
+    const v = this.projV.set(p.x, p.y, p.z).project(this.camera);
+    // Behind the camera the projection mirrors: flip it so edge arrows point the right way.
+    const behind = v.z > 1;
+    const nx = behind ? -v.x : v.x;
+    const ny = behind ? -v.y : v.y;
+    return { x: (nx + 1) / 2, y: (1 - ny) / 2, onScreen: !behind && Math.abs(v.x) <= 1 && Math.abs(v.y) <= 1 };
+  }
+
   garage(
     spec: BotSpec,
     damage?: { facets: Record<Facet, number>; parts: Record<Component, number> },
