@@ -306,11 +306,17 @@ async function theFinal(g: Game): Promise<() => void> {
   const yaw = face(at, me.pos);
   tv.body.setRotation({ x: 0, y: Math.sin(yaw / 2), z: 0, w: Math.cos(yaw / 2) }, true);
   match.setAiScript(NEMESIS.id, 'windup');
-  stage.shot({ kind: 'bot_intro', bot: NEMESIS.id, duration: 4 });
+  // Both robots in one slow orbit: the champion idling, the bar beginning to turn.
+  const mid = { x: (me.pos.x + at.x) / 2, y: 0.2, z: (me.pos.z + at.z) / 2 };
+  stage.shot({ kind: 'replay', point: mid, bots: [NEMESIS.id, PLAYER], duration: 8, seed: 1 });
   g.crowd(0.7);
   await g.say(['dale.pro.turn.1']);
   const turnStart = clock;
-  while (tv.spin01 < 0.9 && clock - turnStart < 1.5) await g.frame();
+  while (tv.spin01 < 0.6 && clock - turnStart < 1.2) await g.frame();
+  // Then close on the bar as it screams up to speed.
+  stage.shot({ kind: 'bot_intro', bot: NEMESIS.id, duration: 2.4 });
+  const closeAt = clock;
+  while ((tv.spin01 < 0.9 || clock - closeAt < 1.3) && clock - closeAt < 2.2) await g.frame();
   tv.omega = Math.max(tv.omega, tv.omegaMax * 0.95);
   // Over the champion's shoulder as it comes.
   const warn = g.say(['chuck.pro.turn.2']);

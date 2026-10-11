@@ -128,10 +128,12 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       const sz = fx;
       out.pos.set(s.base.x + fx * dist + sx * dist * 0.35, 0.35 + L * 0.35 + (1 - e) * 0.25, s.base.z + fz * dist + sz * dist * 0.35);
       out.target.copy(s.base).setY(0.12 + L * 0.12);
-      // Frame the robot right of center and up, so the lower third has room bottom left.
+      // Frame the robot right of center and up, so the lower third has room bottom left. A
+      // portrait screen has no room to the side: centered, just lifted above the card.
+      const side = clamp((aspect - 0.9) / 0.6, 0, 1);
       _a.subVectors(out.target, out.pos).normalize();
       _b.crossVectors(_a, UP).normalize();
-      out.target.addScaledVector(_b, -dist * 0.22).addScaledVector(UP, -dist * 0.09);
+      out.target.addScaledVector(_b, -dist * 0.22 * side).addScaledVector(UP, -dist * 0.09);
       out.fov = 40;
       settle(out.pos, ctx);
       break;
@@ -269,6 +271,58 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       break;
     }
   }
+  const half = subjectHalfWidth(req, ctx);
+  if (half > 0) fitWidth(out, half, aspect);
+}
+
+/** How much of the scene, across, a shot must keep in frame (meters either side of its target). */
+function subjectHalfWidth(req: ActiveShot['req'], ctx: CamCtx): number {
+  const len = (id: string) => ctx.get(id)?.length ?? 0.9;
+  switch (req.kind) {
+    case 'bot_intro':
+      return len(req.bot) * 0.9;
+    case 'winner':
+    case 'loser':
+      return len(req.bot) + 0.15;
+    case 'follow':
+      return 1.5;
+    case 'faceoff':
+      return 1.0;
+    case 'impact':
+      return 1.1;
+    case 'replay': {
+      const bots = req.bots.map((id) => ctx.get(id)).filter((b): b is CamBot => !!b);
+      return bots.length ? Math.min(2.6, actionOf(bots, _c) * 0.7 + 0.8) : 1.1;
+    }
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Keep `halfWidth` meters either side of the target across the frame. Shots are composed for a
+ * wide screen; a portrait phone shows less than half as much across, which put robots off the
+ * edge and the camera apparently inside them. Widen the lens first, then back the camera off
+ * along its line of sight, staying inside the Box.
+ */
+function fitWidth(out: Pose, halfWidth: number, aspect: number): void {
+  const a = Math.max(0.5, aspect);
+  let d = out.pos.distanceTo(out.target);
+  const need = fovForWidth(halfWidth, d, a);
+  if (need <= out.fov) return;
+  const maxFov = 60;
+  if (need <= maxFov) {
+    out.fov = need;
+    return;
+  }
+  out.fov = maxFov;
+  const want = halfWidth / (Math.tan(THREE.MathUtils.degToRad(maxFov) / 2) * a);
+  _a.subVectors(out.pos, out.target).multiplyScalar(want / Math.max(0.01, d));
+  out.pos.copy(out.target).add(_a);
+  clampInside(out.pos, 0.5);
+  // Backed into a wall: the lens makes up the rest, within reason.
+  d = out.pos.distanceTo(out.target);
+  out.fov = clamp(fovForWidth(halfWidth, d, a), maxFov, 74);
 }
 
 export function shotMoving(s: ActiveShot, time: number): boolean {

@@ -25,7 +25,7 @@ while (Date.now() - t0 < 45000) {
   if (!s) break;
   const line = `${s.phase} helpless=${s.helpless} coach="${s.coach}" tv=${s.ai} dis=${s.dis}`;
   if (line !== lastLine) { console.log(`${((Date.now() - t0) / 1000).toFixed(1)}s ${line} spin=${s.spin} d=${s.d}`); lastLine = line; }
-  if (s.dis === 'radio' && !hitLogged) { hitLogged = true; console.log(`HIT at distance ${s.d}`); }
+  if (s.dis && s.dis !== 'ko' && !hitLogged) { hitLogged = true; console.log(`HIT at distance ${s.d} (${s.dis} knocked out)`); }
   if (s.phase === 'over') break;
   await p.waitForTimeout(100);
 }
