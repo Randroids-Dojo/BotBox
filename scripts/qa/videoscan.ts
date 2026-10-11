@@ -14,8 +14,7 @@ const dur = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'for
 const vf = `${crop ? `crop=${crop},` : ''}scale=${W}:${H}:flags=area,format=rgb24`;
 const ff = spawn('ffmpeg', ['-v', 'error', '-i', file, '-vf', vf, '-f', 'rawvideo', '-']);
 const FS = W * H * 3;
-const ring: Uint8Array[] = [];
-let pending = Buffer.alloc(0);
+let pending: Buffer = Buffer.alloc(0);
 let f = 0;
 let magFrames = 0;
 const mag: string[] = [];
@@ -65,7 +64,7 @@ function frame(buf: Uint8Array) {
   f++;
 }
 ff.stdout.on('data', (chunk: Buffer) => {
-  pending = pending.length ? Buffer.concat([pending, chunk]) : chunk;
+  pending = pending.length ? Buffer.concat([pending, chunk]) : Buffer.from(chunk);
   while (pending.length >= FS) {
     frame(pending.subarray(0, FS));
     pending = pending.subarray(FS);
