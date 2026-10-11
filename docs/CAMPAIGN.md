@@ -38,7 +38,7 @@ Rivals get a little sharper the higher you climb. Lose and you can rematch as of
 ## Money
 
 - **Start:** $0 and the scrap of Juggernaut: box frame, 2WD drill motors, a sealed lead-acid pack, light aluminum armor, a front wedge plate and the self-righting arm nobody wanted to buy. No weapon (the disk went to pay the rent).
-- **Earn:** prize money for every campaign win. Side gigs (repeatable exhibition fights against someone from your act) pay a smaller purse, so a bad run never leaves you stuck.
+- **Earn:** prize money for every campaign win. Side gigs (repeatable grudge matches against a robot you have already beaten, from this act or the one before) pay a smaller purse, so a bad run never leaves you stuck.
 - **Spend:**
   - Parts in the garage: every part shows its price, and you buy it the moment you fit it. Parts above your tier are visible but locked ("Unlocks at the Regionals").
   - Armor thickness is free once you own the material. Weight is the limit.

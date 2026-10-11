@@ -169,16 +169,22 @@ export interface SideGig {
   rank: number;
 }
 
+/**
+ * A repeatable cash fight (after the first win) against a robot already beaten: in this act if
+ * there is one, else from the act before. It is the way out of a losing run, so it has to be
+ * winnable by a robot that is falling behind.
+ */
 export function sideGig(c: CareerSave, seed: number): SideGig | null {
   if (c.w === 0) return null;
   const act = currentAct(c);
-  const pool = FIGHTS.filter((f) => f.act === act.id && f.opponent !== NEMESIS.id).map((f) => f.opponent);
-  const done = FIGHTS.slice(0, c.next).filter((f) => f.act === act.id).map((f) => f.opponent);
-  const choices = done.length ? done : pool;
-  const opponent = choices[Math.abs(seed) % choices.length];
-  const f = FIGHTS.find((x) => x.opponent === opponent);
-  const skill = Math.max(0.1, (f?.skill ?? 0.4) - 0.05);
-  return { title: act.id === 'scrapyard' ? 'Parking lot grudge match' : 'Exhibition bout', opponent, prize: sideGigPurse(c), skill, rank: f?.rankAfter ?? 50 };
+  const beaten = FIGHTS.slice(0, c.next).filter((f) => f.opponent !== NEMESIS.id);
+  const here = beaten.filter((f) => f.act === act.id);
+  const before = ACTS[Math.max(0, ACTS.indexOf(act) - 1)].id;
+  const choices = here.length ? here : beaten.filter((f) => f.act === before);
+  if (!choices.length) return null;
+  const f = choices[Math.abs(seed) % choices.length];
+  const skill = Math.max(0.08, f.skill - 0.08);
+  return { title: f.act === 'scrapyard' ? 'Parking lot grudge match' : 'Exhibition bout', opponent: f.opponent, prize: sideGigPurse(c), skill, rank: f.rankAfter };
 }
 
 export function workshopView(c: CareerSave, gig: SideGig | null): WorkshopView {

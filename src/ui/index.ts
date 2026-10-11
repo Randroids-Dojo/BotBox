@@ -57,6 +57,19 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
       const layers = { hud: layer('hud'), gfx: layer('gfx'), touch: layer('touch'), screen: layer('screen'), over: layer('over'), top: layer('top') };
       bx.append(layers.hud, layers.gfx, layers.touch, layers.screen, layers.over, layers.top);
       root.append(bx);
+      // The overlay and its layers never scroll. scrollIntoView on a focused item scrolls every
+      // ancestor it can, which left every later screen shifted up; inner lists still scroll.
+      const pin = (e: HTMLElement) =>
+        e.addEventListener('scroll', () => {
+          if (e.scrollTop || e.scrollLeft) {
+            e.scrollTop = 0;
+            e.scrollLeft = 0;
+          }
+        }, { passive: true });
+      for (const e of [root, bx, ...Object.values(layers)]) pin(e);
+      window.addEventListener('scroll', () => {
+        if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
+      }, { passive: true });
       ctx = { input: deps.input, nav, sfx, root: bx, layers, mine: null };
       loading = new Loading(ctx);
       bc = new Broadcast(ctx);

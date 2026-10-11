@@ -275,7 +275,12 @@ export function careerLadder(ctx: UiCtx, v: CareerView): Promise<void> {
     ctx.layers.screen.append(node);
     const scope = ctx.nav.push({ root: node, back: finish, initial: back });
     // Open on the rung you're standing on.
-    requestAnimationFrame(() => (nextRow as HTMLElement | null)?.scrollIntoView({ block: 'center' }));
+    // Scroll the climb itself, not the page around it.
+    requestAnimationFrame(() => {
+      const row = nextRow as HTMLElement | null;
+      const box = row?.closest<HTMLElement>('.ld-climb-wrap');
+      if (row && box) box.scrollTop += row.getBoundingClientRect().top - box.getBoundingClientRect().top - box.clientHeight / 2 + row.offsetHeight / 2;
+    });
   });
 }
 

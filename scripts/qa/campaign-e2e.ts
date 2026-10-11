@@ -35,6 +35,16 @@ const ctx = await b.newContext(
 );
 const p: Page = await ctx.newPage();
 p.on('pageerror', (e) => log(`PAGEERROR ${e.message} ${(e.stack ?? '').split('\n').slice(1, 3).join(' | ')}`));
+p.on('crash', () => log('PAGECRASH renderer crashed'));
+p.on('framenavigated', (f) => { if (f === p.mainFrame()) log(`NAVIGATED ${f.url()}`); });
+// Lost GL contexts and memory, for reloads and freezes nobody asked for.
+await p.addInitScript(() => {
+  addEventListener('webglcontextlost', () => console.warn('WEBGL context lost'), true);
+  setInterval(() => {
+    const m = (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory;
+    if (m) console.warn(`HEAP ${(m.usedJSHeapSize / 1e6).toFixed(0)} MB`);
+  }, 60000);
+});
 p.on('console', (m) => {
   if (m.type() === 'error' || m.type() === 'warning') log(`CONSOLE.${m.type()} ${m.text().slice(0, 240)}`);
 });
@@ -158,6 +168,8 @@ let lastChange = Date.now();
 let lastScreen = '';
 let shots = 0;
 let workshopVisits = 0;
+let actedOn = '';
+let actedAt = 0;
 let fightsSeen = 0;
 let lastFightPhase = '-';
 const deadline = t0 + minutes * 60_000;
@@ -194,6 +206,7 @@ while (Date.now() < deadline) {
 
   // ---- react to the screen like a player
   const scr = s.screen;
+  if (!scr.includes('workshop') && actedOn === 'workshop') actedOn = '';
   if (scr.startsWith('title')) {
     if (touch) await click('.title-screen', 'title');
     else await press('Enter');
@@ -208,15 +221,19 @@ while (Date.now() < deadline) {
     if (!info.disabled) await clickText('.garage .gp-foot', /^\s*done\s*$/i, 'Done (rebuild)');
     else await press('Enter');
   } else if (scr.includes('garage')) {
+    actedOn = 'garage';
     await shop();
-  } else if (scr.includes('workshop')) {
+  } else if (scr.includes('workshop') && (actedOn !== 'workshop' || Date.now() - actedAt > 6000)) {
+    actedOn = 'workshop';
+    actedAt = Date.now();
+    await p.waitForTimeout(700);
     workshopVisits++;
     const c = s.career;
     log(`WORKSHOP visit ${workshopVisits}: ${JSON.stringify(c)}`);
     await p.waitForTimeout(600);
     if (workshopVisits % 5 === 2) {
       await clickText('.workshop', /^\s*career\s*$/i, 'Career ladder');
-    } else if (c && (c.damaged || c.funds >= 250) && workshopVisits % 2 === 0) {
+    } else if (c && (c.damaged || c.funds >= 250) && workshopVisits % 2 === 1) {
       await clickText('.workshop', /work on the robot/i, 'Work on the robot');
     } else if (c && c.l >= 2 && c.l % 2 === 0 && (await p.locator('.workshop').getByText(/side gig/i).count())) {
       await clickText('.workshop', /side gig/i, 'Side gig');
