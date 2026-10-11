@@ -43,5 +43,14 @@ npx tsx scripts/qa/badpixels.ts 'http://localhost:5240/?autopilot&nan' 45     # 
 npx tsx scripts/qa/ladder.ts 8 0.8                                            # career win rates per rung
 ```
 
+On a real phone (Pixel over wireless adb, `adb forward tcp:9222 localabstract:chrome_devtools_remote`):
+
+```bash
+npx tsx scripts/qa/device-prologue.ts 'https://botbox-game.vercel.app/?autopilot&nan' /tmp/dev.mp4 100  # clears this origin's careers, records the prologue on the phone
+npx tsx scripts/qa/videoscan.ts /tmp/dev.mp4 454 454:1008:895:0                                         # magenta/cyan bad pixels and flashing dark squares, frame by frame
+```
+
+The phone records its portrait screen inside a 2244x1008 landscape frame; the crop is the game. Restore the phone's game save afterwards.
+
 Scripted scenes must survive a player doing the wrong thing (flipped, stuck, idle): test that, not just the happy path. `?nan` on a phone shows whether black squares come from bad pixels.
 
