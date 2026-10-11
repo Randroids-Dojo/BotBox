@@ -9,6 +9,7 @@ import {
   FREE_PATCH,
   NEMESIS,
   PART_PRICES,
+  RANKED_FILLERS,
   RANKED_NAMES,
   SCRAP_LOADOUT,
   SIDE_GIG_SHARE,
@@ -209,16 +210,17 @@ export function workshopView(c: CareerSave, gig: SideGig | null): WorkshopView {
   };
 }
 
+/** The board: everyone the player has beaten drops below it, so the robots ranked above it
+ *  are the ones still to come, topped up with other heavyweights. */
 export function rankings(c: CareerSave): CareerView['rankings'] {
-  const names = RANKED_NAMES.slice();
   const you = c.loadout.name;
+  const beaten = new Set(FIGHTS.slice(0, c.next).map((f) => careerRivalById(f.opponent)?.card.name));
+  const ahead = [...RANKED_NAMES.filter((n) => !beaten.has(n)), ...RANKED_FILLERS];
   const out: CareerView['rankings'] = [];
   if (c.rank !== null && c.rank <= 10) {
-    names.splice(c.rank - 1, 0, you);
-    names.length = 10;
-    names.forEach((n, i) => out.push({ rank: i + 1, name: n, you: i + 1 === c.rank }));
+    for (let r = 1; r <= 10; r++) out.push(r === c.rank ? { rank: r, name: you, you: true } : { rank: r, name: ahead.shift()!, you: false });
   } else {
-    names.forEach((n, i) => out.push({ rank: i + 1, name: n, you: false }));
+    for (let r = 1; r <= 10; r++) out.push({ rank: r, name: ahead.shift()!, you: false });
     out.push({ rank: c.rank ?? 0, name: c.rank === null ? `${you} (unranked)` : you, you: true });
   }
   return out;

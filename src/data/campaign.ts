@@ -163,8 +163,8 @@ export const NEMESIS: Rival = careerRival(
 export const CAREER_BOTS: Rival[] = [
   careerRival(
     'doorstop',
-    { name: 'Doorstop', team: 'Team Cinderblock', hometown: 'Fresno, California', builders: 'Earl Pruitt and his nephew', blurb: 'A slow pusher built from a steel door and optimism.', record: '2-9' },
-    { cls: 'heavy', chassis: 'box', drive: 'drill2', power: 'sla', weapon: 'none', armor: { material: 'polycarb', grade: 1 }, extras: [], paint: { primary: '#7a6a55', secondary: '#3a3a3a', accent: '#e0c060', pattern: 'solid', finish: 'matte', decal: 'STOP' } },
+    { name: 'Doorstop', team: 'Team Cinderblock', hometown: 'Fresno, California', builders: 'Earl Pruitt and his nephew', blurb: 'A slow wedge built from a door hinge and optimism.', record: '2-9' },
+    { cls: 'heavy', chassis: 'wedge', drive: 'drill2', power: 'sla', weapon: 'none', armor: { material: 'polycarb', grade: 1 }, extras: [], paint: { primary: '#7a6a55', secondary: '#3a3a3a', accent: '#e0c060', pattern: 'solid', finish: 'matte', decal: 'STOP' } },
     'tactical',
     0.05,
   ),
@@ -227,6 +227,10 @@ export function fightLoadout(f: CampaignFight): Loadout {
 
 /** Side gigs pay this share of the next campaign purse (rounded to $50). */
 export const SIDE_GIG_SHARE = 0.35;
+
+/** Other ranked heavyweights, below the named contenders: they fill the board as the player
+ *  passes the robots it beats. */
+export const RANKED_FILLERS: string[] = ['Overbite', 'Gridlock', 'Sawbones', 'Pothole', 'Static Cling', 'Rust Belt', 'Night Shift', 'Hard Hat', 'Tin Can Tommy', 'Dead Bolt'];
 
 /** The rankings board for the career screen: the top ten names around the player's climb. */
 export const RANKED_NAMES: string[] = [

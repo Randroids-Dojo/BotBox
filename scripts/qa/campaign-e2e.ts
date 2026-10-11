@@ -78,6 +78,7 @@ const clickText = async (scope: string, re: RegExp, label: string) => {
   }
 };
 const press = async (k: string) => {
+  log(`PRESS ${k}`);
   await p.keyboard.press(k);
 };
 
@@ -247,7 +248,7 @@ while (Date.now() < deadline) {
     await p.waitForTimeout(2500);
     await press('Enter');
     await p.waitForTimeout(600);
-    await press('Enter');
+    if (await p.locator('.rewards').count()) await press('Enter');
   } else {
     // Decision cards, interviews, results, ceremony: anything waiting on Continue.
     const cont = p.locator('.screen .btn.primary:visible, .screen .btn:visible').filter({ hasText: /continue|next|ok/i }).first();

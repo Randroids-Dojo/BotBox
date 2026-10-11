@@ -256,7 +256,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   g.setSkippable(false);
   g.skipAll = false;
   stage.shot({ kind: 'faceoff', duration: 3 });
-  if (!minimal) void g.say(['vic.ready']);
+  // Only before the lights: dropped rather than said over the fight.
+  if (!minimal) void g.say(['vic.ready'], 30, 1);
   await g.wait(1.6, false);
   stage.shot({ kind: 'lights', duration: 4 });
   ui.hud(setup.entrants.map((e) => ({ id: e.id, name: e.card.name, corner: e.corner, spec: e.spec, player: e.id === setup.playerId })));
