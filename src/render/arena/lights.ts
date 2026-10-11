@@ -80,10 +80,13 @@ float noise(vec3 p) {
 }
 void main() {
   vec3 v = normalize(-vViewPos);
-  float facing = abs(dot(normalize(vNormalV), v));
+  // Interpolation can carry vAlong a hair past 1 at the floor, and pow() of a negative base is
+  // NaN: one NaN pixel that bloom spread into a black square. Clamp before every pow.
+  float al = clamp(vAlong, 0.0, 1.0);
+  float facing = min(1.0, abs(dot(vNormalV, v)) / max(length(vNormalV), 1e-4));
   float soft = pow(facing, 2.2);
-  float fall = pow(1.0 - vAlong, 1.4) * smoothstep(0.0, 0.06, vAlong);
-  float floorFade = 1.0 - smoothstep(0.82, 1.0, vAlong);
+  float fall = pow(1.0 - al, 1.4) * smoothstep(0.0, 0.06, al);
+  float floorFade = 1.0 - smoothstep(0.82, 1.0, al);
   float near = smoothstep(0.6, 3.0, -vViewPos.z);
   float dust = 0.65 + 0.7 * noise(vWorld * 1.3 + vec3(0.0, uTime * 0.15, uTime * 0.07));
   float a = soft * fall * floorFade * near * dust * uIntensity;

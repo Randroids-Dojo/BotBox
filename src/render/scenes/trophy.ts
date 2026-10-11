@@ -54,7 +54,7 @@ export class TrophyScene {
   constructor(private env: THREE.Texture, private quality: () => Quality) {
     this.root.name = 'trophy';
     // Riser.
-    const riser = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.8, 0.24, 48), new THREE.MeshStandardMaterial({ color: '#0d0e10', roughness: 0.65, metalness: 0.4 }));
+    const riser = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.8, 0.24, 48), new THREE.MeshStandardMaterial({ color: '#0d0e10', roughness: 0.4, metalness: 0.6 }));
     riser.position.y = 0.12;
     riser.receiveShadow = true;
     riser.castShadow = true;

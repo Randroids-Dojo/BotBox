@@ -40,6 +40,7 @@ npx tsx scripts/qa/handling.ts                                                # 
 npx tsx scripts/qa/prologue-flip.ts                                           # flipped in the prologue: prompt, assist, hit on contact
 npx tsx scripts/qa/prologue-timeline.ts                                       # the prologue as a player sees it: captions, prompts, shots, frames in /tmp/pt-*.png
 npx tsx scripts/qa/badpixels.ts 'http://localhost:5240/?autopilot&nan' 45     # NaN (magenta) and overflow (cyan) pixels per frame
+npx tsx scripts/qa/blacksquares.ts 'http://localhost:5240/?lab=arena&hideui=1&q=high' 30  # frames holding a solid black square, read back from WebGL (target 0; try q=medium and scene=trophy too)
 npx tsx scripts/qa/ladder.ts 8 0.8                                            # career win rates per rung
 ```
 
@@ -53,4 +54,6 @@ npx tsx scripts/qa/videoscan.ts /tmp/dev.mp4 454 454:1008:895:0                 
 The phone records its portrait screen inside a 2244x1008 landscape frame; the crop is the game. Restore the phone's game save afterwards.
 
 Scripted scenes must survive a player doing the wrong thing (flipped, stuck, idle): test that, not just the happy path. `?nan` on a phone shows whether black squares come from bad pixels.
+
+Black squares are one NaN pixel that bloom smears into a block. Shader rules: clamp before `pow()` (a base a hair below zero is NaN), never `normalize()` an interpolated vector that can reach zero, and do not trust `isnan()` (fast math drops it). Post effects that clean pixels must use `BlendFunction.SRC`: the default blend multiplies the input by zero and NaN survives that.
 

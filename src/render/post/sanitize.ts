@@ -3,22 +3,25 @@
 // pass runs between the scene and bloom, replaces invalid values and caps extreme brightness.
 //
 // A bad pixel is filled from its valid neighbours rather than zeroed: zeroing turned whatever
-// produced it (a particle quad, a point sprite) into a black square on GPUs that make NaNs where
-// this Mac does not. `?nan` paints them magenta (NaN) and cyan (overflow) to find the source.
+// produced it (a particle quad, a point sprite) into a black square. `?nan` paints them magenta
+// (NaN), cyan (overflow) and negative light yellow, to find the source.
 
-import { Effect, EffectAttribute } from 'postprocessing';
+import { BlendFunction, Effect, EffectAttribute } from 'postprocessing';
 
 const FRAG = /* glsl */ `
+// Read the bits: with fast math (ANGLE on Metal) isnan() and the "NaN fails every comparison"
+// test are both optimised away, and one NaN pixel got through to bloom as a black square.
+bool badf(float x) { return (floatBitsToUint(x) & 0x7f800000u) == 0x7f800000u; }
+bool nanf(float x) { uint u = floatBitsToUint(x); return (u & 0x7f800000u) == 0x7f800000u && (u & 0x007fffffu) != 0u; }
 bool badv(vec3 c) {
-  // isnan can be optimised away; a NaN also fails every comparison.
-  return any(isnan(c)) || any(isinf(c)) || !(c.r >= -1e9 && c.g >= -1e9 && c.b >= -1e9) || max(abs(c.r), max(abs(c.g), abs(c.b))) > 6.0e4;
+  return badf(c.r) || badf(c.g) || badf(c.b) || max(abs(c.r), max(abs(c.g), abs(c.b))) > 6.0e4;
 }
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
   vec3 c = inputColor.rgb;
   if (badv(c)) {
 #ifdef DEBUG_NAN
-    c = any(isnan(c)) || !(c.r >= -1e9) ? vec3(40.0, 0.0, 40.0) : vec3(0.0, 40.0, 40.0);
+    c = nanf(c.r) || nanf(c.g) || nanf(c.b) ? vec3(40.0, 0.0, 40.0) : vec3(0.0, 40.0, 40.0);
 #else
     vec3 sum = vec3(0.0);
     float n = 0.0;
@@ -50,6 +53,9 @@ export class SanitizeEffect extends Effect {
   constructor() {
     const debug = typeof location !== 'undefined' && new URLSearchParams(location.search).has('nan');
     super('SanitizeEffect', FRAG, {
+      // The default NORMAL blend is mix(input, output, 1): input * 0 is still NaN, so the bad pixel
+      // came straight back. SRC writes the cleaned color alone.
+      blendFunction: BlendFunction.SRC,
       attributes: EffectAttribute.CONVOLUTION,
       defines: debug ? new Map([['DEBUG_NAN', '1']]) : undefined,
     });
