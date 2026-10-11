@@ -15,6 +15,8 @@ p.on('console', (m) => {
 });
 await p.goto(url);
 await p.waitForTimeout(4000);
+// The game waits on its title screen: start it (a fresh profile goes into the prologue).
+if (await p.locator('.title-screen').count()) await p.keyboard.press('Enter');
 await p.evaluate(`(() => {
   const st = (window.__lab || window.botbox).stage;
   const gl = st.renderer.getContext();
