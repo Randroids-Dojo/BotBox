@@ -1,5 +1,5 @@
 // Voice cut-off audit: logs every voice line, how much of it played, and who cut it.
-// npx tsx scripts/qa/voices.ts '<url>' <seconds> [extra Enter presses after start]
+// npx tsx scripts/qa/voices.ts '<url>' <seconds> [extra Enter presses after start]   (VERBOSE=1 prints the timeline)
 import { chromium } from 'playwright-core';
 const url = process.argv[2] ?? 'http://localhost:5240/?autopilot';
 const secs = Number(process.argv[3] ?? 60);
@@ -42,6 +42,7 @@ for (const r of log) {
   if (r.refused) { refused++; console.log(`REFUSED ${r.id} (busy with ${r.by})`); continue; }
   if (!r.end) { console.log(`PLAYING ${r.id}`); continue; }
   played++;
+  if (process.env.VERBOSE) console.log(`${((r.start - log[0].req) / 1000).toFixed(1).padStart(6)}s ${r.id}`);
   const heard = (r.end - r.start) / 1000;
   const frac = r.dur ? heard / r.dur : 1;
   const wait = (r.start - r.req) / 1000;

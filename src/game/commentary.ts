@@ -34,7 +34,8 @@ export class Commentary {
   private busyUntil = 0;
   private counting: string | null = null;
   private lastComeback = -99;
-  private lastCount = -99;
+  /** When Vic's last count number finishes. */
+  private countEnd = -99;
   /** The director's scripted lines take priority: the booth waits while this is true. */
   hold: () => boolean = () => false;
   enabled = true;
@@ -161,9 +162,10 @@ export class Commentary {
     const id = `vic.count.${n}`;
     if (!this.audio.voiceLine(id)) return;
     // Vic picks the count up when the booth finishes its sentence instead of talking over it.
-    // Only his own previous number (under a second long) may be cut.
-    if (this.audio.voiceBusy() && this.now - this.lastCount > 1.05) return;
-    this.lastCount = this.now;
+    // Only his own previous number may be cut: a booth line that started in the gap after it
+    // used to be cut 30 ms in by the next number.
+    if (this.audio.voiceBusy() && this.now > this.countEnd) return;
+    this.countEnd = this.now + (this.audio.voiceLine(id)?.dur ?? 0.8) + 0.05;
     void this.audio.voice(id, { interrupt: true });
     this.busyUntil = this.now + 0.8;
   }
@@ -188,6 +190,11 @@ export class Commentary {
     if (!this.pending && this.now - this.lastLine > 9 && this.now - this.lastEvent > 3) this.queue('idle');
     const p = this.pending;
     if (!p) return;
+    // During a count the booth says its one count line and otherwise lets Vic count.
+    if (this.counting !== null && p.cat !== 'count') {
+      this.pending = null;
+      return;
+    }
     const stale = p.cat !== 'idle' && this.now - p.at > 1.4;
     const gap = this.now - this.lastLine;
     if (stale) {
@@ -201,6 +208,7 @@ export class Commentary {
 
   /** Say a line from a category now (used by the director for scripted beats). */
   speak(cat: Category | 'desk' | 'bumper'): boolean {
+    if (!this.settings().commentary) return false;
     // Alternate voices, with Dale getting the jokes and Chuck the big moments.
     let speaker: 'dale' | 'chuck' = this.lastSpeaker === 'dale' ? 'chuck' : 'dale';
     if (cat === 'huge' || cat === 'flip' || cat === 'pulverizer') speaker = Math.random() < 0.65 ? 'chuck' : 'dale';

@@ -344,7 +344,8 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
   audio.music('none', 1);
 
   // ---------------------------------------------------------------- bot replay
-  const moments = rec.best(show === 'broadcast' ? 3 : show === 'regional' ? 1 : 0);
+  // Two moments at most: three ran 25 s of slow motion before the winner was named.
+  const moments = rec.best(show === 'broadcast' ? 2 : show === 'regional' ? 1 : 0);
   if (moments.length) {
     g.setSkippable(true);
     audio.stinger('replay');
@@ -352,9 +353,9 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
     for (const [i, h] of moments.entries()) {
       if (g.skipAll) break;
       stage.clearTransient();
-      const start = h.t - 1.7;
-      const end = h.t + 1.6;
-      const rate = 0.4;
+      const start = h.t - 1.5;
+      const end = h.t + 1.4;
+      const rate = 0.45;
       let t = start;
       let prev = start - 1e-3;
       stage.shot({ kind: 'replay', point: h.point, bots: h.bots, duration: (end - start) / rate, seed: i * 7 + Math.floor(h.t) });
@@ -367,8 +368,13 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
         audio.setTimeScale(rate);
         audio.frame(s.frame, s.events, stage.listener(), dt);
       });
-      if (i === 0) booth.speak(Math.random() < 0.5 ? 'huge' : 'hit');
-      while (t < end && !g.skipped) await g.frame();
+      // The booth talks over each replay, once Vic has finished calling the result.
+      let said = false;
+      const cat = i === 0 && Math.random() < 0.6 ? 'huge' : 'hit';
+      while (t < end && !g.skipped) {
+        if (!said && end - t > 1) said = booth.speak(cat);
+        await g.frame();
+      }
       g.skipped = false;
     }
     ui.replayFrame(false);
