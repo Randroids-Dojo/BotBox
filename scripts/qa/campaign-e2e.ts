@@ -118,10 +118,10 @@ const state = async (): Promise<State> =>
 // Parts to buy, in order, when the store has them and there is money to spare.
 const WANT: { tab: string; key: string }[] = [
   { tab: 'armor', key: 'armor:uhmw' },
-  { tab: 'power', key: 'power:nicad' },
-  { tab: 'weapon', key: 'weapon:vdisk' },
-  { tab: 'drive', key: 'drive:chair4' },
   { tab: 'extras', key: 'extra:wheelguards' },
+  { tab: 'weapon', key: 'weapon:vdisk' },
+  { tab: 'power', key: 'power:nicad' },
+  { tab: 'drive', key: 'drive:chair4' },
   { tab: 'armor', key: 'armor:steel' },
   { tab: 'armor', key: 'armor:titanium' },
   { tab: 'power', key: 'power:nimh' },

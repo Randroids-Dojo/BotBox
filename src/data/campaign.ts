@@ -99,14 +99,17 @@ export interface Act {
 }
 
 export const ACTS: Act[] = [
-  { id: 'scrapyard', title: 'The Scrapyard Circuit', subtitle: 'Tuesday nights. Folding chairs. No cameras.', tier: 0, presentation: 'minimal', repairPer10: 5, crowd: 0.25 },
-  { id: 'regionals', title: 'Regionals', subtitle: 'Taped for the regional broadcast.', tier: 1, presentation: 'regional', repairPer10: 15, crowd: 0.55 },
-  { id: 'show', title: 'The Show', subtitle: 'BotBox. Prime time. Everyone is watching.', tier: 2, presentation: 'broadcast', repairPer10: 35, crowd: 0.8 },
-  { id: 'championship', title: 'The Championship', subtitle: 'The rematch.', tier: 3, presentation: 'broadcast', repairPer10: 35, crowd: 1 },
+  { id: 'scrapyard', title: 'The Scrapyard Circuit', subtitle: 'Tuesday nights. Folding chairs. No cameras.', tier: 0, presentation: 'minimal', repairPer10: 4, crowd: 0.25 },
+  { id: 'regionals', title: 'Regionals', subtitle: 'Taped for the regional broadcast.', tier: 1, presentation: 'regional', repairPer10: 8, crowd: 0.55 },
+  { id: 'show', title: 'The Show', subtitle: 'BotBox. Prime time. Everyone is watching.', tier: 2, presentation: 'broadcast', repairPer10: 15, crowd: 0.8 },
+  { id: 'championship', title: 'The Championship', subtitle: 'The rematch.', tier: 3, presentation: 'broadcast', repairPer10: 15, crowd: 1 },
 ];
 
 /** Health below this fraction is patched for free between fights. */
-export const FREE_PATCH = 0.4;
+export const FREE_PATCH = 0.6;
+
+/** A lost campaign fight still pays this share of the purse: the producers pay you to show up. */
+export const APPEARANCE_FEE = 0.2;
 
 export interface CampaignFight {
   id: string;

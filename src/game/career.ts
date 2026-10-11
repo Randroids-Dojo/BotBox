@@ -4,6 +4,7 @@
 import { COMPONENTS, FACETS, type Loadout, type PartKey } from '../contract';
 import {
   ACTS,
+  APPEARANCE_FEE,
   FIGHTS,
   FREE_PATCH,
   NEMESIS,
@@ -257,6 +258,7 @@ export function settle(
   const actBefore = currentAct(c);
   c.damage = freePatch(o.damage);
   let actComplete: RewardsView['actComplete'] = null;
+  let fee = 0;
   if (o.won) {
     c.w++;
     c.funds += o.prize;
@@ -272,6 +274,13 @@ export function settle(
     }
   } else {
     c.l++;
+    // A campaign loss still pays an appearance fee, so a bad run never leaves you unable to
+    // repair. Side gigs pay only for a win.
+    if (o.fight) {
+      fee = Math.round((o.fight.prize * APPEARANCE_FEE) / 50) * 50;
+      c.funds += fee;
+      c.earnings += fee;
+    }
   }
   const tierAfter = storeTier(c);
   const unlocks = tierAfter > tierBefore ? partsUnlockedAt(tierAfter) : [];
@@ -288,7 +297,9 @@ export function settle(
       ? isDamaged(c.damage)
         ? 'Spend it wisely. Repairs and parts are in the garage.'
         : 'Spend it wisely.'
-      : 'Rematch whenever you are ready. Patch it up first.',
+      : fee > 0
+        ? `Appearance fee: $${fee.toLocaleString('en-US')}. Patch it up and rematch.`
+        : 'Rematch whenever you are ready. Patch it up first.',
   };
 }
 

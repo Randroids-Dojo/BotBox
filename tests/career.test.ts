@@ -33,10 +33,12 @@ describe('career', () => {
     expect(view.acts[1].fights[0].state).toBe('next');
   });
 
-  it('a loss costs nothing but pride, and heavy damage is patched for free', () => {
+  it('a loss pays an appearance fee, and heavy damage is patched for free', () => {
     const c = newCareer();
     const r = settle(c, { won: false, fight: FIGHTS[0], prize: FIGHTS[0].prize, result: 'KO 1:00', damage: wear(0.1, 0.05) });
     expect(r.prize).toBe(0);
+    expect(c.funds).toBe(100);
+    expect(r.note).toContain('Appearance fee');
     expect(c.next).toBe(0);
     expect(c.l).toBe(1);
     expect(c.damage?.facets.front).toBe(FREE_PATCH);

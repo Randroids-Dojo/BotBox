@@ -42,7 +42,8 @@ Rivals get a little sharper the higher you climb. Lose and you can rematch as of
 - **Spend:**
   - Parts in the garage: every part shows its price, and you buy it the moment you fit it. Parts above your tier are visible but locked ("Unlocks at the Regionals").
   - Armor thickness is free once you own the material. Weight is the limit.
-  - Repairs cost money per 10 percent restored on each panel or part ($5 in Act I, $15 in Act II, $35 in Act III and IV, `repairPer10` in `ACTS`). Anything below 40 percent gets a free patch job, so you can always field a working robot.
+  - Repairs cost money per 10 percent restored on each panel or part ($4 in Act I, $8 in Act II, $15 in Act III and IV, `repairPer10` in `ACTS`). Anything below 60 percent gets a free patch job, so you can always field a working robot.
+  - A lost campaign fight pays a 20 percent appearance fee. Together with the patch job, a loss costs about a fifth of the next purse to put right, not the whole bank (the end-to-end run found a player broke and losing in a loop at the old prices).
 - **Balance, from AI-vs-AI ladders:** a srimech decides most early fights (the killsaws flip everything and a flipped box is counted out), so the scrap keeps its old one and Act I is winnable until Buzz Off, the act's wall. The Regionals want a spinner on chair motors with steel and a srimech; the regional versions of Homewrecker and Undertow run aluminum and lead-acid (`tweak` in `FIGHTS`). Prime Juggernaut against Terminal Velocity is close to a coin flip.
 
 ## Fight presentation by act
