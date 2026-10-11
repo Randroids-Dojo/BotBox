@@ -64,6 +64,8 @@ export class Match implements SimHost {
   result: MatchResult | null = null;
   /** Scripted scenes switch the arena hazards off so the script cannot be derailed. */
   hazardsOn = true;
+  /** Scripted scenes freeze the fight clock (a cutscene must not run the time out). */
+  clockHeld = false;
 
   private events: MatchEvent[] = [];
   private queue: EventQueue;
@@ -341,6 +343,7 @@ export class Match implements SimHost {
         this.emit({ type: 'fight_start', t: this.t });
       }
     } else if (this.phase === 'fight') {
+      if (this.clockHeld) this.fightStart += dt;
       this.clock = Math.max(0, this.opts.length - (this.t - this.fightStart));
       const sec = Math.ceil(this.clock);
       if (sec !== this.clockSec) {

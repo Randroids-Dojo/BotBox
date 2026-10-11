@@ -139,6 +139,7 @@ export interface ScopeOptions {
 
 export class Scope {
   focused: HTMLElement | null = null;
+  readonly openedAt = performance.now();
   constructor(readonly nav: Nav, readonly opts: ScopeOptions) {}
 
   items(): HTMLElement[] {
@@ -214,12 +215,15 @@ export class Scope {
       return;
     }
     if (!this.focused || !this.items().includes(this.focused)) {
-      this.refresh();
+      // Nothing focused yet: land on the screen's intended button, never just the first one.
+      this.refresh(this.opts.initial ?? null);
       if (n !== 'confirm') return;
     }
     const f = this.focused;
     if (!f) return;
     if (n === 'confirm') {
+      // A confirm this soon after the screen opened was meant for the screen before it.
+      if (performance.now() - this.openedAt < 450) return;
       this.activate(f);
       return;
     }
@@ -312,7 +316,10 @@ export class Nav {
       s.focus(t, { silent: true, scroll: false });
       s.activate(t);
     });
-    requestAnimationFrame(() => s.refresh(opts.initial ?? null));
+    // Focus the intended button now if it is already in the page, and again next frame once
+    // the screen has laid out.
+    if (opts.initial && opts.initial.isConnected) s.refresh(opts.initial);
+    requestAnimationFrame(() => s.refresh(s.focused ?? opts.initial ?? null));
     return s;
   }
 

@@ -14,11 +14,14 @@ export function interview(o: {
   them: BotCard;
   final: boolean;
   champion: boolean;
+  /** Career: the fallen champion's climb back. */
+  comeback?: boolean;
 }): { speaker: Speaker; text: string }[] {
   const { won, result, me, them } = o;
   const s = result.stats[me.id];
   const lines: { speaker: Speaker; text: string }[] = [];
   const how = result.method;
+  if (o.comeback) return comebackLines(o, how, s ? s.flips > 0 : false);
   if (o.champion) {
     lines.push({ speaker: 'Jenna', text: `You just won the Giant Nut! What goes through your head right now?` });
     lines.push({ speaker: 'Builder', text: pick([
@@ -48,4 +51,31 @@ export function interview(o: {
     else lines.push({ speaker: 'Builder', text: pick([`I thought we did enough. The judges didn't.`, `Close fight. Next year we bring a bigger weapon.`]) });
   }
   return lines;
+}
+
+/** The comeback in the builder's words: the storage unit, the scrap, Terminal Velocity. */
+function comebackLines(o: { won: boolean; me: { name: string; weapon: WeaponId }; them: BotCard; final: boolean; champion: boolean }, how: MatchResult['method'], flipped: boolean): { speaker: Speaker; text: string }[] {
+  const { me, them } = o;
+  if (o.champion)
+    return [
+      { speaker: 'Jenna', text: `Two seasons ago you were in a storage unit with a box of scrap. Now you're holding the Giant Nut. Talk to me.` },
+      { speaker: 'Builder', text: pick([`Every bolt in this robot is a grudge. Tonight we cashed them all in.`, `They sold our disk. They pulled our sponsors. They forgot our name. Say it now.`, `Terminal Velocity took everything. We came back for it.`]) },
+      { speaker: 'Jenna', text: `What's next for ${me.name}?` },
+      { speaker: 'Builder', text: pick([`A nap. Then we defend it.`, `We keep the storage unit. Just to remember.`]) },
+    ];
+  if (o.won) {
+    const lines: { speaker: Speaker; text: string }[] = [
+      { speaker: 'Jenna', text: pick([`The old champ is back in the win column! How does it feel?`, `${me.name} beats ${them.name}. Is the comeback for real?`, `Another rung on the ladder. Did you ever doubt it?`]) },
+    ];
+    if (how === 'ko' && flipped) lines.push({ speaker: 'Builder', text: pick([`We learned the hard way what it's like on your back. Now we hand it out.`, `Flip them, count them, collect the purse.`]) });
+    else if (how === 'ko') lines.push({ speaker: 'Builder', text: pick([`That robot was built out of a junk pile. It hits like it remembers.`, `Two seasons of losing teaches you exactly where to hit.`, `We stopped coasting. That's the whole difference.`]) });
+    else lines.push({ speaker: 'Builder', text: pick([`Ugly, but it counts. The purse spends the same.`, `Three minutes of hard work. That's how we climb now.`]) });
+    lines.push({ speaker: 'Jenna', text: o.final ? `Next up: the rematch. Terminal Velocity.` : `Where does the purse go?` });
+    lines.push({ speaker: 'Builder', text: o.final ? pick([`I've watched that tape a thousand times. We're ready.`, `It took our title in one hit. We only need one too.`]) : pick([`Armor first. Then something with teeth.`, `Rent on the storage unit, then parts. In that order.`, me.weapon === 'none' ? `A weapon. We're tired of pushing.` : `Bearings for the weapon. It's been earning its keep.`]) });
+    return lines;
+  }
+  return [
+    { speaker: 'Jenna', text: pick([`Tough one against ${them.name}. Is the comeback over?`, `That's a setback. What went wrong out there?`]) },
+    { speaker: 'Builder', text: how === 'ko' && flipped ? pick([`Got flipped and couldn't get up. We'll fix that before the rematch.`, `On our back again. Not for long.`]) : pick([`Not a chance it's over. We've been a lot lower than this.`, `We'll patch it up and come right back. That's what we do now.`]) },
+  ];
 }

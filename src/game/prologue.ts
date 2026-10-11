@@ -145,7 +145,8 @@ async function theFinal(g: Game): Promise<() => void> {
         b.immobileTime = 0;
         b.stuckTime = 0;
       }
-      match.advance(dt * g.speed);
+      // A cinematic runs in real time, whatever the test speed-up says.
+      match.advance(dt);
     }
     const events = match.drainEvents();
     const world = match.frame();
@@ -295,6 +296,8 @@ async function theFinal(g: Game): Promise<() => void> {
   // ---- the turn: bars drop, the HUD goes, and the film takes over
   control = false;
   cutscene(true);
+  // The clock stops with the bars down: the cutscene cannot run the final out of time.
+  match.clockHeld = true;
   if (auto) match.setAiScript(PLAYER, 'passive');
   // Line Terminal Velocity up a short run away, facing the champion. The cut hides the move.
   const room = { x: -Math.sign(me.pos.x || 1), z: -Math.sign(me.pos.z || 1) };

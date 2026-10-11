@@ -428,6 +428,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
         them: them.card,
         final: !!setup.final,
         champion: playerWon && !!setup.championIfWon,
+        comeback: setup.comeback,
       }),
     );
     audio.stopVoice();
