@@ -137,6 +137,13 @@ export class Game {
     this.skipGen++;
   }
 
+  /** End every scripted line now, queued ones too: the scene they belonged to has closed. */
+  hush(): void {
+    this.skipGen++;
+    this.audio.stopVoice();
+    this.ui.caption(null);
+  }
+
   /** Bumped by every skip, so a queued line knows the moment it belonged to was skipped. */
   private skipGen = 0;
   private sayQueue: Promise<void> = Promise.resolve();
@@ -423,8 +430,7 @@ export class Game {
         preview: this.garagePreview,
         orbit: (dx, dy) => this.stage.orbit(dx, dy),
       });
-      this.audio.stopVoice();
-      this.ui.caption(null);
+      this.hush();
       if (!pits) return;
       s.loadout = pits.loadout;
       s.damage = pits.damage ?? s.damage;
@@ -472,6 +478,7 @@ export class Game {
       this.audio.music('bumper', 0.2);
       void this.say([this.pickId('dale.bumper.')]);
       await this.ui.bumper();
+      this.hush();
     }
   }
 
@@ -515,6 +522,7 @@ export class Game {
     this.crowd(1);
     void this.say(['vic.champion', ...nameLines({ id: PLAYER, card: this.playerCard(l) })]);
     await this.ui.ceremony(this.playerCard(l), l.cls);
+    this.hush();
   }
 
   // ------------------------------------------------------------------ exhibition

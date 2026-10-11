@@ -37,6 +37,10 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     c = n > 0.0 ? sum / n : vec3(0.0);
 #endif
   }
+#ifdef DEBUG_NAN
+  // Negative light clamps to black: paint it yellow.
+  else if (min(c.r, min(c.g, c.b)) < -0.001) c = vec3(40.0, 40.0, 0.0);
+#endif
   // Keep HDR headroom for sparks and lamps, but nowhere near half-float overflow.
   c = clamp(c, 0.0, 96.0);
   outputColor = vec4(c, inputColor.a);

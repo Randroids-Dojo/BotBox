@@ -271,7 +271,7 @@ export function settle(
       c.next = Math.max(c.next, FIGHTS.indexOf(o.fight) + 1);
       const actAfter = currentAct(c);
       if (actAfter !== actBefore || c.next >= FIGHTS.length) {
-        actComplete = { title: actBefore.title, next: c.next >= FIGHTS.length ? 'Champion again.' : actAfter.title };
+        actComplete = { title: actBefore.title, next: c.next >= FIGHTS.length ? '' : actAfter.title };
       }
     }
   } else {
@@ -296,7 +296,9 @@ export function settle(
     unlocks,
     actComplete,
     note: o.won
-      ? isDamaged(c.damage)
+      ? o.fight === FIGHTS[FIGHTS.length - 1]
+        ? 'Four Giant Nuts. Nobody is calling you washed up now.'
+        : isDamaged(c.damage)
         ? 'Spend it wisely. Repairs and parts are in the garage.'
         : 'Spend it wisely.'
       : fee > 0

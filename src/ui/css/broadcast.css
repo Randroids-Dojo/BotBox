@@ -815,7 +815,8 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: var(--pad-t);
+  /* The display face rises above its line box: leave room or the top of CHAMPION is cut. */
+  top: calc(var(--pad-t) + var(--u) * 1.2);
   text-align: center;
 }
 .bx .cm-kicker {
@@ -1009,5 +1010,19 @@
     text-overflow: clip;
     text-wrap: balance;
     overflow-wrap: anywhere;
+  }
+}
+
+/* The ceremony's name card owns the bottom of the screen: Vic speaks from under the title. */
+.bx:has(.ceremony-screen) .caption {
+  bottom: auto;
+  top: calc(var(--pad-t) + var(--u) * 9.6);
+}
+@media (orientation: portrait) {
+  .bx .cm-top {
+    top: calc(var(--pad-t) + var(--u) * 2.4);
+  }
+  .bx:has(.ceremony-screen) .caption {
+    top: calc(var(--pad-t) + var(--u) * 9);
   }
 }

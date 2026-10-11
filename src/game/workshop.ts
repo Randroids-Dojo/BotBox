@@ -132,8 +132,7 @@ async function ceremony(g: Game, c: CareerSave): Promise<void> {
   g.crowd(1);
   void g.say(['vic.champion', ...nameLines({ id: PLAYER, card }), 'vic.comeback'], 16);
   await g.ui.ceremony(card, c.loadout.cls);
-  g.audio.stopVoice();
-  g.ui.caption(null);
+  g.hush();
 }
 
 /** The workshop loop. Returns when the player heads back to the main menu. */

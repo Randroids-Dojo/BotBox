@@ -175,6 +175,7 @@ export interface RewardsView {
   /** New parts in the store, by label. */
   unlocks: string[];
   /** Set when this win finished an act. */
+  /** `next` is empty when the last act is done. */
   actComplete: { title: string; next: string } | null;
   /** A short line under the numbers ("Rematch any time. Repairs are waiting in the garage."). */
   note: string | null;

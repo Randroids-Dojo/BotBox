@@ -315,7 +315,7 @@ export function rewards(ctx: UiCtx, v: RewardsView): Promise<void> {
     const cont = button('Continue', { cls: 'primary rw-go', activate: () => finish() });
     const card = el(`div.rw-card${v.won ? '.won' : '.lost'}`);
     const actBanner = v.actComplete
-      ? el('div.rw-act', [el('div.rw-act-k.kicker', 'Act complete'), el('div.rw-act-t.wide.chrome-text', v.actComplete.title), el('div.rw-act-n', `Next: ${v.actComplete.next}`)])
+      ? el('div.rw-act', [el('div.rw-act-k.kicker', 'Act complete'), el('div.rw-act-t.wide.chrome-text', v.actComplete.title), el('div.rw-act-n', v.actComplete.next ? `Next: ${v.actComplete.next}` : 'The Giant Nut is coming home.')])
       : null;
     const node = el('div.screen.rewards', [el('div.dim-bg'), el('div.rw-wrap', [actBanner, card])]);
 

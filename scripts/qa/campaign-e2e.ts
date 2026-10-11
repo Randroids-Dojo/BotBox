@@ -133,6 +133,7 @@ async function shop(): Promise<void> {
   await p.waitForTimeout(800);
   // Repairs first when damaged.
   if (await clickText('.garage', /fix the worst first/i, 'Fix the worst first')) await p.waitForTimeout(500);
+  let boughtNow = 0;
   for (const w of WANT) {
     if (bought.has(w.key)) continue;
     await click(`.garage [data-key="tab:${w.tab}"]`, `tab ${w.tab}`);
@@ -153,7 +154,8 @@ async function shop(): Promise<void> {
       bought.add(w.key);
       log(`BOUGHT ${w.key}`);
     }
-    break; // one purchase per visit, so the run spreads them out
+    // One purchase per visit spreads them out; BUYALL=1 shops up to three at once.
+    if (!process.env.BUYALL || ++boughtNow >= 3) break;
   }
   await p.screenshot({ path: `${out}/shop-${Date.now() - t0}.png` });
   const warn = await p.evaluate(`(document.querySelector('.gp-warn') || {}).textContent || ''`);
@@ -231,6 +233,10 @@ while (Date.now() < deadline) {
     workshopVisits++;
     const c = s.career;
     log(`WORKSHOP visit ${workshopVisits}: ${JSON.stringify(c)}`);
+    if (c && c.next >= 13) {
+      log('CHAMPION back in the workshop: the campaign is done');
+      break;
+    }
     await p.waitForTimeout(600);
     if (workshopVisits % 5 === 2) {
       await clickText('.workshop', /^\s*career\s*$/i, 'Career ladder');
@@ -254,6 +260,7 @@ while (Date.now() < deadline) {
     const cont = p.locator('.screen .btn.primary:visible, .screen .btn:visible').filter({ hasText: /continue|next|ok/i }).first();
     if (s.phase !== 'fight' && (await cont.count())) {
       await p.waitForTimeout(1500);
+      await p.screenshot({ path: `${out}/${String(shots++).padStart(3, '0')}-${scr.replace(/[^a-z0-9.+-]/gi, '_').slice(0, 40)}-held.png` });
       if (touch) await cont.tap().catch(() => {});
       else await cont.click().catch(() => {});
       log('CLICK continue');

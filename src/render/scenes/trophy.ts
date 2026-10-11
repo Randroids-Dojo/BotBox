@@ -54,11 +54,11 @@ export class TrophyScene {
   constructor(private env: THREE.Texture, private quality: () => Quality) {
     this.root.name = 'trophy';
     // Riser.
-    const riser = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.8, 0.24, 48), new THREE.MeshStandardMaterial({ color: '#0d0e10', roughness: 0.4, metalness: 0.6 }));
+    const riser = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.8, 0.24, 48), new THREE.MeshStandardMaterial({ color: '#0d0e10', roughness: 0.65, metalness: 0.4 }));
     riser.position.y = 0.12;
     riser.receiveShadow = true;
     riser.castShadow = true;
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(1.75, 0.03, 8, 64), new THREE.MeshStandardMaterial({ color: '#e8e8e8', metalness: 1, roughness: 0.15 }));
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(1.75, 0.03, 8, 64), new THREE.MeshStandardMaterial({ color: '#e8e8e8', metalness: 1, roughness: 0.38 }));
     rim.rotation.x = Math.PI / 2;
     rim.position.y = 0.24;
     const glow = new THREE.Mesh(new THREE.TorusGeometry(1.8, 0.02, 6, 64), new THREE.MeshBasicMaterial({ color: new THREE.Color(5, 1.4, 0.1) }));
@@ -79,7 +79,7 @@ export class TrophyScene {
       [-4, 5, 0xfff2e0],
       [4, 4, 0xbfd4ff],
     ] as const) {
-      const s = new THREE.SpotLight(c, 400, 20, 0.16, 0.4, 1.3);
+      const s = new THREE.SpotLight(c, 150, 20, 0.16, 0.4, 1.3);
       s.position.set(x, 4.8, z);
       s.target.position.set(-0.35, 0.8, 0);
       this.spots.push(s);

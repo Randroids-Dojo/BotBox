@@ -432,7 +432,7 @@ export async function runFight(g: Game, setup: FightSetup): Promise<FightOutcome
         comeback: setup.comeback,
       }),
     );
-    audio.stopVoice();
+    g.hush();
   }
 
   unsubAction();

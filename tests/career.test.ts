@@ -59,7 +59,10 @@ describe('career', () => {
 
   it('wins the championship at the end of the ladder', () => {
     const c = newCareer();
-    for (const f of FIGHTS) settle(c, { won: true, fight: f, prize: f.prize, result: 'KO 1:00', damage: null });
+    let last = null as ReturnType<typeof settle> | null;
+    for (const f of FIGHTS) last = settle(c, { won: true, fight: f, prize: f.prize, result: 'KO 1:00', damage: null });
+    expect(last?.actComplete?.next).toBe('');
+    expect(last?.note).toContain('Four Giant Nuts');
     expect(c.rank).toBe(1);
     expect(c.next).toBe(FIGHTS.length);
     expect(workshopView(c, null).next).toBeNull();
