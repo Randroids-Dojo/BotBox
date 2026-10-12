@@ -449,15 +449,27 @@
     "score": 1.0,
     "issues": []
   },
-  "chuck.pro.down.1": {
-    "sha": "18e6f7a01d34",
-    "heard": "Oh, oh no! The champ is upside down! It's on fire!",
+  "chuck.pro.break.1": {
+    "sha": "a3ea077c306e",
+    "heard": "Its left side is dead, Dale. It can only go in circles.",
     "score": 1.0,
     "issues": []
   },
-  "chuck.pro.down.2": {
-    "sha": "95f8564e5123",
+  "chuck.pro.down.1": {
+    "sha": "4ce66a27806e",
     "heard": "That's not possible. Nobody hits the champ like that. Nobody.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.hit.1": {
+    "sha": "910e60e091db",
+    "heard": "Oh, right in the side. The wheels are gone. It's coming apart.",
+    "score": 1.0,
+    "issues": []
+  },
+  "chuck.pro.side.1": {
+    "sha": "9a06d6107564",
+    "heard": "It's coming at the side. The champ can't turn. Look out.",
     "score": 1.0,
     "issues": []
   },
@@ -476,18 +488,6 @@
   "chuck.pro.taste.3": {
     "sha": "3ee16ecd78b8",
     "heard": "Put it in the trophy case. This dynasty is not done.",
-    "score": 1.0,
-    "issues": []
-  },
-  "chuck.pro.turn.1": {
-    "sha": "8b0d55e197d6",
-    "heard": "Hold on! Listen to that bar wind up! Look out, champ!",
-    "score": 1.0,
-    "issues": []
-  },
-  "chuck.pro.turn.2": {
-    "sha": "c59a5b98ab6b",
-    "heard": "It's coming. Juggernaut doesn't see it. Look out.",
     "score": 1.0,
     "issues": []
   },
@@ -1361,16 +1361,28 @@
     "score": 1.0,
     "issues": []
   },
-  "dale.pro.down.1": {
-    "sha": "a8c40439e423",
-    "heard": "Oh no. Oh no. It hit the ceiling. The champ hit the ceiling.",
+  "dale.pro.break.1": {
+    "sha": "8048853cbbdd",
+    "heard": "Wait, is the champ smoking? Something just let go in there.",
     "score": 1.0,
     "issues": []
   },
-  "dale.pro.down.2": {
-    "sha": "0897bae6768c",
+  "dale.pro.down.1": {
+    "sha": "745fa4152de0",
     "heard": "I don't have a joke. I don't have anything.",
     "score": 0.985,
+    "issues": []
+  },
+  "dale.pro.hit.1": {
+    "sha": "89cb0c80dfd4",
+    "heard": "That's pieces of the champ all over the box.",
+    "score": 0.925,
+    "issues": []
+  },
+  "dale.pro.side.1": {
+    "sha": "9914afa0ef32",
+    "heard": "Uh-oh. And Terminal Velocity has seen it.",
+    "score": 1.0,
     "issues": []
   },
   "dale.pro.taste.1": {
@@ -1388,18 +1400,6 @@
   "dale.pro.taste.3": {
     "sha": "f5136092815b",
     "heard": "Oh, that's mean. That's championship mean.",
-    "score": 1.0,
-    "issues": []
-  },
-  "dale.pro.turn.1": {
-    "sha": "3b4003dae821",
-    "heard": "Wait, wait, what is that bar doing?",
-    "score": 1.0,
-    "issues": []
-  },
-  "dale.pro.turn.2": {
-    "sha": "6d1cd87c5556",
-    "heard": "Uh-oh, that's not a spinner anymore. That's a jet engine.",
     "score": 1.0,
     "issues": []
   },

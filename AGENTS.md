@@ -39,6 +39,7 @@ npx tsx scripts/qa/camera.ts 'http://localhost:5240/?autopilot&career=8' 60   # 
 npx tsx scripts/qa/handling.ts                                                # acceleration, stopping, turn-in, overshoot per robot
 npx tsx scripts/qa/prologue-flip.ts                                           # flipped in the prologue: prompt, assist, hit on contact
 npx tsx scripts/qa/prologue-timeline.ts                                       # the prologue as a player sees it: captions, prompts, shots, frames in /tmp/pt-*.png
+npx tsx scripts/qa/prologue-timeline.ts 'http://localhost:5240/?fall' 50      # the montage alone (dates, cards; OVERLAP= flags a card under a caption)
 npx tsx scripts/qa/badpixels.ts 'http://localhost:5240/?autopilot&nan' 45     # NaN (magenta) and overflow (cyan) pixels per frame
 npx tsx scripts/qa/blacksquares.ts 'http://localhost:5240/?lab=arena&hideui=1&q=high' 30  # frames holding a solid black square, read back from WebGL (target 0; try q=medium and scene=trophy too)
 npx tsx scripts/qa/ladder.ts 8 0.8                                            # career win rates per rung

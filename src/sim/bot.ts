@@ -40,7 +40,7 @@ export interface SimHost {
   botOfBody(body: RigidBody | null): BotSim | undefined;
   spawnDebris(d: {
     bot: string;
-    kind: 'panel' | 'wheel' | 'tooth' | 'chunk';
+    kind: 'panel' | 'wheel' | 'tooth' | 'chunk' | 'weapon';
     facet?: Facet;
     index?: number;
     pos: Vec3;
@@ -111,6 +111,8 @@ export class BotSim {
   cooldown = 0;
   shots: number;
   srimechShots = 6;
+  /** Cinematics: every self-righting attempt (once landed) lifts partway and falls back. */
+  cannotRight = false;
   srimechCooldown = 0;
   wheelSpin: number[];
   wheelContact: boolean[];
@@ -138,7 +140,7 @@ export class BotSim {
   lastTouchBy: BotSim | null = null;
   lastTouchT = -99;
   cmd: DriveCommand = { throttle: 0, turn: 0, weapon: false, weaponPressed: false, selfRight: false };
-  righting: { t: number; success: boolean; axisLocal: Vec3 } | null = null;
+  righting: { t: number; success: boolean; axisLocal: Vec3; start: number } | null = null;
   weaponPrev = false;
   /** Movement tracking for the knockout rule. */
   stuckTime = 0;
@@ -917,6 +919,8 @@ export class BotSim {
   private selfRightStep(dt: number, cmd: DriveCommand): void {
     this.srimechCooldown = Math.max(0, this.srimechCooldown - dt);
     if (!this.helpless || !cmd.selfRight || this.disabled) return;
+    // Scripted to stay down: it only tries once it has landed.
+    if (this.cannotRight && this.airborne) return;
     if (this.spec.loadout.extras.includes('srimech') && this.srimechShots > 0 && this.srimechCooldown <= 0) {
       this.srimechShots--;
       this.srimechCooldown = 2.2;
@@ -944,9 +948,10 @@ export class BotSim {
    *  push it carries the robot all the way over, on a bad one it falls back. */
   private tryRight(how: 'srimech' | 'weapon', odds: number): void {
     const host = this.host;
-    const success = host.rng.chance(odds);
+    const success = !this.cannotRight && host.rng.chance(odds);
     const m = this.spec.massKg;
-    this.righting = { t: 0.65, success, axisLocal: how === 'srimech' || !this.inverted ? vec(0, 0, 1) : vec(1, 0, 0) };
+    const start = Math.acos(clamp(this.up.y, -1, 1));
+    this.righting = { t: 0.65, success, axisLocal: how === 'srimech' || !this.inverted ? vec(0, 0, 1) : vec(1, 0, 0), start };
     this.body.applyImpulse(vec(0, m * 1.3, 0), true);
     if (success) host.emit({ type: 'righted', t: host.t + 0.5, bot: this.id, how });
   }
@@ -968,8 +973,13 @@ export class BotSim {
     const wAlong = dot(w, axis);
     const m = this.spec.massKg;
     const I = (m / 12) * (this.spec.width * this.spec.width + 4 * this.half.y * this.half.y);
-    const strength = r.success ? 1 : 0.45;
-    const torque = I * (55 * angle * strength - 9 * wAlong);
+    // A cinematic that wants it stuck lifts it partway, less than it takes to tip over an edge,
+    // and lets it fall back. In a fight a weak push usually still gets there: career balance is
+    // tuned on that.
+    const stuck = !r.success && this.cannotRight;
+    const goal = stuck ? Math.max(0, r.start - 0.8) : 0;
+    const strength = r.success ? 1 : stuck ? 0.6 : 0.45;
+    const torque = I * (55 * (angle - goal) * strength - 9 * wAlong);
     this.body.applyTorqueImpulse(scale(axis, clamp(torque, -I * 120, I * 120) * dt), true);
   }
 

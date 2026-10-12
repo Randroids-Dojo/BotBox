@@ -252,7 +252,7 @@ export interface DebrisFrame {
   id: number;
   /** Robot id that shed it. */
   bot: string;
-  kind: 'panel' | 'wheel' | 'tooth' | 'chunk';
+  kind: 'panel' | 'wheel' | 'tooth' | 'chunk' | 'weapon';
   /** For panels, which facet it was. */
   facet?: Facet;
   /** For panels, index into spec.panels. For wheels, index into spec.wheels. */

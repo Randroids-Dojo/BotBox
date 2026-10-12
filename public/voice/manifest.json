@@ -451,17 +451,29 @@
       "speaker": "Chuck",
       "dur": 1.96
     },
+    "chuck.pro.break.1": {
+      "file": "chuck/pro-break-1.mp3",
+      "text": "Its left side is dead, Dale! It can only go in circles!",
+      "speaker": "Chuck",
+      "dur": 4.19
+    },
     "chuck.pro.down.1": {
       "file": "chuck/pro-down-1.mp3",
-      "text": "OH! OH NO! The champ is upside down! It's on FIRE!",
-      "speaker": "Chuck",
-      "dur": 4.18
-    },
-    "chuck.pro.down.2": {
-      "file": "chuck/pro-down-2.mp3",
       "text": "That's not possible. Nobody hits the champ like that. Nobody.",
       "speaker": "Chuck",
       "dur": 4.24
+    },
+    "chuck.pro.hit.1": {
+      "file": "chuck/pro-hit-1.mp3",
+      "text": "OH! Right in the side! The wheels are GONE! It's coming APART!",
+      "speaker": "Chuck",
+      "dur": 4.66
+    },
+    "chuck.pro.side.1": {
+      "file": "chuck/pro-side-1.mp3",
+      "text": "It's coming at the side! The champ can't turn! LOOK OUT!",
+      "speaker": "Chuck",
+      "dur": 3.63
     },
     "chuck.pro.taste.1": {
       "file": "chuck/pro-taste-1.mp3",
@@ -480,18 +492,6 @@
       "text": "Put it in the trophy case! This dynasty is NOT done!",
       "speaker": "Chuck",
       "dur": 3.98
-    },
-    "chuck.pro.turn.1": {
-      "file": "chuck/pro-turn-1.mp3",
-      "text": "Hold on! Listen to that bar wind up! Look out, champ!",
-      "speaker": "Chuck",
-      "dur": 3.66
-    },
-    "chuck.pro.turn.2": {
-      "file": "chuck/pro-turn-2.mp3",
-      "text": "It's coming! Juggernaut doesn't see it! LOOK OUT!",
-      "speaker": "Chuck",
-      "dur": 3.24
     },
     "chuck.pulverizer.1": {
       "file": "chuck/pulverizer-1.mp3",
@@ -1363,17 +1363,29 @@
       "speaker": "Dale",
       "dur": 1.71
     },
+    "dale.pro.break.1": {
+      "file": "dale/pro-break-1.mp3",
+      "text": "Wait. Is the champ smoking? Something just let go in there.",
+      "speaker": "Dale",
+      "dur": 2.88
+    },
     "dale.pro.down.1": {
       "file": "dale/pro-down-1.mp3",
-      "text": "Oh no. Oh, no. It hit the ceiling. The champ hit the ceiling.",
-      "speaker": "Dale",
-      "dur": 4.0
-    },
-    "dale.pro.down.2": {
-      "file": "dale/pro-down-2.mp3",
       "text": "I... I don't have a joke. I don't have anything.",
       "speaker": "Dale",
       "dur": 2.56
+    },
+    "dale.pro.hit.1": {
+      "file": "dale/pro-hit-1.mp3",
+      "text": "That's... that's pieces of the champ. All over the Box.",
+      "speaker": "Dale",
+      "dur": 3.28
+    },
+    "dale.pro.side.1": {
+      "file": "dale/pro-side-1.mp3",
+      "text": "Uh oh. And Terminal Velocity has seen it.",
+      "speaker": "Dale",
+      "dur": 2.16
     },
     "dale.pro.taste.1": {
       "file": "dale/pro-taste-1.mp3",
@@ -1392,18 +1404,6 @@
       "text": "Oh, that's mean. That's championship mean!",
       "speaker": "Dale",
       "dur": 2.91
-    },
-    "dale.pro.turn.1": {
-      "file": "dale/pro-turn-1.mp3",
-      "text": "Wait. Wait, what is that bar doing?",
-      "speaker": "Dale",
-      "dur": 1.92
-    },
-    "dale.pro.turn.2": {
-      "file": "dale/pro-turn-2.mp3",
-      "text": "Uh oh. That's not a spinner anymore. That's a jet engine.",
-      "speaker": "Dale",
-      "dur": 3.36
     },
     "dale.pulverizer.1": {
       "file": "dale/pulverizer-1.mp3",

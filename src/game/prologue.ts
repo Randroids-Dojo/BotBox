@@ -1,16 +1,21 @@
 // The first launch. The last seconds of a championship final, played for a taste and then taken
-// away: Terminal Velocity winds up, launches Juggernaut and ends its reign. A montage of the
-// fall, two seasons in a few beats. Then a storage unit, a box of scrap and the first rebuild.
+// away: Juggernaut breaks down under the player's hands, and Terminal Velocity hits it in the side
+// and tears it apart. A montage of the fall on old film, November 1999 to March 2001, four losses
+// four different ways. Then a storage unit, a box of scrap and the first rebuild.
 
 import { COMPONENTS, FACETS, type BotCard, type DriveCommand, type Entrant, type Loadout, type MatchEvent } from '../contract';
-import { FIGHTS, JUGGERNAUT_PRIME, NEMESIS, PLAYER_TEAM, careerRivalById } from '../data/campaign';
+import { ARENA_HALF } from '../data/arena';
+import { FIGHTS, JUGGERNAUT_PRIME, NEMESIS, PLAYER_TEAM } from '../data/campaign';
 import { CLASS_LABEL, WEAPONS } from '../data/parts';
+import type { ShotRequest } from '../render/types';
+import type { BotSim } from '../sim/bot';
 import { Match } from '../sim/match';
 import { yawOf } from '../sim/math';
 import { buildSpec } from '../sim/spec';
 import type { Damage, GarageCategory, MontageCard } from '../ui/types';
 import { careerShop, newCareer, rivalSummary } from './career';
 import { Commentary } from './commentary';
+import { DeathClip, type DeathKind } from './deaths';
 import type { Game } from './game';
 import { PLAYER } from './season';
 
@@ -113,6 +118,7 @@ async function theFinal(g: Game): Promise<() => void> {
   let hits = 0;
   let lastHitT = -99;
   let struck = -99;
+  let broken = false;
 
   const onEvent = (e: MatchEvent) => {
     if (e.type !== 'hit') return;
@@ -133,6 +139,11 @@ async function theFinal(g: Game): Promise<() => void> {
         const cmd = control ? input.command(stage.controlYaw(), yawOf(me.quat), me.inverted) : { ...IDLE };
         // The champion's crew hits the srimech for you if you have not found the button yet.
         if (flippedT > 2.2) cmd.selfRight = true;
+        // Broken down: the disk will not spin up again.
+        if (broken) {
+          cmd.weapon = false;
+          cmd.weaponPressed = false;
+        }
         match.setCommand(PLAYER, cmd);
       }
       if (control && (Math.abs(me.cmd.throttle) > 0.3 || Math.abs(me.cmd.turn) > 0.5)) moveT += dt;
@@ -258,13 +269,7 @@ async function theFinal(g: Game): Promise<() => void> {
     }
     // Still stuck after the crew's srimech (wedged on its side): set it back on its wheels. The
     // script must never wait on a robot that cannot get up.
-    if (flippedT > 6) {
-      const p = me.pos;
-      const yaw0 = yawOf(me.quat);
-      me.body.setTranslation({ x: p.x, y: p.y + 0.25, z: p.z }, true);
-      me.body.setRotation({ x: 0, y: Math.sin(yaw0 / 2), z: 0, w: Math.cos(yaw0 / 2) }, true);
-      me.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
-    }
+    if (flippedT > 6) upright(me);
     if (righting) continue;
     if (step === 0 && inStep > 2 && (apart(me, tv) < 2.4 || inStep > 7 || auto)) setStep(1);
     else if (step === 1 && inStep > 1.2 && (me.armed || inStep > 6)) {
@@ -288,64 +293,84 @@ async function theFinal(g: Game): Promise<() => void> {
         doneAt = clock;
       } else if (counted < 3) ui.coach(counted === 2 ? 'One more!' : 'Again! 2 hits to go');
     }
-    // At least a dozen seconds at the sticks, then the script takes over (never while upside down).
+    // At least a dozen seconds at the sticks, then it breaks (never while upside down).
     const finished = (doneAt > 0 && clock - doneAt > 1.4 && t > 12) || t > 24 || match.phase !== 'fight';
     if (finished && !me.helpless) break;
   }
 
-  // ---- the turn: bars drop, the HUD goes, and the film takes over
+  // ---- the breakdown: the left drive burns out with the player still at the sticks. It can
+  // only turn in circles, and the disk spins down and will not come back.
+  broken = true;
+  me.damagePart('driveL', 1e6, null);
+  me.armed = false;
+  if (auto) match.setAiScript(PLAYER, 'passive');
+  stage.shake(0.35);
+  g.crowd(0.55);
+  ui.coach('Your left drive just died!');
+  await g.say(['dale.pro.break.1']);
+  const circles = g.say(['chuck.pro.break.1']);
+  await g.wait(1.6, false);
+
+  // ---- the turn: bars drop, the right side quits too, and the champion sits dead in the water
   control = false;
   cutscene(true);
   // The clock stops with the bars down: the cutscene cannot run the final out of time.
   match.clockHeld = true;
-  if (auto) match.setAiScript(PLAYER, 'passive');
-  // Line Terminal Velocity up a short run away, facing the champion. The cut hides the move.
-  const room = { x: -Math.sign(me.pos.x || 1), z: -Math.sign(me.pos.z || 1) };
-  const rn = Math.hypot(room.x, room.z);
-  const at = { x: me.pos.x + (room.x / rn) * 2.6, z: me.pos.z + (room.z / rn) * 2.6 };
-  tv.body.setTranslation({ x: at.x, y: tv.pos.y + 0.03, z: at.z }, true);
-  tv.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-  tv.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
-  const yaw = face(at, me.pos);
-  tv.body.setRotation({ x: 0, y: Math.sin(yaw / 2), z: 0, w: Math.cos(yaw / 2) }, true);
+  match.setAiScript(PLAYER, 'idle');
+  // The hit is staged on its wheels: a robot on its back is set right under the cut.
+  if (me.helpless) upright(me);
+  stage.shot({ kind: 'loser', bot: PLAYER, duration: 5 });
+  await g.wait(0.7, false);
+  me.damagePart('driveR', 1e6, null);
+  stage.shake(0.2);
+  await g.wait(circles, false);
+
+  // Terminal Velocity lines up on the champion's side (the dead left one if there is room).
+  const flank = (side: 1 | -1, d: number) => {
+    const y = yawOf(me.quat);
+    return { x: me.pos.x - Math.cos(y) * side * d, z: me.pos.z + Math.sin(y) * side * d };
+  };
+  const room = (p: { x: number; z: number }) => ARENA_HALF - Math.max(Math.abs(p.x), Math.abs(p.z));
+  const side: 1 | -1 = room(flank(1, 2.8)) >= 1.2 || room(flank(1, 2.8)) >= room(flank(-1, 2.8)) ? 1 : -1;
+  const place = (d: number) => {
+    const p = flank(side, d);
+    const lim = ARENA_HALF - 0.9;
+    const at = { x: Math.max(-lim, Math.min(lim, p.x)), z: Math.max(-lim, Math.min(lim, p.z)) };
+    tv.body.setTranslation({ x: at.x, y: Math.max(tv.pos.y, 0.05) + 0.03, z: at.z }, true);
+    tv.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    tv.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    const y = face(at, me.pos);
+    tv.body.setRotation({ x: 0, y: Math.sin(y / 2), z: 0, w: Math.cos(y / 2) }, true);
+  };
+  place(2.8);
   match.setAiScript(NEMESIS.id, 'windup');
-  // Both robots in one slow orbit: the champion idling, the bar beginning to turn.
-  const mid = { x: (me.pos.x + at.x) / 2, y: 0.2, z: (me.pos.z + at.z) / 2 };
-  stage.shot({ kind: 'replay', point: mid, bots: [NEMESIS.id, PLAYER], duration: 8, seed: 1 });
-  g.crowd(0.7);
-  await g.say(['dale.pro.turn.1']);
-  const turnStart = clock;
-  while (tv.spin01 < 0.6 && clock - turnStart < 1.2) await g.frame();
-  // Then close on the bar as it screams up to speed.
-  stage.shot({ kind: 'bot_intro', bot: NEMESIS.id, duration: 2.4 });
-  const closeAt = clock;
-  while ((tv.spin01 < 0.9 || clock - closeAt < 1.3) && clock - closeAt < 2.2) await g.frame();
+  // Behind Terminal Velocity, looking at the champion's flank as the bar comes up to speed.
+  stage.shot({ kind: 'attack', bot: NEMESIS.id, target: PLAYER, duration: 7 });
+  g.crowd(0.75);
+  await g.say(['dale.pro.side.1']);
+  const windAt = clock;
+  while (tv.spin01 < 0.9 && clock - windAt < 1.5) await g.frame();
   tv.omega = Math.max(tv.omega, tv.omegaMax * 0.95);
-  // Over the champion's shoulder as it comes.
-  const warn = g.say(['chuck.pro.turn.2']);
-  await g.wait(0.6, false);
+  // It charges as Chuck sees it coming, so the hit lands as his line ends.
+  const warn = g.say(['chuck.pro.side.1']);
+  await g.wait(Math.max(0.6, (audio.voiceLine('chuck.pro.side.1')?.dur ?? 3.6) - 1.4), false);
   const charge = async (limit: number) => {
     match.setAiScript(NEMESIS.id, 'charge');
-    stage.shot({ kind: 'faceoff', duration: 2.6 });
     const from = clock;
     while (struck < from && apart(me, tv) > 1.05 && clock - from < limit) await g.frame();
     return struck >= from || apart(me, tv) <= 1.05;
   };
-  if (!(await charge(4))) {
+  if (!(await charge(3))) {
     // Stuck somewhere: cut away and line it up again closer. The cut hides it.
     stage.shot({ kind: 'loser', bot: PLAYER, duration: 1 });
     await g.frame();
-    const back = { x: me.pos.x + (room.x / rn) * 1.6, z: me.pos.z + (room.z / rn) * 1.6 };
-    tv.body.setTranslation({ x: back.x, y: tv.pos.y + 0.03, z: back.z }, true);
-    tv.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
-    const y2 = face(back, me.pos);
-    tv.body.setRotation({ x: 0, y: Math.sin(y2 / 2), z: 0, w: Math.cos(y2 / 2) }, true);
-    await charge(4);
+    place(1.6);
+    stage.shot({ kind: 'attack', bot: NEMESIS.id, target: PLAYER, duration: 3 });
+    await charge(3);
   }
 
-  // ---- the hit
-  // High enough to gasp at, low enough to stay in the shot.
-  match.finisher(NEMESIS.id, PLAYER, 'launch', { fire: true, kill: true, power: 0.82 });
+  // ---- the hit: square in the flank. Wheels, armor and the disk come off, and it rolls over.
+  match.finisher(NEMESIS.id, PLAYER, 'broadside', { kill: true, tear: true, power: 0.82 });
   downed = true;
   match.setAiScript(NEMESIS.id, 'passive');
   slowScale = 0.12;
@@ -356,15 +381,15 @@ async function theFinal(g: Game): Promise<() => void> {
   audio.stinger('heartbreak');
   g.crowd(1);
   await warn;
-  await g.wait(0.4, false);
-  void g.say(['chuck.pro.down.1'], 30, 3);
+  void g.say(['chuck.pro.hit.1'], 30, 3);
   const flight = clock;
   while ((me.airborne || clock - flight < 2.6) && clock - flight < 5.5) await g.frame();
 
-  // ---- down and out, and a new champion
-  stage.shot({ kind: 'loser', bot: PLAYER, duration: 6 });
+  // ---- the wreck, and a new champion
+  stage.shot({ kind: 'loser', bot: PLAYER, duration: 7 });
   g.crowd(0.4);
-  await g.quiet(4);
+  await g.say(['dale.pro.hit.1'], 30, 6);
+  await g.quiet(3);
   match.forceKo(PLAYER);
   audio.stinger('ko');
   ui.banner('ko');
@@ -375,7 +400,8 @@ async function theFinal(g: Game): Promise<() => void> {
   // The banner lands with the name, at the end of the line.
   await g.wait(Math.max(0.5, (audio.voiceLine('vic.pro.ko.2')?.dur ?? 6) - 3), false);
   ui.banner('winner', NEMESIS.card.name);
-  await g.wait(Promise.all([crowned, g.wait(3.2, false)]));
+  // Long enough for the banner to clear before the film rolls.
+  await g.wait(Promise.all([crowned, g.wait(3.8, false)]));
   ui.bug(false);
   stage.shot({ kind: 'loser', bot: PLAYER, duration: 8 });
 
@@ -386,68 +412,79 @@ async function theFinal(g: Game): Promise<() => void> {
   };
 }
 
+/** Back on its wheels, facing the way it was (a scripted reset hidden by a cut). */
+function upright(b: BotSim): void {
+  const yaw = yawOf(b.quat);
+  b.body.setTranslation({ x: b.pos.x, y: b.pos.y + 0.25, z: b.pos.z }, true);
+  b.body.setRotation({ x: 0, y: Math.sin(yaw / 2), z: 0, w: Math.cos(yaw / 2) }, true);
+  b.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
+}
+
 // -------------------------------------------------------------------------------- the fall
 
-/** A three second clip from a lost fight: the decline, one beating at a time. */
-async function clip(g: Game, mine: Loadout, foeId: string, style: 'launch' | 'flip' | 'slam', sec: number, carried: Damage): Promise<void> {
+/** Camera for each montage death: the opening framing, the moment it lands, and the wreck. */
+const DEATH_SHOTS: Record<DeathKind, { open: (c: DeathClip) => ShotRequest; hit?: (c: DeathClip) => ShotRequest; after?: (c: DeathClip) => ShotRequest }> = {
+  // Over Juggernaut's shoulder as Flapjack comes in, side on as it goes up and over, then close
+  // on it lying on its back, wheels spinning, the srimech falling back.
+  turtle: {
+    open: () => ({ kind: 'faceoff', duration: 2 }),
+    hit: (c) => ({ kind: 'follow', bot: JUG, from: c.foeId, duration: 2 }),
+    after: () => ({ kind: 'loser', bot: JUG, duration: 4 }),
+  },
+  // Circling the shove across the saw slots.
+  saws: {
+    open: (c) => ({ kind: 'replay', point: mid(c), bots: [JUG, c.foeId], duration: 6, seed: 1 }),
+  },
+  // Side on, low, so the axe's arc reads; then straight down on the hole in the lid.
+  axe: {
+    open: (c) => ({ kind: 'impact', point: c.jug.pos, bots: [JUG, c.foeId], duration: 3 }),
+    after: (c) => ({ kind: 'replay', point: c.jug.pos, bots: [JUG], duration: 4, seed: 3 }),
+  },
+  // A long lens through the Lexan as Trash Panda comes, low across the ram into the spikes, then
+  // close on the fire.
+  fire: {
+    open: (c) => ({ kind: 'replay', point: mid(c), bots: [JUG, c.foeId], duration: 3, seed: 2 }),
+    hit: (c) => ({ kind: 'replay', point: c.jug.pos, bots: [JUG, c.foeId], duration: 2, seed: 0 }),
+    after: () => ({ kind: 'loser', bot: JUG, duration: 4 }),
+  },
+};
+
+const JUG = 'juggernaut';
+
+function mid(c: DeathClip): { x: number; y: number; z: number } {
+  return { x: (c.jug.pos.x + c.foe.pos.x) / 2, y: 0.2, z: (c.jug.pos.z + c.foe.pos.z) / 2 };
+}
+
+/** One loss from the decline, a few seconds long, each a different way to go down. */
+async function clip(g: Game, kind: DeathKind, mine: Loadout, foeId: string, sec: number, carried: Damage, dressing: 'normal' | 'qualifier' = 'normal'): Promise<void> {
   const { stage, audio } = g;
-  const foe = careerRivalById(foeId)!;
-  // Close enough that the charge lands in the first second of the clip.
-  const a = { x: -0.75, z: 0.45 };
-  const b = { x: 0.85, z: -0.4 };
-  const entrants: Entrant[] = [
-    { id: 'juggernaut', corner: 'red', spec: buildSpec(mine), card: CHAMP_CARD, control: 'ai', skill: 0.4, carried },
-    { id: foe.id, corner: 'blue', spec: buildSpec(foe.loadout), card: foe.card, control: 'ai', skill: 0.9 },
-  ];
-  const m = new Match(g.R, {
-    entrants,
-    length: 60,
-    seed: 11,
-    positions: { juggernaut: { ...a, yaw: face(a, b) + 0.5 }, [foe.id]: { ...b, yaw: face(b, a) } },
-  });
-  m.setAiScript('juggernaut', 'passive');
-  m.setAiScript(foe.id, 'charge');
-  m.startFight();
-  const jug = m.bot('juggernaut')!;
-  const them = m.bot(foe.id)!;
-  stage.setDressing('normal');
+  const c = new DeathClip(g.R, kind, mine, foeId, carried, CHAMP_CARD);
+  const shots = DEATH_SHOTS[kind];
+  stage.setDressing(dressing);
   stage.setScene('arena');
   stage.clearTransient();
-  stage.setEntrants(entrants.map((e) => ({ id: e.id, spec: e.spec, corner: e.corner, player: false })));
-  audio.setEntrants(entrants.map((e) => ({ id: e.id, spec: e.spec })));
+  stage.setEntrants(c.entrants.map((e) => ({ id: e.id, spec: e.spec, corner: e.corner, player: false })));
+  audio.setEntrants(c.entrants.map((e) => ({ id: e.id, spec: e.spec })));
   audio.setWorldActive(true);
-  stage.shot({ kind: 'faceoff', duration: 2 });
-  let t = 0;
-  let hitAt = -1;
-  let touched = false;
+  stage.shot(shots.open(c));
   g.setTick((dt) => {
-    t += dt;
-    // The throw lands on contact, never from across the floor.
-    if (hitAt < 0 && (touched || apart(jug, them) < 1.05 || t > 2.5)) {
-      hitAt = t;
-      // Clips stay in frame: a smaller throw than the real thing.
-      m.finisher(foe.id, 'juggernaut', style, { fire: style === 'launch', power: style === 'launch' ? 0.62 : 1 });
-      m.setAiScript(foe.id, 'passive');
-      m.timeScale = 0.25;
+    const { events, cue } = c.tick(dt);
+    if (cue === 'hit') {
       stage.shake(0.8);
-      stage.shot({ kind: 'replay', point: jug.pos, bots: ['juggernaut'], duration: sec, seed: style === 'slam' ? 1 : 0 });
       g.crowd(0.9);
-    }
-    if (hitAt >= 0 && t - hitAt > 0.8) m.timeScale = Math.min(1, m.timeScale + dt);
-    audio.setTimeScale(m.timeScale);
-    m.advance(dt);
-    const events = m.drainEvents();
-    for (const e of events) if (e.type === 'hit' && e.attacker === foe.id && e.victim === 'juggernaut') touched = true;
-    const world = m.frame();
+      if (shots.hit) stage.shot(shots.hit(c));
+    } else if (cue === 'after' && shots.after) stage.shot(shots.after(c));
+    audio.setTimeScale(c.match.timeScale);
+    const world = c.match.frame();
     stage.render(world, events, dt);
     audio.frame(world, events, stage.listener(), dt);
   });
   await g.wait(sec);
   // Freeze on the last frame before the match goes away.
-  const last = m.frame();
+  const last = c.match.frame();
   g.setTick((dt) => stage.render(last, [], dt));
   await g.frame();
-  m.dispose();
+  c.dispose();
   audio.setTimeScale(1);
 }
 
@@ -458,52 +495,71 @@ function garageBeat(g: Game, l: Loadout, d: Damage, tier: 0 | 1 | 2 | 3, missing
   g.stage.garage(buildSpec(l), d, { tier, missing });
 }
 
+type Month = { month: number; year: number };
+const when = (month: number, year: number): Month => ({ month, year });
+
+/** The decline on old film, a date rolling forward on the top bar: four losses, each a different
+ *  way to go down, the rankings sliding, the sponsors and the disk gone. */
 async function theFall(g: Game, teardown: () => void): Promise<void> {
-  const { ui, audio } = g;
+  const { ui, audio, stage } = g;
   g.skipped = false;
   g.skipAll = false;
   g.setSkippable(true);
   audio.music('montage', 2.5);
+  ui.letterbox(true);
+  stage.setFilm(true);
   const tired: Loadout = { ...JUGGERNAUT_PRIME, armor: { material: 'steel', grade: 1 }, paint: { ...JUGGERNAUT_PRIME.paint, finish: 'matte' } };
-  const worn: Loadout = { ...tired, drive: 'drill2', power: 'sla', extras: [], paint: { ...tired.paint, decal: 'JUG' } };
+  const worn: Loadout = { ...tired, drive: 'drill2', power: 'sla', extras: ['srimech'], paint: { ...tired.paint, decal: 'JUG' } };
   // Each beat lasts as long as its line: nobody gets cut off by the next headline.
-  const beat = async (card: MontageCard, voice: string | null, scene?: () => Promise<void>) => {
+  const beat = async (date: Month, card: MontageCard, voice: string | null, scene?: () => Promise<void>) => {
     if (g.skipAll) return;
+    ui.montageDate(date);
     const dur = voice ? (g.audio.voiceLine(voice)?.dur ?? 0) : 0;
     const said = voice ? g.say([voice], 30, 2) : Promise.resolve();
     await g.wait(Promise.all([ui.montage({ ...card, sec: Math.max(card.sec, dur + 0.5) }), scene?.(), said]));
   };
 
-  // The wreck, still burning.
-  await beat({ kind: 'headline', title: 'THE CHAMPION FALLS', sub: 'One hit from Terminal Velocity ends a three year reign.', sec: 4.2 }, null);
+  // The wreck, still smoking.
+  await beat(when(11, 1999), { kind: 'headline', title: 'THE CHAMPION FALLS', sub: 'One hit from Terminal Velocity ends a three year reign.', sec: 4.2 }, 'chuck.fall.2');
   teardown();
   await beat(
-    { kind: 'result', title: 'Next season. Round one.', result: { opponent: 'Flapjack', method: 'Flipped and counted out' }, sec: 4.4 },
+    when(3, 2000),
+    { kind: 'result', title: 'Spring season. Round one.', result: { opponent: 'Flapjack', method: 'Flipped. Never got back up.' }, sec: 5 },
     'jenna.fall.1',
-    () => clip(g, tired, 'flapjack', 'flip', 4.2, wear(0.8)),
+    () => clip(g, 'turtle', tired, 'flapjack', 4.8, wear(0.8)),
   );
   if (!g.skipAll) garageBeat(g, tired, wear(0.45, 0.6), 2);
-  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 1, to: 3 }, sec: 2.6 }, g.pickId('dale.fall.'));
-  await beat({ kind: 'headline', title: 'SPONSORS PULL OUT', sub: 'Team Juggernaut loses its backing.', sec: 3.6 }, 'jenna.fall.2');
+  await beat(when(4, 2000), { kind: 'rank', title: 'Juggernaut', rank: { from: 1, to: 3 }, sec: 2.6 }, 'dale.fall.2');
+  await beat(when(5, 2000), { kind: 'headline', title: 'SPONSORS PULL OUT', sub: 'Team Juggernaut loses its backing.', sec: 3.4 }, 'jenna.fall.2');
   await beat(
-    { kind: 'result', title: 'Round one, again.', result: { opponent: 'Snowplow', method: 'Shoved into the saws' }, sec: 4.4 },
-    g.pickId('chuck.fall.'),
-    () => clip(g, worn, 'snowplow', 'slam', 4.2, wear(0.7)),
+    when(8, 2000),
+    { kind: 'result', title: 'Fall season. Round one, again.', result: { opponent: 'Snowplow', method: 'Shoved into the killsaws' }, sec: 5 },
+    'dale.fall.1',
+    () => clip(g, 'saws', worn, 'snowplow', 4.8, wear(0.7)),
   );
   if (!g.skipAll) garageBeat(g, worn, wear(0.35, 0.5), 1);
-  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 3, to: 11 }, sec: 2.6 }, null);
+  await beat(when(9, 2000), { kind: 'rank', title: 'Juggernaut', rank: { from: 3, to: 11 }, sec: 2.4 }, 'chuck.fall.1');
   await beat(
-    { kind: 'result', title: 'A regional, this time.', result: { opponent: 'Homewrecker', method: 'Torn apart in 0:41' }, sec: 4.4 },
-    g.pickId('dale.fall.'),
-    () => clip(g, worn, 'homewrecker', 'launch', 4.2, wear(0.6)),
+    when(11, 2000),
+    { kind: 'result', title: 'Regionals.', result: { opponent: 'Chop Suey', method: 'Axed through the lid' }, sec: 4.6 },
+    'dale.fall.3',
+    () => clip(g, 'axe', worn, 'chop-suey', 4.4, wear(0.6)),
   );
   if (!g.skipAll) garageBeat(g, worn, wear(0.3, 0.45), 1);
-  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 11, to: 38 }, sec: 2.6 }, 'jenna.fall.3');
+  await beat(when(12, 2000), { kind: 'rank', title: 'Juggernaut', rank: { from: 11, to: 38 }, sec: 2.4 }, 'chuck.fall.3');
+  await beat(
+    when(1, 2001),
+    { kind: 'result', title: 'Tuesday night. The garage league.', result: { opponent: 'Trash Panda', method: 'Caught fire. Tapped out.' }, sec: 5 },
+    'jenna.fall.5',
+    () => clip(g, 'fire', worn, 'trash-panda', 4.8, wear(0.55), 'qualifier'),
+  );
   if (!g.skipAll) garageBeat(g, { ...worn, weapon: 'none' }, wear(0.3, 0.45), 0, ['weapon']);
-  await beat({ kind: 'headline', title: 'THE DISK IS SOLD', sub: 'Juggernaut parts with its weapon to pay the bills.', sec: 3.8 }, 'jenna.fall.4');
-  await beat({ kind: 'rank', title: 'Juggernaut', rank: { from: 38, to: null }, sec: 2.8 }, g.pickId('chuck.fall.'));
+  await beat(when(2, 2001), { kind: 'headline', title: 'THE DISK IS SOLD', sub: 'Juggernaut parts with its weapon to pay the bills.', sec: 3.6 }, 'jenna.fall.4');
+  await beat(when(3, 2001), { kind: 'rank', title: 'Juggernaut', rank: { from: 38, to: null }, sec: 2.8 }, 'jenna.fall.3');
   await g.quiet(5);
   ui.caption(null);
+  ui.montageDate(null);
+  stage.setFilm(false);
   g.setSkippable(false);
   g.skipAll = false;
   g.setTick(null);
@@ -549,18 +605,18 @@ export async function skipToStorage(g: Game): Promise<void> {
   g.persist();
   g.stage.setScene('title');
   g.audio.music('none', 1);
-  await g.ui.story(['Juggernaut lost the final. Then it lost everything else.', 'Two seasons later.', 'A rented storage unit in Oakland.'], 6.5);
+  await g.ui.story(['Juggernaut lost the final. Then it lost everything else.', 'Spring 2001.', 'A rented storage unit in Oakland.'], 6.5);
 }
 
 export async function prologue(g: Game): Promise<void> {
   if (!g.save.career) g.save.career = newCareer();
-  const teardown = await theFinal(g);
+  const teardown = g.jumpToFall ? () => g.stage.setScene('arena') : await theFinal(g);
   await theFall(g, teardown);
   g.save.career.prologueDone = true;
   g.save.seenIntro = true;
   g.persist();
   g.audio.music('none', 4);
   g.ui.letterbox(false);
-  await g.ui.story(['Two seasons later.', 'A rented storage unit in Oakland.'], 5);
+  await g.ui.story(['Spring 2001.', 'A rented storage unit in Oakland.'], 5);
   await firstRebuild(g);
 }

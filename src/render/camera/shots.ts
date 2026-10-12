@@ -92,8 +92,38 @@ export function startShot(req: Exclude<ShotRequest, { kind: 'live' }>, ctx: CamC
     if (b) s.base.copy(b.pos);
     // Start the orbit from the side toward the center so the Box fills the background.
     s.angle = Math.atan2(-s.base.x, -s.base.z) + 0.5;
+    if (req.kind === 'loser' && b) s.angle = clearAngle(s.base, s.angle, 1.4 + b.length, b, ctx);
   }
   return s;
+}
+
+/** The orbit angle nearest `pref` (in eighths of a turn) with no other robot between the camera
+ *  and its subject, staying inside the walls. */
+function clearAngle(base: THREE.Vector3, pref: number, r: number, subject: CamBot, ctx: CamCtx): number {
+  let best = pref;
+  let bestScore = -Infinity;
+  for (let k = 0; k < 8; k++) {
+    const turn = k <= 4 ? k : k - 8;
+    const a = pref + (turn * Math.PI) / 4;
+    _a.set(base.x + Math.sin(a) * r, 0, base.z + Math.cos(a) * r);
+    let clear = 2;
+    for (const o of ctx.bots) {
+      if (o === subject) continue;
+      // Distance from the other robot to the line of sight, camera to subject.
+      _b.subVectors(base, _a).setY(0);
+      const L2 = Math.max(1e-4, _b.lengthSq());
+      const t = clamp(((o.pos.x - _a.x) * _b.x + (o.pos.z - _a.z) * _b.z) / L2, 0, 1);
+      const d = Math.hypot(o.pos.x - (_a.x + _b.x * t), o.pos.z - (_a.z + _b.z * t)) - o.length * 0.5;
+      clear = Math.min(clear, d);
+    }
+    const wall = Math.max(0, Math.max(Math.abs(_a.x), Math.abs(_a.z)) - (ARENA_HALF - 0.5));
+    const score = Math.min(clear, 1) - Math.abs(turn) * 0.08 - wall * 2;
+    if (score > bestScore) {
+      bestScore = score;
+      best = a;
+    }
+  }
+  return best;
 }
 
 /** Fill `out` with the pose for this shot at real time `ctx.time`. */
@@ -264,6 +294,25 @@ export function runShot(s: ActiveShot, ctx: CamCtx, aspect: number, out: Pose, d
       out.fov = 42;
       break;
     }
+    case 'attack': {
+      const a = ctx.get(req.bot);
+      const v = ctx.get(req.target);
+      if (a && v) {
+        _a.subVectors(v.pos, a.pos).setY(0);
+        if (_a.lengthSq() < 1e-4) _a.set(1, 0, 0);
+        _a.normalize();
+        const L = a.length;
+        const back = THREE.MathUtils.lerp(1.6 + L, 1.0 + L * 0.7, e);
+        out.pos.copy(a.pos).addScaledVector(_a, -back);
+        out.pos.x += -_a.z * 0.45;
+        out.pos.z += _a.x * 0.45;
+        out.pos.y = 0.42 + L * 0.15;
+        clampInside(out.pos, 0.5);
+        out.target.copy(a.pos).lerp(v.pos, 0.7).setY(0.22);
+      }
+      out.fov = 44;
+      break;
+    }
     case 'booth': {
       out.pos.set(BOOTH.pos.x, BOOTH.pos.y, BOOTH.pos.z);
       out.target.set(-0.5, 0, -0.5);
@@ -286,6 +335,8 @@ function subjectHalfWidth(req: ActiveShot['req'], ctx: CamCtx): number {
       return len(req.bot) + 0.15;
     case 'follow':
       return 1.5;
+    case 'attack':
+      return 1.0;
     case 'faceoff':
       return 1.0;
     case 'impact':

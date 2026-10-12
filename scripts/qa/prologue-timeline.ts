@@ -36,7 +36,15 @@ while (Date.now() - t0 < secs * 1000) {
         drive = { err: Math.atan2(Math.sin(want - have), Math.cos(want - have)), armed: me.armed, helpless: me.helpless };
       }
     }
-    return { cap: q('.caption') || q('.cap'), coach: q('.coach-t'), banner: q('.banner'), slate: q('.slate'), l3: q('.lower-third .l3-name') || q('.l3-name'), story: q('.story'), montage: q('.mt-card') || q('.montage'), rig: window.botbox.stage.cams.rigName, phase: m ? m.phase : '-', drive };
+    // Montage cards must never sit under a caption.
+    const box = (sel) => { const e = document.querySelector(sel); return e ? e.getBoundingClientRect() : null; };
+    const cr = box('.caption:not(.out)');
+    let ov = 0;
+    for (const sel of ['.mt-result:not(.out)', '.mt-paper:not(.out)', '.mt-tv:not(.out)', '.mt-rank:not(.out)']) {
+      const r = box(sel);
+      if (cr && r) ov = Math.max(ov, Math.min(cr.bottom, r.bottom) - Math.max(cr.top, r.top) > 0 && Math.min(cr.right, r.right) - Math.max(cr.left, r.left) > 0 ? Math.round(Math.min(cr.bottom, r.bottom) - Math.max(cr.top, r.top)) : 0);
+    }
+    return { ov, cap: q('.caption') || q('.cap'), coach: q('.coach-t'), banner: q('.banner'), slate: q('.slate'), l3: q('.lower-third .l3-name') || q('.l3-name'), story: q('.story'), montage: q('.mt:not(.out)'), date: q('.film-date'), rig: window.botbox.stage.cams.rigName, phase: m ? m.phase : '-', drive };
   })())`));
   // Drive like a person: point at Terminal Velocity and go, spin up when told.
   if (s.drive && s.coach) {
@@ -47,7 +55,7 @@ while (Date.now() - t0 < secs * 1000) {
     if (/spin/i.test(s.coach) && !armed) { armed = true; await p.keyboard.press('Space'); }
     if (/self-right/i.test(s.coach)) await p.keyboard.press('KeyE');
   } else for (const k of [...held]) await hold(k, false);
-  const line = `cap="${s.cap}" coach="${s.coach}" banner="${s.banner}" slate="${s.slate}" l3="${s.l3}" story="${s.story}" mont="${s.montage.slice(0, 50)}" rig=${s.rig} phase=${s.phase}`;
+  const line = `cap="${s.cap}" coach="${s.coach}" banner="${s.banner}" slate="${s.slate}" l3="${s.l3}" story="${s.story}" mont="${s.montage.slice(0, 50)}" date="${s.date}"${s.ov ? ` OVERLAP=${s.ov}px` : ''} rig=${s.rig} phase=${s.phase}`;
   if (line !== last) { console.log(`${t.toFixed(1).padStart(5)}s ${line}`); last = line; }
   if (t >= nextShot) { await p.screenshot({ path: `/tmp/pt-${String(shot++).padStart(2, '0')}.png` }); nextShot += every; }
   await p.waitForTimeout(120);

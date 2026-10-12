@@ -45,6 +45,8 @@ export class Game {
   /** Dev and test hooks: ?autopilot drives the player's robot with the AI, ?speed=N runs fights faster. */
   readonly autopilot = params.has('autopilot');
   readonly speed = Math.max(1, Number(params.get('speed') ?? 1));
+  /** Test hook: the first launch skips the final and starts on the montage. */
+  readonly jumpToFall = params.has('fall');
   skipped = false;
   skipAll = false;
   /** The match on screen, for tests and dev tools (window.botbox.game.current). */

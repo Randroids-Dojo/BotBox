@@ -1,5 +1,6 @@
-// Prologue graphics: montage cards (news headlines, loss tickers, the rankings slide), story text
-// on black, and the coach bubble that teaches the first fight and the first rebuild.
+// Prologue graphics: montage cards (news headlines, loss tickers, the rankings slide), the
+// montage date rolling forward on the top cinema bar, story text on black, and the coach bubble
+// that teaches the first fight and the first rebuild.
 
 import { JUGGERNAUT_PRIME } from '../data/campaign';
 import { el, exit, sleep } from './core';
@@ -15,6 +16,13 @@ const COACH_KEYS: Record<CoachAction, { kb: string[]; pad: string[]; touch: stri
   selfRight: { kb: ['E'], pad: ['B'], touch: ['Right'] },
   camera: { kb: ['C'], pad: ['Y'], touch: ['Cam'] },
 };
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/** Months since year 0 as "March 2000". */
+function monthYear(n: number): string {
+  return `${MONTHS[n % 12]} ${Math.floor(n / 12)}`;
+}
 
 export class Cinema {
   private cards: HTMLElement[] = [];
@@ -108,6 +116,51 @@ export class Cinema {
     node.classList.add(to === null ? 'gone' : 'down');
   }
 
+  // ---- montage date
+  private dateEl: HTMLElement | null = null;
+  private dateText: HTMLElement | null = null;
+  private dateNow = 0;
+  private dateRun = 0;
+
+  montageDate(d: { month: number; year: number } | null): void {
+    const run = ++this.dateRun;
+    if (!d) {
+      if (this.dateEl) void exit(this.dateEl, 300);
+      this.dateEl = this.dateText = null;
+      return;
+    }
+    const to = d.year * 12 + d.month - 1;
+    if (!this.dateEl) {
+      this.dateText = el('span.fd-t', monthYear(to));
+      this.dateEl = el('div.film-date', [el('span.fd-rule'), this.dateText, el('span.fd-rule')]);
+      this.ctx.layers.gfx.append(this.dateEl);
+      this.dateNow = to;
+      return;
+    }
+    void this.rollDate(to, run);
+  }
+
+  /** Flip through the months in between, quick ticks like a calendar in a time lapse. */
+  private async rollDate(to: number, run: number): Promise<void> {
+    const text = this.dateText!;
+    const steps = Math.abs(to - this.dateNow);
+    const stride = Math.max(1, Math.ceil(steps / 10));
+    text.classList.remove('set');
+    while (this.dateNow !== to) {
+      if (run !== this.dateRun || !text.isConnected) return;
+      this.dateNow = to > this.dateNow ? Math.min(to, this.dateNow + stride) : Math.max(to, this.dateNow - stride);
+      text.textContent = monthYear(this.dateNow);
+      text.classList.remove('tick');
+      void text.offsetWidth;
+      text.classList.add('tick');
+      this.ctx.sfx.ui('tick');
+      await sleep(steps > 6 ? 60 : 95);
+    }
+    text.classList.remove('tick');
+    void text.offsetWidth;
+    text.classList.add('set');
+  }
+
   // ---- story
   async story(lines: string[], sec: number): Promise<void> {
     const ms = Math.max(800, sec * 1000);
@@ -197,6 +250,9 @@ export class Cinema {
   /** Drop every card and the coach (debug resets). */
   clear(): void {
     for (const c of this.cards.splice(0)) c.remove();
+    this.dateRun++;
+    this.dateEl?.remove();
+    this.dateEl = this.dateText = null;
     this.coachEl?.remove();
     this.coachEl = null;
     this.bars?.remove();

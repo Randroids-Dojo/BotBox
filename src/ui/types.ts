@@ -340,7 +340,10 @@ export interface BroadcastUI {
   rewards(view: RewardsView): Promise<void>;
   /** A montage beat (fire and forget the graphic; resolves after card.sec). */
   montage(card: MontageCard): Promise<void>;
-  /** Story text on black ("Two seasons later."), resolves after sec. */
+  /** The montage date, typed on the top cinema bar ("MARCH 2000"). A new date rolls forward (or
+   *  back) month by month to it; null takes it away. */
+  montageDate(date: { month: number; year: number } | null): void;
+  /** Story text on black ("Spring 2001."), resolves after sec. */
   story(lines: string[], sec: number): Promise<void>;
   /** Cinema bars top and bottom: the player is watching, not driving. Captions sit on the bars. */
   letterbox(on: boolean): void;

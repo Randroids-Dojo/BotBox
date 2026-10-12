@@ -171,7 +171,8 @@ CAREER_FIXED = ["vic.pro.open", "vic.act.regionals", "vic.act.show", "vic.act.ch
                 "vic.comeback", "jenna.rematch"]
 CAREER_VARIANTS = {"vic.pro.ko": 2, "vic.player.comeback": 3, "jenna.fall": 4, "jenna.comeback": 3}
 for _who in ("dale", "chuck"):
-    CAREER_VARIANTS.update({f"{_who}.pro.taste": 3, f"{_who}.pro.turn": 2, f"{_who}.pro.down": 2,
+    CAREER_VARIANTS.update({f"{_who}.pro.taste": 3, f"{_who}.pro.break": 1, f"{_who}.pro.side": 1,
+                            f"{_who}.pro.hit": 1, f"{_who}.pro.down": 1,
                             f"{_who}.fall": 3, f"{_who}.comeback": 4})
 
 

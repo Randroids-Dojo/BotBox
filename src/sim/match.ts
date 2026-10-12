@@ -214,11 +214,18 @@ export class Match implements SimHost {
   }
 
   /**
-   * A scripted, catastrophic hit for cinematics: the victim is thrown (launched high, flipped
-   * over, or slammed sideways), loses armor and parts, and catches fire. Uses the same damage
-   * and impulse paths as a real hit, so every effect, sound and camera beat follows.
+   * A scripted, catastrophic hit for cinematics: the victim is thrown (flipped onto its back,
+   * slammed sideways, rolled over by a hit in the flank, or axed through the lid), loses
+   * armor and parts, and can catch fire. `tear` rips it apart: the wheels on the struck side, the
+   * spinning weapon and chunks of frame come off. Uses the same damage and impulse paths as a
+   * real hit, so every effect, sound and camera beat follows.
    */
-  finisher(attackerId: string, victimId: string, style: 'launch' | 'flip' | 'slam', opts: { fire?: boolean; kill?: boolean; power?: number } = {}): void {
+  finisher(
+    attackerId: string,
+    victimId: string,
+    style: 'flip' | 'slam' | 'broadside' | 'axe',
+    opts: { fire?: boolean; kill?: boolean; power?: number; tear?: boolean } = {},
+  ): void {
     const a = this.bot(attackerId);
     const v = this.bot(victimId);
     if (!a || !v) return;
@@ -227,25 +234,40 @@ export class Match implements SimHost {
     const vp = v.pos;
     let dir = norm(vec(vp.x - ap.x, 0, vp.z - ap.z));
     if (len(dir) < 0.5) dir = vec(1, 0, 0);
-    const point = vec(vp.x - dir.x * v.half.z * 0.8, vp.y + v.half.y * 0.6, vp.z - dir.z * v.half.z * 0.8);
-    const side = vec(-dir.z, 0, dir.x);
-    if (style === 'launch') {
-      v.body.applyImpulseAtPoint(vec(dir.x * m * 3.2, m * 8.8, dir.z * m * 3.2), point, true);
-      v.body.applyTorqueImpulse(scale(side, m * 1.6), true);
-    } else if (style === 'flip') {
-      v.body.applyImpulseAtPoint(vec(dir.x * m * 1.6, m * 6.2, dir.z * m * 1.6), point, true);
-      v.body.applyTorqueImpulse(scale(side, m * 1.1), true);
-    } else {
+    let point = vec(vp.x - dir.x * v.half.z * 0.8, vp.y + v.half.y * 0.6, vp.z - dir.z * v.half.z * 0.8);
+    const k = opts.power ?? 1;
+    const spin = () => (this.rng.chance(0.5) ? 1 : -1);
+    if (style === 'flip') {
+      // Thrown end over end off the flipper, half a turn onto its back (6 of 6 headless across
+      // frame rates).
+      this.throwOver(v, dir, 1.0 * k, 4.2 * k, 1, 0.2 * spin());
+    } else if (style === 'slam') {
       v.body.applyImpulseAtPoint(vec(dir.x * m * 8.5, m * 1.6, dir.z * m * 8.5), point, true);
       v.body.applyTorqueImpulse(vec(0, m * 0.8, 0), true);
+    } else if (style === 'broadside') {
+      // Into the flank, rolled over it with the struck side coming up: a roll and a half while
+      // in the air lands it on its back (14 of 14 headless at power 0.82), low enough to stay
+      // in the shot.
+      point = vec(vp.x - dir.x * (v.spec.width / 2), vp.y + v.half.y * 0.5, vp.z - dir.z * (v.spec.width / 2));
+      this.throwOver(v, dir, 2.6 * k, 5.6 * k, 3, 0.6 * spin());
+    } else {
+      // An axe through the lid: driven into the floor, a hop, a little twist.
+      point = vec(vp.x, vp.y + v.half.y * 2, vp.z);
+      v.body.applyImpulseAtPoint(vec(dir.x * m * 0.4, -m * 1.2, dir.z * m * 0.4), point, true);
+      v.body.applyTorqueImpulse(vec(0, m * 0.15, 0), true);
     }
     const energy = 30000 * v.mScale;
-    const facing = v.facetAt(point);
-    v.damage({ amount: v.spec.facetHp[facing] * 3, facet: facing, kind: style === 'flip' ? 'flip' : 'spinner', attacker: a, point, dir, energy, threat: 'spinner', severity: 1 });
-    // The follow-on damage is quiet: one impact flash, not three stacked into a white-out.
-    v.damage({ amount: v.spec.facetHp.top * 2, facet: 'top', kind: 'spinner', attacker: a, point: vec(vp.x, vp.y + v.half.y * 2, vp.z), dir, energy: 120, threat: 'spinner', severity: 0.3 });
-    const flank: Facet = this.rng.chance(0.5) ? 'left' : 'right';
-    v.damage({ amount: v.spec.facetHp[flank] * 2, facet: flank, kind: 'spinner', attacker: a, point, dir, energy: 120, threat: 'spinner', severity: 0.3 });
+    const facing = style === 'axe' ? 'top' : v.facetAt(point);
+    const kind = style === 'flip' ? 'flip' : style === 'axe' ? 'axe' : 'spinner';
+    const threat = style === 'axe' || style === 'flip' ? 'blunt' : 'spinner';
+    v.damage({ amount: v.spec.facetHp[facing] * 3, facet: facing, kind, attacker: a, point, dir, energy, threat, severity: 1 });
+    if (style !== 'axe') {
+      // The follow-on damage is quiet: one impact flash, not three stacked into a white-out.
+      v.damage({ amount: v.spec.facetHp.top * 2, facet: 'top', kind: 'spinner', attacker: a, point: vec(vp.x, vp.y + v.half.y * 2, vp.z), dir, energy: 120, threat: 'spinner', severity: 0.3 });
+      const flank: Facet = facing === 'left' || facing === 'right' ? facing : this.rng.chance(0.5) ? 'left' : 'right';
+      v.damage({ amount: v.spec.facetHp[flank] * 2, facet: flank, kind: 'spinner', attacker: a, point, dir, energy: 120, threat: 'spinner', severity: 0.3 });
+    }
+    if (opts.tear) this.tearApart(v, facing, point, dir);
     if (opts.kill) {
       v.damagePart('weapon', 1e6, a);
       v.damagePart('electronics', 1e6, a);
@@ -257,6 +279,56 @@ export class Match implements SimHost {
     }
     v.lastTouchBy = a;
     v.lastTouchT = this.t;
+  }
+
+  /** Throw a robot so it lands the same way every time, whatever the contact did: set its
+   *  velocity (away from the hit, and up) and a spin about the axis that lifts the struck face,
+   *  `halfTurns` half turns while it is in the air. */
+  private throwOver(v: BotSim, dir: Vec3, lateral: number, up: number, halfTurns: number, yaw: number): void {
+    const side = vec(-dir.z, 0, dir.x);
+    const turn = (Math.PI * halfTurns) / ((2 * up) / 9.81);
+    v.body.setLinvel(vec(dir.x * lateral, up, dir.z * lateral), true);
+    v.body.setAngvel(add(scale(side, -turn), vec(0, yaw, 0)), true);
+  }
+
+  /** Rip a robot apart: every wheel on the struck side, the spinning weapon off its mount, and
+   *  torn chunks of frame, all flying away from the hit. */
+  private tearApart(v: BotSim, facing: Facet, point: Vec3, dir: Vec3): void {
+    const J = v.spec.massKg * 4;
+    const local = v.toLocal(point);
+    const struck: -1 | 1 = facing === 'left' ? -1 : facing === 'right' ? 1 : local.x < 0 ? -1 : 1;
+    const wheels = v.spec.wheels.filter((w) => w.side === struck).length;
+    for (let i = 0; i < wheels; i++) v.knockWheel(struck, point, dir, J);
+    const sp = v.spinnerSpec;
+    if (sp) {
+      const c = v.toWorld(sp.center);
+      const r = sp.radius + sp.toothHeight;
+      const flat = sp.axis === 'x' ? vec(sp.width, r * 2, r * 2) : vec(r * 2, sp.width, sp.axis === 'y' && sp.kind === 'hbar' ? sp.chord : r * 2);
+      this.spawnDebris({
+        bot: v.id,
+        kind: 'weapon',
+        pos: c,
+        quat: v.body.rotation(),
+        size: flat,
+        vel: add(scale(dir, 5.5), vec(0, 4.5, 0)),
+        spin: vec(this.rng.range(-18, 18), this.rng.range(-8, 8), this.rng.range(-18, 18)),
+      });
+      v.omega = 0;
+      v.damagePart('weapon', 1e6, null);
+    }
+    const s = v.spec.scale;
+    for (let i = 0; i < 5; i++) {
+      this.spawnDebris({
+        bot: v.id,
+        kind: 'chunk',
+        pos: add(point, vec(this.rng.range(-0.1, 0.1), this.rng.range(0, 0.1), this.rng.range(-0.1, 0.1))),
+        quat: { x: 0, y: 0, z: 0, w: 1 },
+        size: vec(this.rng.range(0.05, 0.1) * s, this.rng.range(0.012, 0.03) * s, this.rng.range(0.04, 0.08) * s),
+        vel: add(scale(dir, this.rng.range(4, 9)), vec(this.rng.range(-2, 2), this.rng.range(2, 5), this.rng.range(-2, 2))),
+        spin: vec(this.rng.range(-30, 30), this.rng.range(-30, 30), this.rng.range(-30, 30)),
+      });
+    }
+    this.emit({ type: 'shrapnel', t: this.t, bot: v.id, point, dir, count: 28, material: v.spec.loadout.armor.material });
   }
 
   /** End the fight now: this robot is counted out. */

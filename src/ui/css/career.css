@@ -1250,6 +1250,69 @@
   }
 }
 
+/* Under the cinema bars the top bar holds the date and the bottom bar the captions, so the
+   cards sit inside the picture. */
+.bx:has(.lbox.on) .mt-paper,
+.bx:has(.lbox.on) .mt-tv,
+.bx:has(.lbox.on) .mt-rank {
+  top: calc(11vh + var(--u) * 1.2);
+}
+.bx:has(.lbox.on) .mt-result {
+  bottom: calc(11vh + var(--u) * 3.4);
+}
+
+/* ---- montage date: typed on the top cinema bar, rolling forward a month at a time */
+.bx .film-date {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 11vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1em;
+  pointer-events: none;
+  color: #ebe3cf;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 700;
+  font-size: min(calc(var(--u) * 1.7), 4.4vh);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 0 0.6em rgba(255, 214, 150, 0.25);
+  animation: bx-fade 0.6s ease-out both;
+}
+.bx .film-date.out {
+  animation: bx-fade-out 0.3s ease-in forwards;
+}
+.bx .fd-rule {
+  width: min(calc(var(--u) * 6), 9vw);
+  height: 1px;
+  background: rgba(235, 227, 207, 0.4);
+}
+.bx .fd-t {
+  display: inline-block;
+}
+.bx .fd-t.tick {
+  animation: bx-fd-tick 0.09s ease-out;
+}
+@keyframes bx-fd-tick {
+  from {
+    transform: translateY(-0.3em);
+    opacity: 0.35;
+  }
+}
+.bx .fd-t.set {
+  animation: bx-fd-set 0.7s ease-out;
+}
+@keyframes bx-fd-set {
+  0% {
+    color: #fff;
+    text-shadow: 0 0 1em rgba(255, 226, 170, 0.85);
+  }
+}
+
 /* ---- story text on black */
 .bx .story {
   position: absolute;

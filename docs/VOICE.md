@@ -111,9 +111,11 @@ The player's robot is JUGGERNAUT (the name call `vic.player.juggernaut` already 
 | `vic.final.open` | 1 | Vic | The rematch: the robot that fell against the robot that broke it. |
 | `vic.comeback` | 1 | Vic | After the final win: the comeback is complete. |
 | `dale.pro.taste.N`, `chuck.pro.taste.N` | 3 each | Dale, Chuck | Prologue, while the champion dominates: seconds from a fourth straight Giant Nut (lines stay count-free). |
-| `dale.pro.turn.N`, `chuck.pro.turn.N` | 2 each | Dale, Chuck | Prologue: something is wrong, Terminal Velocity's bar is screaming up to speed. |
-| `dale.pro.down.N`, `chuck.pro.down.N` | 2 each | Dale, Chuck | Prologue: the champion is launched and goes down. Shock. |
-| `jenna.fall.N` | 4 | Jenna | Montage, TV news style, played in order: 1 crashes out in the first round; 2 sponsors pull out; 3 falls out of the rankings; 4 the team sells the disk. |
+| `dale.pro.break.N`, `chuck.pro.break.N` | 1 each | Dale, Chuck | Prologue: the champion breaks down. Dale sees smoke; Chuck: the left side is dead, it can only go in circles. |
+| `dale.pro.side.N`, `chuck.pro.side.N` | 1 each | Dale, Chuck | Prologue: Terminal Velocity sees the crippled champion and comes at its side. It cannot turn to face it. |
+| `dale.pro.hit.N`, `chuck.pro.hit.N` | 1 each | Dale, Chuck | Prologue: the side hit. Chuck as it lands (wheels gone, coming apart); Dale over the wreck (pieces everywhere). |
+| `dale.pro.down.N`, `chuck.pro.down.N` | 1 each | Dale, Chuck | Prologue: shock after the hit. |
+| `jenna.fall.N` | 4 | Jenna | Montage, TV news style: 1 crashes out in the first round; 2 sponsors pull out; 3 falls out of the rankings; 4 the team sells the disk; 5 another loss, it cannot buy a win. |
 | `dale.fall.N`, `chuck.fall.N` | 3 each | Dale, Chuck | Montage: wry and sad reactions to Juggernaut losing again and again. |
 | `dale.comeback.N`, `chuck.comeback.N` | 4 each | Dale, Chuck | During Regionals and later fights when Juggernaut lands something big: the old champ still has it. |
 | `jenna.comeback.N` | 3 | Jenna | Post-win interview openers during the climb. |

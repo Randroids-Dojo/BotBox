@@ -27,6 +27,9 @@ export interface WeaponRig {
   armRest?: number;
   /** For shells: the spinning skin, for dents and damage paint. */
   shell?: { mesh: THREE.Mesh; base: Float32Array; proxy: THREE.Mesh };
+  /** Spinners: hide the rotor for good (torn off its mount) and return a still copy for debris,
+   *  centered on the spin axis. */
+  tearOff?(): THREE.Object3D;
   dispose(): void;
 }
 
@@ -171,6 +174,22 @@ function spinnerShell(w: SpinnerSpec): SpinnerParts {
   axis.add(rotor);
   group.add(axis);
   return { group, axis, rotor, slow: [], fast: [], blur: [], blurMats: [], glintMats: [], maxOpacity: 0.7 };
+}
+
+/** The rotor off its mount: hidden on the robot, and a still copy (no blur) for the debris. */
+function tearRotor(p: SpinnerParts): THREE.Object3D {
+  const moving = [...p.fast, ...p.blur];
+  for (const o of moving) o.userData.blurOnly = true;
+  const g = p.rotor.clone();
+  for (const o of moving) delete o.userData.blurOnly;
+  g.traverse((o) => {
+    o.visible = !o.userData.blurOnly;
+    o.castShadow = true;
+  });
+  g.position.set(0, 0, 0);
+  g.rotation.set(0, 0, 0);
+  p.axis.visible = false;
+  return g;
 }
 
 let glintTex: THREE.CanvasTexture | null = null;
@@ -403,6 +422,7 @@ function buildVDisk(c: RigCtx, w: SpinnerSpec): WeaponRig {
       clock += dt;
       animateSpinner(p, w, f, health, clock);
     },
+    tearOff: () => tearRotor(p),
     dispose() {
       for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
     },
@@ -505,6 +525,7 @@ function buildDrum(c: RigCtx, w: SpinnerSpec): WeaponRig {
       clock += dt;
       animateSpinner(p, w, f, health, clock);
     },
+    tearOff: () => tearRotor(p),
     dispose() {
       for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
     },
@@ -596,6 +617,7 @@ function buildHBar(c: RigCtx, w: SpinnerSpec): WeaponRig {
       clock += dt;
       animateSpinner(p, w, f, health, clock);
     },
+    tearOff: () => tearRotor(p),
     dispose() {
       for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
     },
@@ -731,6 +753,7 @@ function buildShell(c: RigCtx, w: SpinnerSpec): WeaponRig {
       clock += dt;
       animateSpinner(p, w, f, health, clock);
     },
+    tearOff: () => tearRotor(p),
     dispose() {
       for (const m of [...p.blurMats, ...p.glintMats]) m.dispose();
       pm.dispose();

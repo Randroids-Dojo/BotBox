@@ -1,5 +1,5 @@
 // Post: N8AO (high only), mipmap bloom, vignette and filmic tone mapping, SMAA, and the
-// optional broadcast filter.
+// optional broadcast filter (which also carries the montage's old film look).
 
 import { N8AOPostPass } from 'n8ao';
 import {
@@ -32,6 +32,8 @@ export class PostPipeline {
   private broadcastPass: EffectPass;
   readonly broadcast: BroadcastEffect;
   private quality: Quality = 'high';
+  private broadcastWanted = false;
+  private film = 0;
 
   constructor(private renderer: THREE.WebGLRenderer, scene: THREE.Scene, private camera: THREE.PerspectiveCamera) {
     this.composer = new EffectComposer(renderer, { frameBufferType: THREE.HalfFloatType, multisampling: 0 });
@@ -88,14 +90,28 @@ export class PostPipeline {
   }
 
   setBroadcast(on: boolean): void {
+    this.broadcastWanted = on;
+    this.syncFilter();
+  }
+
+  /** Old film over everything, 0 to 1, whatever the broadcast setting. */
+  setFilm(amount: number): void {
+    this.film = amount;
+    this.syncFilter();
+  }
+
+  private syncFilter(): void {
+    this.broadcast.setAmount(this.broadcastWanted ? 1 : 0);
+    this.broadcast.setFilm(this.film);
     // The last enabled pass must write to the screen.
+    const on = this.broadcastWanted || this.film > 0.001;
     this.broadcastPass.enabled = on;
     this.broadcastPass.renderToScreen = on;
     this.aaPass.renderToScreen = !on;
   }
 
   get broadcastOn(): boolean {
-    return this.broadcastPass.enabled;
+    return this.broadcastWanted;
   }
 
   setSize(w: number, h: number): void {

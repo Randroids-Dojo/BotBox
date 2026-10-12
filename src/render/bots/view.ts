@@ -833,6 +833,10 @@ class ProceduralBotView implements BotView {
     return g;
   }
 
+  weaponMesh(): THREE.Object3D {
+    return this.rig?.tearOff?.() ?? new THREE.Group();
+  }
+
   componentWorld(c: Component, out: THREE.Vector3): THREE.Vector3 {
     const p = this.comp.get(c);
     if (p) out.copy(p);

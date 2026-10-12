@@ -63,6 +63,8 @@ class StageImpl implements Stage, StageExtras {
   private screenDirector = new BroadcastDirector(31, ['floor']);
   private screenRT!: THREE.WebGLRenderTarget;
   private time = 0;
+  private film = 0;
+  private filmTarget = 0;
   private frameNo = 0;
   private crowdBase = 0.25;
   private crowdBurst = 0;
@@ -242,6 +244,11 @@ class StageImpl implements Stage, StageExtras {
     }
 
     if (this.sceneId !== 'garage') this.updateScreen(world);
+    if (this.film !== this.filmTarget) {
+      const step = dt * 2.2;
+      this.film = Math.abs(this.filmTarget - this.film) <= step ? this.filmTarget : this.film + Math.sign(this.filmTarget - this.film) * step;
+      this.post.setFilm(this.film);
+    }
     this.post.render(dt, this.time);
     this.lastStats.calls = r.info.render.calls;
     this.lastStats.triangles = r.info.render.triangles;
@@ -417,6 +424,10 @@ class StageImpl implements Stage, StageExtras {
 
   setBroadcastFilter(on: boolean): void {
     this.post?.setBroadcast(on);
+  }
+
+  setFilm(on: boolean): void {
+    this.filmTarget = on ? 1 : 0;
   }
 
   shake(amount: number): void {

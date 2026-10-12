@@ -17,7 +17,7 @@ const HAZARD_SPOTS: { pos: Vec3; r: number; kind: 'pulv' | 'saw' | 'ram' }[] = [
   ...RAMRODS.map((r) => ({ pos: r.center, r: Math.max(r.hx, r.hz) + 0.2, kind: 'ram' as const })),
 ];
 
-export type AiScript = 'passive' | 'windup' | 'charge';
+export type AiScript = 'passive' | 'idle' | 'windup' | 'charge' | 'strike';
 
 export class BotAi {
   mode: Mode = 'spinup';
@@ -43,9 +43,10 @@ export class BotAi {
     this.circleDir = rng.chance(0.5) ? 1 : -1;
   }
 
-  /** Cinematic override: 'passive' keeps its distance with the weapon off, 'windup' turns to
+  /** Cinematic override: 'passive' keeps its distance with the weapon off, 'idle' sits still
+   *  with the weapon off, 'windup' turns to
    *  face the target and holds still while the weapon comes up to speed, 'charge' goes
-   *  straight for the target. */
+   *  straight for the target, 'strike' charges and fires a flipper or axe the moment it can. */
   script: AiScript | null = null;
 
   update(dt: number, bots: BotSim[]): DriveCommand {
@@ -75,7 +76,6 @@ export class BotAi {
     const d = dist(fp, pos);
     const yaw = yawOf(me.quat);
     const sp = me.spinnerSpec;
-    const arm = me.armSpec;
     this.modeTime += dt;
 
     // Stuck detection.
@@ -197,33 +197,40 @@ export class BotAi {
     goal = this.avoid(goal, pos, this.mode === 'push' || this.mode === 'carry');
     this.steer(cmd, pos, yaw, goal, speed, reverseOk);
 
-    // Weapons.
-    const local = toLocal(me, fp);
-    const front = -me.half.z;
-    if (arm) {
-      this.fireDelay -= dt;
-      if (arm.kind === 'flipper') {
-        const inZone = local.z < front + 0.1 && local.z > front - foe.spec.length * 0.6 - 0.35 * me.spec.scale && Math.abs(local.x) < arm.width / 2 + 0.15;
-        if (inZone && me.armPhase === 'rest' && me.cooldown <= 0 && this.fireDelay <= 0) {
-          if (this.rng.chance(lerp(0.35, 0.95, this.skill))) cmd.weaponPressed = true;
-          this.fireDelay = lerp(0.35, 0.05, this.skill);
-        }
-      } else if (arm.kind === 'axe') {
-        const tipZ = arm.hinge.z - Math.cos(arm.maxAngle) * arm.length;
-        const inZone = Math.abs(local.z - tipZ) < 0.32 * me.spec.scale + foe.spec.length * 0.3 && Math.abs(local.x) < 0.35 * me.spec.scale;
-        if (inZone && me.armPhase === 'rest' && me.cooldown <= 0 && this.fireDelay <= 0) {
-          if (this.rng.chance(lerp(0.4, 0.95, this.skill))) cmd.weaponPressed = true;
-          this.fireDelay = lerp(0.4, 0.08, this.skill);
-        }
-      } else if (arm.kind === 'lifter') {
-        const inZone = local.z < front + 0.05 && local.z > front - foe.spec.length * 0.7 - 0.3 * me.spec.scale && Math.abs(local.x) < arm.width / 2 + 0.1;
-        if (inZone) {
-          cmd.weapon = true;
-          if (this.mode !== 'carry' && me.arm > 0.6) this.setMode('carry');
-        } else if (this.mode === 'carry') cmd.weapon = true;
-      }
-    }
+    this.fireArm(cmd, foe, dt, false);
     return this.finish(cmd, me);
+  }
+
+  /** Fire a flipper or axe when the target is in reach, hold a lifter under it. `sure` fires every
+   *  time (scripted strikes); otherwise the driver's skill decides. */
+  private fireArm(cmd: DriveCommand, foe: BotSim, dt: number, sure: boolean): void {
+    const me = this.me;
+    const arm = me.armSpec;
+    if (!arm) return;
+    const local = toLocal(me, foe.pos);
+    const front = -me.half.z;
+    const odds = (lo: number) => sure || this.rng.chance(lerp(lo, 0.95, this.skill));
+    this.fireDelay -= dt;
+    if (arm.kind === 'flipper') {
+      const inZone = local.z < front + 0.1 && local.z > front - foe.spec.length * 0.6 - 0.35 * me.spec.scale && Math.abs(local.x) < arm.width / 2 + 0.15;
+      if (inZone && me.armPhase === 'rest' && me.cooldown <= 0 && this.fireDelay <= 0) {
+        if (odds(0.35)) cmd.weaponPressed = true;
+        this.fireDelay = lerp(0.35, 0.05, this.skill);
+      }
+    } else if (arm.kind === 'axe') {
+      const tipZ = arm.hinge.z - Math.cos(arm.maxAngle) * arm.length;
+      const inZone = Math.abs(local.z - tipZ) < 0.32 * me.spec.scale + foe.spec.length * 0.3 && Math.abs(local.x) < 0.35 * me.spec.scale;
+      if (inZone && me.armPhase === 'rest' && me.cooldown <= 0 && this.fireDelay <= 0) {
+        if (odds(0.4)) cmd.weaponPressed = true;
+        this.fireDelay = lerp(0.4, 0.08, this.skill);
+      }
+    } else if (arm.kind === 'lifter') {
+      const inZone = local.z < front + 0.05 && local.z > front - foe.spec.length * 0.7 - 0.3 * me.spec.scale && Math.abs(local.x) < arm.width / 2 + 0.1;
+      if (inZone) {
+        cmd.weapon = true;
+        if (!this.script && this.mode !== 'carry' && me.arm > 0.6) this.setMode('carry');
+      } else if (!this.script && this.mode === 'carry') cmd.weapon = true;
+    }
   }
 
   private scripted(dt: number, bots: BotSim[], cmd: DriveCommand): DriveCommand {
@@ -231,17 +238,20 @@ export class BotAi {
     const foe = bots.find((b) => b !== me && !b.disabled);
     const pos = me.pos;
     const yaw = yawOf(me.quat);
-    // Scripted or not, a robot on its back rights itself first.
+    // Scripted or not, a robot on its back rights itself first, wheels spinning in the air.
     if (me.helpless) {
+      this.modeTime += dt;
       cmd.selfRight = true;
+      cmd.throttle = Math.sin(this.modeTime * 7) * 0.8;
       return cmd;
     }
-    const wantArmed = this.script !== 'passive' && me.parts.weapon > 0;
+    const wantArmed = this.script !== 'passive' && this.script !== 'idle' && me.parts.weapon > 0;
     if (me.spinnerSpec && me.armed !== wantArmed) cmd.weaponPressed = true;
-    if (!foe) return cmd;
+    if (!foe || this.script === 'idle') return cmd;
     const fp = foe.pos;
-    if (this.script === 'charge') {
+    if (this.script === 'charge' || this.script === 'strike') {
       this.steer(cmd, pos, yaw, vec(fp.x, 0, fp.z), 1, false);
+      if (this.script === 'strike') this.fireArm(cmd, foe, dt, true);
       return cmd;
     }
     if (this.script === 'windup') {

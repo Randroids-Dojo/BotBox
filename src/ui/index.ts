@@ -125,6 +125,7 @@ export function createBroadcastUI(deps: { input: Input; audio?: AudioEngine | nu
     career: (v) => careerLadder(need(), v),
     rewards: (v) => rewards(need(), v),
     montage: (card) => cinema!.montage(card),
+    montageDate: (d) => cinema?.montageDate(d),
     story: (lines, sec) => cinema!.story(lines, sec),
     coach: (text, action) => cinema?.coach(text, action),
     letterbox: (on) => cinema?.letterbox(on),

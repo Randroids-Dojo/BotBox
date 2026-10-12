@@ -7,9 +7,16 @@ BotBox opens on a story, not a menu. The first time you play you are the champio
 1. **Press start.** The title over the dark Box: logo and PRESS START, nothing else. It is the audio unlock.
 2. **Prologue: the championship final, 0:45 left.** No menus, no intros. You are JUGGERNAUT, the three-time heavyweight champion going for a fourth Giant Nut, a titanium box with a 19 kJ vertical disk, rank #1. Both robots are already scuffed. The crowd is on its feet.
    - **Taste (about 15 seconds, you drive).** Short coach prompts teach the only three things you need: drive, spin up the disk, hit. The challenger, TERMINAL VELOCITY, mostly circles and lets you land a couple of big, satisfying hits. Commentary is ecstatic.
-   - **Takeover.** After two hits or 15 seconds, control is taken away. Terminal Velocity's bar screams up to speed and it charges. One catastrophic hit in slow motion: Juggernaut is launched into the Lexan ceiling, armor panels flying, disk torn out, battery on fire. It lands upside down. The count. KNOCKOUT. A new champion.
-3. **Montage: the fall.** Quick cuts, about 30 seconds, sad and fast. Juggernaut, patched up and never the same, loses again and again (short slow-motion clips), with TV headlines and a rankings ticker sliding down: #1, #3, #11, #38, unranked. Sponsors leave. The team sells what it can.
-4. **"Two seasons later."** A rented storage unit in Oakland. A bare bulb. On the bench: what is left of Juggernaut, a bent frame and a box of scrap.
+   - **Breakdown.** After the third hit Juggernaut's left drive burns out with the player still at the sticks: smoke pours out, it can only turn in circles, and the disk spins down and will not come back. The booth sees it before the player does ("Is the champ smoking?", "It can only go in circles!").
+   - **Takeover.** The bars drop and the right side quits too: the champion sits dead in the water. Terminal Velocity lines up on its flank (the dead left side when there is room) and spins up, shot from behind its bar. It charges in from the side, the champion cannot turn to face it, and one hit in slow motion tears it apart: both wheels on that side sheared off, side and top armor gone, the disk ripped off its mount, and the wreck rolled onto its back. Pieces everywhere. The count. KNOCKOUT. A new champion.
+3. **Montage: the fall.** About 45 seconds on old film (a faded warm print with grain, flicker, scratches and dust), a date typed on the top bar rolling forward month by month from November 1999 to March 2001. Four losses, each a different way to go down, each shot differently:
+   - March 2000, Flapjack: flipped onto its back, the srimech fires and falls back, wheels spinning in the air.
+   - August 2000, Snowplow: shoved sideways across the killsaws.
+   - November 2000, Chop Suey at Regionals: an axe through the lid until the radio dies.
+   - January 2001, Trash Panda in the garage league: rammed into the spikes, the battery catches fire, the team taps out.
+
+   Between them the rankings slide (#1, #3, #11, #38, unranked) over the robot in the garage, more worn each time, the sponsors leave and the disk is sold. The choreography is in `src/game/deaths.ts`, on the sim alone, and `tests/prologue.test.ts` checks each death lands. `?fall` starts a first launch on the montage.
+4. **"Spring 2001."** A rented storage unit in Oakland. A bare bulb. On the bench: what is left of Juggernaut, a bent frame and a box of scrap.
 5. **Rebuild.** A guided first build: bolt on wheels (drive), wire a battery (power), hang some armor, keep the name. Only the scrap you own is available. Done unlocks your first fight.
 6. **The workshop hub.** From now on this is home: your robot on the bench, your funds, your rank, and one big button for the next fight.
 

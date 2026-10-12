@@ -46,6 +46,9 @@ export type ShotRequest =
   | { kind: 'follow'; bot: string; from: string; duration: number }
   /** Hold on a beaten robot (smoke, fire, count). */
   | { kind: 'loser'; bot: string; duration: number }
+  /** Low behind a robot, looking past it at its target, pushing in: an attack lining up and
+   *  then coming in (the camera rides along as it charges). */
+  | { kind: 'attack'; bot: string; target: string; duration: number }
   /** High wide from the announcer booth. */
   | { kind: 'booth'; duration: number }
   /** Back to the gameplay camera for the current CameraMode. */
@@ -108,6 +111,9 @@ export interface Stage {
   getQuality(): Quality;
   /** Optional broadcast look: grain, slight chroma, scanline softness. */
   setBroadcastFilter(on: boolean): void;
+  /** Old film (faded print, grain, flicker, scratches, dust) for the prologue montage. Fades in
+   *  and out over about half a second. */
+  setFilm(on: boolean): void;
   /** Shake the camera (0..1) for hits the director wants to emphasize. */
   shake(amount: number): void;
   resize(): void;
@@ -136,6 +142,9 @@ export interface BotView {
   panelMesh(index: number): THREE.Object3D;
   /** Clone of a wheel mesh for debris, centered. */
   wheelMesh(index: number): THREE.Object3D;
+  /** Tear the spinning weapon off (hidden on the robot from now on) and return a still copy for
+   *  a debris body, centered on its spin axis. An empty group for robots without a spinner. */
+  weaponMesh(): THREE.Object3D;
   /** World-space position of a component, for smoke and fire emitters. */
   componentWorld(c: Component, out: THREE.Vector3): THREE.Vector3;
   dispose(): void;

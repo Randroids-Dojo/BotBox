@@ -1,6 +1,6 @@
 // Debris meshes for the sim's loose bodies. Panels and wheels are copies of the shedding robot's
-// own parts (same paint, dents and scratches), bent and scorched a little more; teeth and chunks
-// are generic torn steel.
+// own parts (same paint, dents and scratches), bent and scorched a little more; a torn-off spinner
+// is the robot's own rotor; teeth and chunks are generic torn steel.
 import * as THREE from 'three';
 import type { DebrisFrame } from '../../contract';
 import { bendPlate } from '../bots/plate';
@@ -77,6 +77,8 @@ export class Debris implements DebrisLayer {
     } else if (d.kind === 'wheel' && view && d.index !== undefined) {
       obj = view.wheelMesh(d.index);
       obj.traverse((o) => ((o as THREE.Mesh).castShadow = true));
+    } else if (d.kind === 'weapon' && view) {
+      obj = view.weaponMesh();
     } else if (d.kind === 'tooth') {
       const m = new THREE.Mesh(this.toothGeo, this.steel);
       m.scale.set(d.size.x, d.size.y, d.size.z);
